@@ -1,0 +1,107 @@
+/* Add these to your existing :root variables */
+:root {
+    /* ... existing variables ... */
+    --timeline-bg-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%23e0e0e0" stroke-width="0.5"/></svg>');
+    --timeline-bg-opacity: 0.03;
+    --year-marker-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Add background to timeline container */
+.timeline-container {
+    position: relative;
+    min-height: 600px;
+    margin: 40px 0;
+    background-image: var(--timeline-bg-image);
+    background-size: 100px 100px;
+    background-repeat: repeat;
+    background-position: center;
+    opacity: var(--timeline-bg-opacity);
+    border-radius: var(--card-radius);
+}
+
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--timeline-bg);
+    border-radius: var(--card-radius);
+    z-index: -1;
+}
+
+/* Year markers */
+.year-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--year-marker-color);
+    z-index: 1;
+}
+
+.year-label {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+    background: var(--timeline-bg);
+    padding: 2px 8px;
+    border-radius: 3px;
+    z-index: 2;
+}
+
+.top-section .year-label {
+    bottom: auto;
+    top: -30px;
+}
+
+/* Adjust timeline track height for stacking */
+.timeline-track {
+    position: absolute;
+    top: 50px; /* Changed from 70px to allow more vertical space */
+    left: 0;
+    right: 0;
+    height: 160px; /* Increased from 120px for stacking */
+    overflow: visible; /* Changed from hidden */
+    cursor: grab;
+    user-select: none;
+}
+
+/* Update card positioning for stacking */
+.timeline-card {
+    position: absolute;
+    /* top will be calculated dynamically */
+    transform: none; /* Remove translateY(-50%) */
+    width: 180px;
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 15px;
+    transition: all var(--transition-speed);
+    cursor: pointer;
+    z-index: 5;
+}
+
+.timeline-card:hover {
+    transform: scale(1.05); /* Updated from translateY version */
+    box-shadow: var(--card-shadow-hover);
+    z-index: 20;
+}
+
+/* FIX: Ensure modal is hidden on page load */
+#event-modal {
+    display: none !important;
+}
+
+/* Make sure timeline is visible */
+.timeline-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
