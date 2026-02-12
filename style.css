@@ -105,3 +105,28 @@
     visibility: visible !important;
     opacity: 1 !important;
 }
+/* FIX: Ensure timeline elements are visible */
+.timeline-container {
+    min-height: 800px !important;
+    position: relative !important;
+}
+
+.timeline-track {
+    position: relative !important;
+    height: 300px !important;
+    min-width: 2000px !important;
+    overflow: visible !important;
+}
+
+.timeline-card {
+    position: absolute !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 10 !important;
+}
+
+/* Force modal to start hidden */
+#event-modal {
+    display: none !important;
+}
