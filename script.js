@@ -139,34 +139,39 @@ class ComparativeTimeline {
         this.clearYearMarkers();
     }
     
-    // Create event card
+    // Create event card - FIXED click handler
     createEventCard(event, x, y) {
-        const card = document.createElement('div');
-        card.className = `timeline-card ${event.position}`;
-        card.style.left = `${x}px`;
-        card.style.top = `${y}px`;
-        card.dataset.id = event.id;
-        
-        const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
-        const displayDate = this.formatDate(event.date);
-        
-        card.innerHTML = `
-            <div class="card-icon">
-                <i class="${iconClass}"></i>
-            </div>
-            ${event.image ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.card-icon').style.fontSize='1.8rem';">` : ''}
-            <div class="card-title">${event.title}</div>
-            <div class="card-year">${displayDate}</div>
-        `;
-        
-        card.addEventListener('click', () => this.showEventDetails(event));
-        
-        if (event.position === 'top') {
-            this.topTimeline.appendChild(card);
-        } else {
-            this.bottomTimeline.appendChild(card);
-        }
+    const card = document.createElement('div');
+    card.className = `timeline-card ${event.position}`;
+    card.style.left = `${x}px`;
+    card.style.top = `${y}px`;
+    card.dataset.id = event.id;
+    
+    const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
+    const displayDate = this.formatDate(event.date);
+    
+    card.innerHTML = `
+        <div class="card-icon">
+            <i class="${iconClass}"></i>
+        </div>
+        ${event.image ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.card-icon').style.fontSize='1.8rem';">` : ''}
+        <div class="card-title">${event.title}</div>
+        <div class="card-year">${displayDate}</div>
+    `;
+    
+    // FIXED: Explicit click handler with debug
+    card.onclick = (e) => {
+        e.stopPropagation();
+        console.log('Card clicked:', event.title);
+        this.showEventDetails(event);
+    };
+    
+    if (event.position === 'top') {
+        this.topTimeline.appendChild(card);
+    } else {
+        this.bottomTimeline.appendChild(card);
     }
+}
     
     formatDate(dateString) {
         if (!dateString) return '';
