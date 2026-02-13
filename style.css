@@ -139,12 +139,48 @@
     visibility: visible !important;
     opacity: 1 !important;
 }
+
 /* FIX: Ensure timeline elements are visible */
 .timeline-container {
     min-height: 800px !important;
     position: relative !important;
 }
+/* FIX: Force red/blue color theme */
+.timeline-card.top {
+    border-top: 4px solid #DC143C !important;
+    border-left: 1px solid rgba(220, 20, 60, 0.3) !important;
+    border-right: 1px solid rgba(220, 20, 60, 0.3) !important;
+    border-bottom: 1px solid rgba(220, 20, 60, 0.3) !important;
+}
 
+.timeline-card.bottom {
+    border-top: 4px solid #1E90FF !important;
+    border-left: 1px solid rgba(30, 144, 255, 0.3) !important;
+    border-right: 1px solid rgba(30, 144, 255, 0.3) !important;
+    border-bottom: 1px solid rgba(30, 144, 255, 0.3) !important;
+}
+
+.timeline-card.top .card-icon {
+    color: #DC143C !important;
+    background-color: rgba(220, 20, 60, 0.1) !important;
+}
+
+.timeline-card.bottom .card-icon {
+    color: #1E90FF !important;
+    background-color: rgba(30, 144, 255, 0.1) !important;
+}
+
+/* Ensure modal popup works */
+#event-modal {
+    display: none;
+    z-index: 1000;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+}
 .timeline-track {
     position: relative !important;
     height: 300px !important;
