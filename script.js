@@ -77,7 +77,7 @@ class ComparativeTimeline {
         
         sortedEvents.forEach(event => {
             const x = this.yearToPixel(event.year, position);
-            const cardWidth = 180;
+            const cardWidth = 140;
             
             // Find available vertical lane
             let laneIndex = 0;
