@@ -184,16 +184,40 @@ class ComparativeTimeline {
     
     // Event detail modal
     showEventDetails(event) {
-        document.getElementById('modal-title').textContent = event.title;
-        document.getElementById('modal-date').textContent = this.formatDate(event.date) + ' - Full Details';
-        document.getElementById('modal-description').textContent = event.description;
-        document.getElementById('modal-type').textContent = event.type.charAt(0).toUpperCase() + event.type.slice(1);
-        document.getElementById('modal-position').textContent = event.position === 'top' ? 'Person A' : 'Person B';
-        
-        // Image handling
-        const modalImage = document.getElementById('modal-image');
-        const imageFallback = document.getElementById('image-fallback');
-        
+    console.log('Opening modal for:', event.title);
+    
+    // Get modal elements
+    const modal = document.getElementById('event-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDate = document.getElementById('modal-date');
+    const modalDesc = document.getElementById('modal-description');
+    const modalImage = document.getElementById('modal-image');
+    const imageFallback = document.getElementById('image-fallback');
+    const modalTags = document.getElementById('modal-tags');
+    const videoContainer = document.getElementById('modal-video-container');
+    const videoLink = document.getElementById('video-link');
+    const modalType = document.getElementById('modal-type');
+    const modalPosition = document.getElementById('modal-position');
+    
+    // Debug: Check if elements exist
+    console.log('Modal element found:', !!modal);
+    console.log('Title element found:', !!modalTitle);
+    console.log('Description element found:', !!modalDesc);
+    
+    if (!modal) {
+        console.error('CRITICAL: Modal element not found in HTML!');
+        return;
+    }
+    
+    // Populate basic fields
+    if (modalTitle) modalTitle.textContent = event.title || 'No title';
+    if (modalDate) modalDate.textContent = this.formatDate(event.date) || 'Date unknown';
+    if (modalDesc) modalDesc.textContent = event.description || 'No description available';
+    if (modalType) modalType.textContent = event.type || 'event';
+    if (modalPosition) modalPosition.textContent = event.position === 'top' ? 'Person A' : 'Person B';
+    
+    // Handle image
+    if (modalImage && imageFallback) {
         if (event.image) {
             modalImage.src = event.image;
             modalImage.alt = event.title;
@@ -207,11 +231,10 @@ class ComparativeTimeline {
             modalImage.style.display = 'none';
             imageFallback.style.display = 'flex';
         }
-        
-        // Video handling
-        const videoContainer = document.getElementById('modal-video-container');
-        const videoLink = document.getElementById('video-link');
-        
+    }
+    
+    // Handle video
+    if (videoContainer && videoLink) {
         if (event.video) {
             videoContainer.style.display = 'block';
             videoLink.href = event.video;
@@ -221,11 +244,11 @@ class ComparativeTimeline {
         } else {
             videoContainer.style.display = 'none';
         }
-        
-        // Tags
-        const tagsContainer = document.getElementById('modal-tags');
-        tagsContainer.innerHTML = '';
-        
+    }
+    
+    // Handle tags
+    if (modalTags) {
+        modalTags.innerHTML = '';
         if (event.tags && event.tags.length > 0) {
             event.tags.forEach(tagId => {
                 const tagDef = TAG_DEFINITIONS[tagId];
@@ -234,13 +257,16 @@ class ComparativeTimeline {
                     tagElement.className = 'tag';
                     tagElement.textContent = tagDef.name;
                     tagElement.style.backgroundColor = tagDef.color;
-                    tagsContainer.appendChild(tagElement);
+                    modalTags.appendChild(tagElement);
                 }
             });
         }
-        
-        this.modal.style.display = 'block';
     }
+    
+    // FORCE modal to show
+    modal.style.display = 'block';
+    console.log('Modal display set to block');
+}
     
     setupModal() {
         // Ensure modal starts hidden
