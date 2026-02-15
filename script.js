@@ -126,8 +126,6 @@ yearToPixel(year, position) {
     
     return placedCards;
 }
-    
-}    
     // Render timeline
     renderTimeline() {
         this.clearTimeline();
