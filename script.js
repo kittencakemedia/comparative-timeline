@@ -28,14 +28,23 @@ class ComparativeTimeline {
         this.timelineContainer = document.querySelector('.timeline-container');
     }
     
-    // FIXED: Convert year to pixel position
-    yearToPixel(year, position) {
-        const era = position === 'top' ? this.config.topEra : this.config.bottomEra;
-        const relativeYear = year - era.start;
-        const relativePercent = relativeYear / (era.end - era.start);
-        const totalWidth = (era.end - era.start) * this.currentZoom;
-        return (relativePercent * totalWidth) + this.currentOffset + 50; // +50 for padding
-    }
+    // FIXED: Convert year to pixel position with proper scaling
+yearToPixel(year, position) {
+    const era = position === 'top' ? this.config.topEra : this.config.bottomEra;
+    
+    // Calculate how far into the era this year falls (0 to 1)
+    const yearOffset = (year - era.start) / (era.end - era.start);
+    
+    // Calculate total width in pixels for the era
+    const eraWidth = (era.end - era.start) * this.currentZoom;
+    
+    // Calculate pixel position: start + (offset * width) + pan offset
+    const pixelPos = 50 + (yearOffset * eraWidth) + this.currentOffset;
+    
+    console.log(`Year ${year} -> offset: ${yearOffset.toFixed(2)}, pixel: ${pixelPos.toFixed(0)}`);
+    
+    return pixelPos;
+}
     
     // Create year markers
     createYearMarkers() {
@@ -70,33 +79,31 @@ class ComparativeTimeline {
         document.querySelectorAll('.year-marker, .year-label').forEach(el => el.remove());
     }
     
-    // FIXED: Smart card stacking
-    calculateCardPositions(events, position) {
+// FIXED: Calculate card positions with proper horizontal spacing
+calculateCardPositions(events, position) {
     const placedCards = [];
-    const cardWidth = 140;  // Match your card width
-    const cardHeight = 120; // Approximate card height
-    const verticalSpacing = 30; // Space between stacked cards
+    const cardWidth = 140;
+    const verticalSpacing = 35;
     
-    // Sort events by date
+    // Sort by year
     const sortedEvents = [...events].sort((a, b) => a.year - b.year);
     
     sortedEvents.forEach(event => {
+        // Get HORIZONTAL position from fixed yearToPixel
         const x = this.yearToPixel(event.year, position);
         
-        // Find available vertical lane
+        // Find vertical lane
         let laneIndex = 0;
         let foundLane = false;
         
         while (!foundLane) {
             foundLane = true;
             
-            // Check if this lane is occupied by any previously placed card
             for (const placed of placedCards) {
                 if (placed.lane === laneIndex) {
-                    // Calculate horizontal overlap
-                    const overlap = Math.abs(placed.x - x) < cardWidth * 0.6; // 60% overlap threshold
-                    
-                    if (overlap) {
+                    // Check horizontal overlap
+                    const horizontalDistance = Math.abs(placed.x - x);
+                    if (horizontalDistance < cardWidth * 0.7) {
                         foundLane = false;
                         laneIndex++;
                         break;
@@ -105,15 +112,15 @@ class ComparativeTimeline {
             }
         }
         
-        // Calculate Y position based on lane
-        // Base Y is 20px from top of track, then add lane * verticalSpacing
+        // VERTICAL position based on lane
         const y = 20 + (laneIndex * verticalSpacing);
         
         placedCards.push({
             event: event,
             x: x,
             y: y,
-            lane: laneIndex
+            lane: laneIndex,
+            year: event.year
         });
     });
     
