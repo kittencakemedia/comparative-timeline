@@ -367,3 +367,26 @@
         margin: 10px !important;
     }
 }
+/* Optional: Connection lines for same-year events */
+.timeline-track {
+    position: relative;
+}
+
+.timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: rgba(0,0,0,0.1);
+    pointer-events: none;
+}
+
+/* Add this if you want year markers to show connections */
+.year-marker {
+    background-color: rgba(0,0,0,0.15);
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
