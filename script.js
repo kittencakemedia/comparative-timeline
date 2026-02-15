@@ -72,50 +72,53 @@ class ComparativeTimeline {
     
     // FIXED: Smart card stacking
     calculateCardPositions(events, position) {
-        const placedCards = [];
-        const sortedEvents = [...events].sort((a, b) => a.year - b.year);
+    const placedCards = [];
+    const cardWidth = 140;  // Match your card width
+    const cardHeight = 120; // Approximate card height
+    const verticalSpacing = 30; // Space between stacked cards
+    
+    // Sort events by date
+    const sortedEvents = [...events].sort((a, b) => a.year - b.year);
+    
+    sortedEvents.forEach(event => {
+        const x = this.yearToPixel(event.year, position);
         
-        sortedEvents.forEach(event => {
-            const x = this.yearToPixel(event.year, position);
-            const cardWidth = 140;
+        // Find available vertical lane
+        let laneIndex = 0;
+        let foundLane = false;
+        
+        while (!foundLane) {
+            foundLane = true;
             
-            // Find available vertical lane
-            let laneIndex = 0;
-            let collision = true;
-            
-            while (collision) {
-                collision = false;
-                
-                // Check for collisions in this lane
-                for (const placed of placedCards) {
-                    if (placed.lane === laneIndex) {
-                        const horizontalOverlap = Math.abs(placed.x - x) < cardWidth * 0.7;
-                        if (horizontalOverlap) {
-                            collision = true;
-                            laneIndex++;
-                            break;
-                        }
+            // Check if this lane is occupied by any previously placed card
+            for (const placed of placedCards) {
+                if (placed.lane === laneIndex) {
+                    // Calculate horizontal overlap
+                    const overlap = Math.abs(placed.x - x) < cardWidth * 0.6; // 60% overlap threshold
+                    
+                    if (overlap) {
+                        foundLane = false;
+                        laneIndex++;
+                        break;
                     }
                 }
-                
-                if (!collision) {
-                    break;
-                }
             }
-            
-            // Calculate y position
-            const y = 20 + (laneIndex * 100); // 100px vertical spacing
-            
-            placedCards.push({
-                event: event,
-                x: x,
-                y: y,
-                lane: laneIndex
-            });
-        });
+        }
         
-        return placedCards;
-    }
+        // Calculate Y position based on lane
+        // Base Y is 20px from top of track, then add lane * verticalSpacing
+        const y = 20 + (laneIndex * verticalSpacing);
+        
+        placedCards.push({
+            event: event,
+            x: x,
+            y: y,
+            lane: laneIndex
+        });
+    });
+    
+    return placedCards;
+}
     
     // Render timeline
     renderTimeline() {
