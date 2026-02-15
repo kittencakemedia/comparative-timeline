@@ -390,6 +390,7 @@
     position: absolute;
     top: 0;
 }
+
 /* Add to end of style.css for debugging */
 .year-marker {
     background-color: red !important;
@@ -422,4 +423,27 @@
 /* Debug - temporarily show boundaries */
 .timeline-track {
     border-right: 2px dashed red !important;
+}
+/* DEBUG: See all cards clearly */
+.timeline-card {
+    opacity: 1 !important;
+    border: 3px solid black !important;
+    background: white !important;
+    z-index: 100 !important;
+}
+
+.timeline-card.top {
+    border-color: #DC143C !important;
+}
+
+.timeline-card.bottom {
+    border-color: #1E90FF !important;
+}
+
+/* Add year markers */
+.year-marker {
+    background: rgba(0,0,0,0.2) !important;
+    width: 2px !important;
+    height: 100% !important;
+    position: absolute !important;
 }
