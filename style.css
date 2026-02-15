@@ -390,3 +390,14 @@
     position: absolute;
     top: 0;
 }
+/* Add to end of style.css for debugging */
+.year-marker {
+    background-color: red !important;
+    width: 2px !important;
+    height: 100% !important;
+    opacity: 0.5 !important;
+}
+
+.timeline-card {
+    opacity: 0.9 !important;
+}
