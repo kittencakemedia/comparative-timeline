@@ -401,3 +401,25 @@
 .timeline-card {
     opacity: 0.9 !important;
 }
+/* FIX: Make timeline tracks wide enough for all cards */
+.timeline-track {
+    width: 3000px !important;  /* Force minimum width */
+    min-width: 3000px !important;
+    overflow-x: visible !important;
+}
+
+.timeline-container {
+    overflow-x: auto !important;  /* Allow horizontal scrolling */
+    width: 100% !important;
+}
+
+/* Ensure the parent containers don't clip */
+.top-section, .bottom-section {
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+/* Debug - temporarily show boundaries */
+.timeline-track {
+    border-right: 2px dashed red !important;
+}
