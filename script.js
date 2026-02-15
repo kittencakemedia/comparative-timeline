@@ -79,54 +79,49 @@ yearToPixel(year, position) {
         document.querySelectorAll('.year-marker, .year-label').forEach(el => el.remove());
     }
     
-// FIXED: Calculate card positions with proper horizontal spacing
 calculateCardPositions(events, position) {
     const placedCards = [];
     const cardWidth = 140;
-    const verticalSpacing = 35;
+    const cardHeight = 120;
+    const verticalSpacing = 40;
     
-    // Sort by year
-    const sortedEvents = [...events].sort((a, b) => a.year - b.year);
-    
-    sortedEvents.forEach(event => {
-        // Get HORIZONTAL position from fixed yearToPixel
-        const x = this.yearToPixel(event.year, position);
-        
-        // Find vertical lane
-        let laneIndex = 0;
-        let foundLane = false;
-        
-        while (!foundLane) {
-            foundLane = true;
-            
-            for (const placed of placedCards) {
-                if (placed.lane === laneIndex) {
-                    // Check horizontal overlap
-                    const horizontalDistance = Math.abs(placed.x - x);
-                    if (horizontalDistance < cardWidth * 0.7) {
-                        foundLane = false;
-                        laneIndex++;
-                        break;
-                    }
-                }
-            }
+    // Group events by year first
+    const eventsByYear = {};
+    events.forEach(event => {
+        if (!eventsByYear[event.year]) {
+            eventsByYear[event.year] = [];
         }
+        eventsByYear[event.year].push(event);
+    });
+    
+    // Process each year group
+    Object.keys(eventsByYear).sort().forEach(year => {
+        const yearEvents = eventsByYear[year];
+        const baseX = this.yearToPixel(parseInt(year), position);
         
-        // VERTICAL position based on lane
-        const y = 20 + (laneIndex * verticalSpacing);
-        
-        placedCards.push({
-            event: event,
-            x: x,
-            y: y,
-            lane: laneIndex,
-            year: event.year
+        // For multiple events in same year, stack them
+        yearEvents.forEach((event, index) => {
+            // Slight horizontal offset for visual clarity (optional)
+            const xOffset = index * 15; // Cascade effect
+            const x = baseX + xOffset;
+            
+            // Stack vertically
+            const y = 20 + (index * verticalSpacing);
+            
+            placedCards.push({
+                event: event,
+                x: x,
+                y: y,
+                lane: index,
+                year: event.year
+            });
+            
+            console.log(`Placed ${event.title} at x:${x}, y:${y}`);
         });
     });
     
     return placedCards;
-}
-    
+}    
     // Render timeline
     renderTimeline() {
         this.clearTimeline();
