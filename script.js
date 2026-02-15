@@ -28,20 +28,18 @@ class ComparativeTimeline {
         this.timelineContainer = document.querySelector('.timeline-container');
     }
     
-    // FIXED: Convert year to pixel position with proper scaling
+    // back to basics.
 yearToPixel(year, position) {
     const era = position === 'top' ? this.config.topEra : this.config.bottomEra;
     
-    // Calculate how far into the era this year falls (0 to 1)
-    const yearOffset = (year - era.start) / (era.end - era.start);
+    // Calculate relative position (0 to 1)
+    const relativePosition = (year - era.start) / (era.end - era.start);
     
-    // Calculate total width in pixels for the era
-    const eraWidth = (era.end - era.start) * this.currentZoom;
+    // Calculate total width
+    const totalWidth = (era.end - era.start) * this.currentZoom;
     
-    // Calculate pixel position: start + (offset * width) + pan offset
-    const pixelPos = 50 + (yearOffset * eraWidth) + this.currentOffset;
-    
-    console.log(`Year ${year} -> offset: ${yearOffset.toFixed(2)}, pixel: ${pixelPos.toFixed(0)}`);
+    // Calculate pixel position
+    const pixelPos = 100 + (relativePosition * totalWidth) + this.currentOffset;
     
     return pixelPos;
 }
