@@ -447,3 +447,42 @@
     height: 100% !important;
     position: absolute !important;
 }
+/* CRITICAL: Force cards to respect their assigned positions */
+.timeline-track {
+    position: relative !important;
+    height: 400px !important;
+    width: 100% !important;
+    overflow: visible !important;
+}
+
+.timeline-card {
+    position: absolute !important;
+    /* Remove any transforms that might interfere */
+    transform: none !important;
+    /* Ensure each card stays exactly where placed */
+    margin: 0 !important;
+    /* Make sure they're visible */
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Debug: Add background to see card boundaries clearly */
+.timeline-card {
+    background: white !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
+
+/* Add temporary colored borders to see stacking */
+.timeline-card.top {
+    border-left: 4px solid #DC143C !important;
+}
+
+.timeline-card.bottom {
+    border-left: 4px solid #1E90FF !important;
+}
+
+/* Make lane 1 cards slightly indented to see they're different */
+.timeline-card[data-lane="1"] {
+    margin-left: 20px !important;
+}
