@@ -486,3 +486,42 @@
 .timeline-card[data-lane="1"] {
     margin-left: 20px !important;
 }
+
+/* NUCLEAR OPTION - Force cards to respect positions */
+.timeline-track {
+    position: relative !important;
+    height: 500px !important;
+}
+
+.timeline-card {
+    position: absolute !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    /* Remove any transforms that could affect positioning */
+    transform: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+    /* Reset any margins/padding that could shift position */
+    margin: 0 !important;
+    /* Make sure the top property is used */
+    top: var(--assigned-top, 20px) !important;
+}
+
+/* Force each card's individual top position */
+.timeline-card[style*="top: 20px"] { top: 20px !important; }
+.timeline-card[style*="top: 65px"] { top: 65px !important; }
+
+/* Add visual separation */
+.timeline-card {
+    border: 2px solid #000 !important;
+    background: white !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* Different background for lane 1 to verify */
+.timeline-card[data-lane="1"] {
+    background: #f0f0f0 !important;
+    border-left: 8px solid #DC143C !important;
+}
