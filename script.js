@@ -80,7 +80,7 @@ yearToPixel(year, position) {
  calculateCardPositions(events, position) {
     const placedCards = [];
     const cardWidth = 140;
-    const verticalSpacing = 45;
+    const verticalSpacing = 100; // INCREASED from 45 to 100px
     
     // Sort by year
     const sortedEvents = [...events].sort((a, b) => a.year - b.year);
@@ -107,8 +107,8 @@ yearToPixel(year, position) {
         // Mark this lane as used for this year
         usedLanes.add(laneIndex);
         
-        // Calculate Y position
-        const y = 20 + (laneIndex * verticalSpacing);
+        // Calculate Y position with MORE SPACE
+        const y = 20 + (laneIndex * verticalSpacing); // Now 20, 120, 220, etc.
         
         // Add slight horizontal cascade
         const xOffset = laneIndex * 8;
