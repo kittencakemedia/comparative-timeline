@@ -525,3 +525,21 @@
     background: #f0f0f0 !important;
     border-left: 8px solid #DC143C !important;
 }
+/* FINAL FIXES - Add at the very bottom */
+.timeline-track {
+    height: 400px !important;
+    min-height: 400px !important;
+    overflow: visible !important;
+    background: rgba(200, 200, 255, 0.1) !important;
+    border: 2px dashed blue !important;
+}
+
+.timeline-section {
+    height: auto !important;
+    min-height: 300px !important;
+    overflow: visible !important;
+}
+
+.timeline-card {
+    z-index: 100 !important;
+}
