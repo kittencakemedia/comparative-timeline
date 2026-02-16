@@ -154,15 +154,14 @@ yearToPixel(year, position) {
         this.clearYearMarkers();
     }
     
-    // Create event card - FIXED click handler
-    createEventCard(event, x, y) {
+createEventCard(event, x, y, lane) {  // Add lane parameter
     const card = document.createElement('div');
     card.className = `timeline-card ${event.position}`;
     card.style.left = `${x}px`;
     card.style.top = `${y}px`;
     card.dataset.id = event.id;
-    card.dataset.lane = lane; // ADD THIS LINE
-        
+    card.dataset.lane = lane;  // Store lane for debugging
+    
     const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
     const displayDate = this.formatDate(event.date);
     
@@ -175,10 +174,8 @@ yearToPixel(year, position) {
         <div class="card-year">${displayDate}</div>
     `;
     
-    // FIXED: Explicit click handler with debug
     card.onclick = (e) => {
         e.stopPropagation();
-        console.log('Card clicked:', event.title);
         this.showEventDetails(event);
     };
     
