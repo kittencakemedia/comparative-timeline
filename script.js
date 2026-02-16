@@ -162,7 +162,8 @@ yearToPixel(year, position) {
     card.style.left = `${x}px`;
     card.style.top = `${y}px`;
     card.dataset.id = event.id;
-    
+    card.dataset.lane = lane; // ADD THIS LINE
+        
     const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
     const displayDate = this.formatDate(event.date);
     
