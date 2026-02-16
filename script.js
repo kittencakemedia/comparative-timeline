@@ -143,9 +143,8 @@ yearToPixel(year, position) {
         const topCards = this.calculateCardPositions(topEvents, 'top');
         const bottomCards = this.calculateCardPositions(bottomEvents, 'bottom');
         
-        topCards.forEach(card => this.createEventCard(card.event, card.x, card.y));
-        bottomCards.forEach(card => this.createEventCard(card.event, card.x, card.y));
-        
+        topCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
+        bottomCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
         this.createYearMarkers();
     }
     
