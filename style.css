@@ -580,3 +580,22 @@
     height: 80px !important;  /* Consistent image height */
     object-fit: cover !important;
 }
+/* FORCE INLINE STYLES TO WORK */
+.timeline-card {
+    top: auto !important;  /* Remove any default top */
+}
+
+.timeline-card.top,
+.timeline-card.bottom {
+    top: auto !important;  /* Remove any position-specific tops */
+}
+
+/* Let the inline styles take over completely */
+.timeline-card[style*="top:"] {
+    top: inherit !important;
+}
+
+/* Debug - add visual indicators */
+.timeline-card[data-lane="0"] { border-left: 8px solid red !important; }
+.timeline-card[data-lane="1"] { border-left: 8px solid blue !important; }
+.timeline-card[data-lane="2"] { border-left: 8px solid green !important; }
