@@ -639,3 +639,36 @@
     height: 600px !important;
     position: relative !important;
 }
+
+/* Reduce card height */
+.timeline-card {
+    height: auto !important;
+    max-height: 180px !important;  /* Limit card height */
+    overflow: hidden !important;    /* Hide overflow if needed */
+}
+
+.card-image {
+    height: 60px !important;  /* Smaller images */
+    object-fit: cover !important;
+}
+
+.card-title {
+    font-size: 0.85rem !important;
+    margin: 5px 0 2px !important;
+    line-height: 1.2 !important;
+    max-height: 2.4em !important;
+    overflow: hidden !important;
+}
+
+.card-year {
+    font-size: 0.75rem !important;
+}
+
+/* FINAL TRACK HEIGHT - MUST BE AT THE VERY END */
+.timeline-track {
+    height: 800px !important;
+    min-height: 800px !important;
+    max-height: none !important;
+    position: relative !important;
+    overflow: visible !important;
+}
