@@ -598,12 +598,11 @@
     font-size: 0.75rem !important;
 }
 
-/* ABSOLUTE FINAL OVERRIDE FOR TRACK HEIGHT */
-/*#top-timeline.timeline-track,
-#bottom-timeline.timeline-track,*/
-
-/* SINGLE SOURCE OF TRUTH FOR TIMELINE TRACK */
-.timeline-track {
+/* ULTIMATE OVERRIDE - MORE SPECIFIC THAN ANY OTHER */
+div.timeline-track,
+section .timeline-track,
+#top-timeline.timeline-track,
+#bottom-timeline.timeline-track {
     height: 800px !important;
     min-height: 800px !important;
     max-height: 800px !important;
