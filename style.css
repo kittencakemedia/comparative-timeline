@@ -61,18 +61,6 @@
     top: -30px;
 }
 
-/* Adjust timeline track height for stacking */
-.timeline-track {
-    position: absolute;
-    top: 50px; /* Changed from 70px to allow more vertical space */
-    left: 0;
-    right: 0;
-    height: 160px; /* Increased from 120px for stacking */
-    overflow: visible; /* Changed from hidden */
-    cursor: grab;
-    user-select: none;
-}
-
 /* Timeline Cards - REDUCED SIZE */
 .timeline-card {
     position: absolute !important;
@@ -180,12 +168,6 @@
     display: none;
     position: fixed;
     z-index: 2000;
-}
-.timeline-track {
-    position: relative !important;
-    height: 300px !important;
-    min-width: 2000px !important;
-    overflow: visible !important;
 }
 
 .timeline-card {
@@ -367,20 +349,10 @@
         margin: 10px !important;
     }
 }
-/* Optional: Connection lines for same-year events */
+/* Optional: Connection lines for same-year events
 .timeline-track {
     position: relative;
-}
-
-.timeline-track::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background-color: rgba(0,0,0,0.1);
-    pointer-events: none;
-}
+} */
 
 /* Add this if you want year markers to show connections */
 .year-marker {
@@ -402,12 +374,6 @@
 .timeline-card {
     opacity: 0.9 !important;
 }
-/* FIX: Make timeline tracks wide enough for all cards */
-.timeline-track {
-    width: 3000px !important;  /* Force minimum width */
-    min-width: 3000px !important;
-    overflow-x: visible !important;
-}
 
 .timeline-container {
     overflow-x: auto !important;  /* Allow horizontal scrolling */
@@ -420,10 +386,10 @@
     overflow: visible !important;
 }
 
-/* Debug - temporarily show boundaries */
+/* Debug - temporarily show boundaries 
 .timeline-track {
     border-right: 2px dashed red !important;
-}
+} */
 /* DEBUG: See all cards clearly */
 .timeline-card {
     opacity: 1 !important;
@@ -446,13 +412,6 @@
     width: 2px !important;
     height: 100% !important;
     position: absolute !important;
-}
-/* CRITICAL: Force cards to respect their assigned positions */
-.timeline-track {
-    position: relative !important;
-    height: 400px !important;
-    width: 100% !important;
-    overflow: visible !important;
 }
 
 .timeline-card {
@@ -487,12 +446,6 @@
     margin-left: 20px !important;
 }
 
-/* NUCLEAR OPTION - Force cards to respect positions */
-.timeline-track {
-    position: relative !important;
-    height: 500px !important;
-}
-
 .timeline-card {
     position: absolute !important;
     display: block !important;
@@ -525,14 +478,6 @@
     background: #f0f0f0 !important;
     border-left: 8px solid #DC143C !important;
 }
-/* FINAL FIXES - Add at the very bottom */
-.timeline-track {
-    height: 400px !important;
-    min-height: 400px !important;
-    overflow: visible !important;
-    background: rgba(200, 200, 255, 0.1) !important;
-    border: 2px dashed blue !important;
-}
 
 .timeline-section {
     height: auto !important;
@@ -542,12 +487,6 @@
 
 .timeline-card {
     z-index: 100 !important;
-}
-
-/* INCREASE VERTICAL SPACE FOR STACKED CARDS */
-.timeline-track {
-    height: 600px !important;  /* Much taller to accommodate stacked cards */
-    min-height: 600px !important;
 }
 
 .timeline-section {
@@ -562,10 +501,11 @@
     margin-bottom: 10px !important;  /* Extra breathing room */
 }
 
-/* Add background to see the full track area */
+/* Add background to see the full track area 
 .timeline-track {
     background: linear-gradient(to bottom, rgba(220,20,60,0.05), rgba(30,144,255,0.05)) !important;
-}
+} */
+    
 .timeline-card {
     padding: 15px !important;
     line-height: 1.4 !important;
@@ -634,12 +574,6 @@
 .timeline-card[data-lane="2"] { top: 220px !important; }
 .timeline-card[data-lane="3"] { top: 320px !important; }
 
-/* Make sure track is tall enough */
-.timeline-track {
-    height: 600px !important;
-    position: relative !important;
-}
-
 /* Reduce card height */
 .timeline-card {
     height: auto !important;
@@ -665,15 +599,15 @@
 }
 
 /* ABSOLUTE FINAL OVERRIDE FOR TRACK HEIGHT */
-#top-timeline.timeline-track,
-#bottom-timeline.timeline-track,
+/*#top-timeline.timeline-track,
+#bottom-timeline.timeline-track,*/
+
+/* SINGLE SOURCE OF TRUTH FOR TIMELINE TRACK */
 .timeline-track {
     height: 800px !important;
     min-height: 800px !important;
     max-height: 800px !important;
     position: relative !important;
     overflow: visible !important;
-    display: block !important;
-    visibility: visible !important;
-    background: rgba(0, 255, 0, 0.1) !important; /* Light green so you can see it's applied */
+    background: rgba(0, 255, 0, 0.1) !important;
 }
