@@ -1,44 +1,235 @@
-/* Add these to your existing :root variables */
+/* COMPLETE TIMELINE CSS - VERSION 2.0 */
+
 :root {
-    /* ... existing variables ... */
-    --timeline-bg-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%23e0e0e0" stroke-width="0.5"/></svg>');
-    --timeline-bg-opacity: 0.03;
-    --year-marker-color: rgba(0, 0, 0, 0.15);
+    --timeline-top-color: #DC143C;
+    --timeline-bottom-color: #1E90FF;
+    --timeline-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --baseline-color: #333333;
+    --modal-bg: rgba(0, 0, 0, 0.7);
+    --font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --card-radius: 8px;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition-speed: 0.3s;
 }
 
-/* Add background to timeline container */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--timeline-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.control-group button {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all var(--transition-speed);
+    color: var(--text-primary);
+}
+
+.legend {
+    display: flex;
+    gap: 30px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.legend-color.top { background-color: var(--timeline-top-color); }
+.legend-color.bottom { background-color: var(--timeline-bottom-color); }
+
+/* TIMELINE CONTAINER */
 .timeline-container {
     position: relative;
-    min-height: 600px;
+    min-height: 900px;
     margin: 40px 0;
-    background-image: var(--timeline-bg-image);
-    background-size: 100px 100px;
-    background-repeat: repeat;
-    background-position: center;
-    opacity: var(--timeline-bg-opacity);
-    border-radius: var(--card-radius);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-.timeline-container::before {
-    content: '';
+/* TIMELINE SECTIONS */
+.timeline-section {
+    position: relative;
+    width: 100%;
+}
+
+.top-section {
+    height: 450px;
+    border-bottom: 2px solid var(--baseline-color);
+    background: linear-gradient(to bottom, rgba(220, 20, 60, 0.05), transparent);
+}
+
+.bottom-section {
+    height: 450px;
+    background: linear-gradient(to top, rgba(30, 144, 255, 0.05), transparent);
+}
+
+.era-label {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--timeline-bg);
-    border-radius: var(--card-radius);
-    z-index: -1;
+    top: 20px;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 8px 20px;
+    border-radius: 20px;
+    z-index: 10;
+    color: white;
 }
 
-/* Year markers */
+.top-section .era-label {
+    left: 20px;
+    background-color: var(--timeline-top-color);
+}
+
+.bottom-section .era-label {
+    right: 20px;
+    background-color: var(--timeline-bottom-color);
+}
+
+/* TIMELINE TRACKS - CRITICAL SECTION */
+.timeline-track {
+    position: relative !important;
+    width: 3000px !important;
+    height: 400px !important;
+    min-height: 400px !important;
+    overflow: visible !important;
+    background: rgba(200, 200, 255, 0.1) !important;
+    border: 2px dashed blue !important;
+}
+
+#top-timeline {
+    top: 20px;
+}
+
+#bottom-timeline {
+    top: 20px;
+}
+
+/* TIMELINE CARDS */
+.timeline-card {
+    position: absolute !important;
+    width: 160px;
+    background: white !important;
+    border-radius: var(--card-radius);
+    padding: 12px;
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 6px solid;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.timeline-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 100;
+}
+
+.timeline-card.top {
+    border-left-color: var(--timeline-top-color);
+}
+
+.timeline-card.bottom {
+    border-left-color: var(--timeline-bottom-color);
+}
+
+.card-icon {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.card-image {
+    width: 100%;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+    line-height: 1.3;
+    max-height: 2.6em;
+    overflow: hidden;
+}
+
+.card-year {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* YEAR MARKERS */
 .year-marker {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 1px;
-    background-color: var(--year-marker-color);
+    width: 2px;
+    background-color: rgba(0, 0, 0, 0.2);
     z-index: 1;
+    pointer-events: none;
 }
 
 .year-label {
@@ -61,552 +252,178 @@
     top: -30px;
 }
 
-/* Timeline Cards - REDUCED SIZE */
-.timeline-card {
-    position: absolute !important;
-    width: 140px !important;  /* Reduced from 180px */
-    background: var(--card-bg);
-    border-radius: 6px;       /* Smaller radius */
-    box-shadow: var(--card-shadow);
-    padding: 10px;           /* Reduced padding */
-    transition: all var(--transition-speed);
-    cursor: pointer;
+/* BASELINE */
+.baseline-container {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    height: 2px;
+    background-color: var(--baseline-color);
     z-index: 5;
-    font-size: 0.85rem;      /* Smaller base font */
+    pointer-events: none;
 }
 
-.card-title {
+.baseline-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--timeline-bg);
+    padding: 5px 20px;
     font-weight: 600;
-    font-size: 0.85rem;      /* Reduced from 0.95rem */
-    margin-bottom: 5px;
-    line-height: 1.2;
-    height: 2.4em;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    color: var(--baseline-color);
+    white-space: nowrap;
 }
 
-.card-year {
-    font-size: 0.75rem;      /* Reduced from 0.85rem */
-    color: var(--text-secondary);
-    font-weight: 500;
+.era-markers {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    pointer-events: none;
 }
 
-.card-image {
-    width: 100%;
-    height: 60px;           /* Reduced from 80px */
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    display: block;
+.era-marker {
+    background: rgba(51, 51, 51, 0.1);
+    padding: 5px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    color: var(--baseline-color);
 }
 
-.card-icon {
-    font-size: 1rem;        /* Reduced from 1.2rem */
-    margin-bottom: 5px;
-    display: inline-block;
-    padding: 4px;
-    border-radius: 4px;
-}
-
-.timeline-card:hover {
-    transform: scale(1.05); /* Updated from translateY version */
-    box-shadow: var(--card-shadow-hover);
-    z-index: 20;
-}
-
-/* FIX: Ensure modal is hidden on page load */
-#event-modal {
-    display: none !important;
-}
-
-/* Make sure timeline is visible */
-.timeline-container {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-/* FIX: Ensure timeline elements are visible */
-.timeline-container {
-    min-height: 800px !important;
-    position: relative !important;
-}
-/* FIX: Force red/blue color theme */
-.timeline-card.top {
-    border-top: 4px solid #DC143C !important;
-    border-left: 1px solid rgba(220, 20, 60, 0.3) !important;
-    border-right: 1px solid rgba(220, 20, 60, 0.3) !important;
-    border-bottom: 1px solid rgba(220, 20, 60, 0.3) !important;
-}
-
-.timeline-card.bottom {
-    border-top: 4px solid #1E90FF !important;
-    border-left: 1px solid rgba(30, 144, 255, 0.3) !important;
-    border-right: 1px solid rgba(30, 144, 255, 0.3) !important;
-    border-bottom: 1px solid rgba(30, 144, 255, 0.3) !important;
-}
-
-.timeline-card.top .card-icon {
-    color: #DC143C !important;
-    background-color: rgba(220, 20, 60, 0.1) !important;
-}
-
-.timeline-card.bottom .card-icon {
-    color: #1E90FF !important;
-    background-color: rgba(30, 144, 255, 0.1) !important;
-}
-
-/* Ensure modal popup works */
+/* MODAL */
 #event-modal {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-bg);
     z-index: 1000;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-}
-
-.timeline-card {
-    position: absolute !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 10 !important;
-}
-
-/* Force modal to start hidden */
-#event-modal {
-    display: none !important;
-}
-/* FORCE MODAL TO TOP OF EVERYTHING */
-/* MODAL STYLES - FIXED SIZE */
-#event-modal,
-.modal {
-    display: none !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background-color: rgba(0, 0, 0, 0.7) !important;
-    z-index: 999999 !important;
-}
-
-#event-modal[style*="display: block"],
-.modal[style*="display: block"] {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
 .modal-content {
-    position: relative !important;
-    background-color: white !important;
-    width: auto !important;
-    max-width: 600px !important;  /* Reduced from 800px */
-    max-height: 80vh !important;   /* Limit height */
-    margin: 20px !important;
-    border-radius: 8px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-    overflow: hidden !important;    /* Keep content inside */
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-.modal-header {
-    padding: 15px 20px !important;
-    border-bottom: 1px solid #eee !important;
-    flex-shrink: 0 !important;
-}
-
-.modal-header h2 {
-    margin: 0 !important;
-    font-size: 1.4rem !important;  /* Smaller title */
-    line-height: 1.3 !important;
-    padding-right: 30px !important;
-}
-
-.modal-date {
-    font-size: 0.9rem !important;
-    color: #666 !important;
-    margin-top: 5px !important;
-}
-
-.modal-body {
-    padding: 20px !important;
-    overflow-y: auto !important;     /* Scroll if content too tall */
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 20px !important;
-    max-height: calc(80vh - 100px) !important;
-}
-
-/* Image container - fixed size */
-.modal-image-container {
-    flex: 0 0 200px !important;      /* Fixed width */
-    height: 150px !important;        /* Fixed height */
-    position: relative !important;
-    border-radius: 6px !important;
-    overflow: hidden !important;
-    background: #f5f5f5 !important;
-}
-
-#modal-image {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;    /* Crop image to fit */
-    display: block !important;
-}
-
-.modal-details {
-    flex: 1 !important;
-    min-width: 0 !important;         /* Prevent overflow */
-}
-
-#modal-description {
-    font-size: 0.95rem !important;
-    line-height: 1.5 !important;
-    margin-bottom: 15px !important;
-    max-height: 200px !important;
-    overflow-y: auto !important;
-}
-
-/* Tags - smaller and wrap */
-.modal-tags {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    margin-bottom: 15px !important;
-}
-
-.tag {
-    padding: 4px 10px !important;
-    border-radius: 16px !important;
-    font-size: 0.75rem !important;
-    font-weight: 500 !important;
-    color: white !important;
-    white-space: nowrap !important;
-}
-
-/* Video button - smaller */
-.video-button {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    background: #FF0000 !important;
-    color: white !important;
-    padding: 8px 16px !important;
-    border-radius: 20px !important;
-    text-decoration: none !important;
-    font-size: 0.9rem !important;
-    font-weight: 500 !important;
-    margin-bottom: 15px !important;
-}
-
-/* Meta info - smaller */
-.modal-meta {
-    display: flex !important;
-    gap: 20px !important;
-    padding-top: 10px !important;
-    border-top: 1px solid #eee !important;
-    font-size: 0.85rem !important;
+    position: relative;
+    background-color: white;
+    margin: 5% auto;
+    width: 90%;
+    max-width: 600px;
+    border-radius: var(--card-radius);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .close-modal {
-    position: absolute !important;
-    right: 15px !important;
-    top: 10px !important;
-    font-size: 24px !important;
-    font-weight: bold !important;
-    color: #999 !important;
-    cursor: pointer !important;
-    z-index: 10 !important;
-    line-height: 1 !important;
-}
-
-.close-modal:hover {
-    color: #333 !important;
-}
-
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .modal-body {
-        flex-direction: column !important;
-    }
-    
-    .modal-image-container {
-        flex: 0 0 auto !important;
-        width: 100% !important;
-        height: 180px !important;
-    }
-    
-    .modal-content {
-        max-width: 95% !important;
-        margin: 10px !important;
-    }
-}
-/* Optional: Connection lines for same-year events
-. {
-    position: relative;
-} */
-
-/* Add this if you want year markers to show connections */
-.year-marker {
-    background-color: rgba(0,0,0,0.15);
-    width: 1px;
-    height: 100%;
     position: absolute;
-    top: 0;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-secondary);
+    cursor: pointer;
+    z-index: 10;
 }
 
-/* Add to end of style.css for debugging */
-.year-marker {
-    background-color: red !important;
-    width: 2px !important;
-    height: 100% !important;
-    opacity: 0.5 !important;
+.modal-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid #eee;
 }
 
-.timeline-card {
-    opacity: 0.9 !important;
+.modal-body {
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }
 
-.timeline-container {
-    overflow-x: auto !important;  /* Allow horizontal scrolling */
-    width: 100% !important;
+.modal-image-container {
+    flex: 0 0 200px;
+    height: 150px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
 }
 
-/* Ensure the parent containers don't clip */
-.top-section, .bottom-section {
-    width: 100% !important;
-    overflow: visible !important;
+#modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Debug - temporarily show boundaries */ 
+.image-fallback {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #bbb;
+}
+
+.modal-details {
+    flex: 1;
+}
+
+#modal-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tag {
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: white;
+}
+
+.video-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FF0000;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.modal-meta {
+    display: flex;
+    gap: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    color: var(--text-secondary);
+}
+
+/* DEBUG - REMOVE AFTER FIXED */
 .timeline-track {
-    border-right: 2px dashed red !important;
-} 
-/* DEBUG: See all cards clearly */
-.timeline-card {
-    opacity: 1 !important;
-    border: 3px solid black !important;
-    background: white !important;
-    z-index: 100 !important;
-}
-
-.timeline-card.top {
-    border-color: #DC143C !important;
-}
-
-.timeline-card.bottom {
-    border-color: #1E90FF !important;
-}
-
-/* Add year markers */
-.year-marker {
-    background: rgba(0,0,0,0.2) !important;
-    width: 2px !important;
-    height: 100% !important;
-    position: absolute !important;
-}
-
-.timeline-card {
-    position: absolute !important;
-    /* Remove any transforms that might interfere */
-    transform: none !important;
-    /* Ensure each card stays exactly where placed */
-    margin: 0 !important;
-    /* Make sure they're visible */
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* Debug: Add background to see card boundaries clearly */
-.timeline-card {
-    background: white !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-}
-
-/* Add temporary colored borders to see stacking */
-.timeline-card.top {
-    border-left: 4px solid #DC143C !important;
-}
-
-.timeline-card.bottom {
-    border-left: 4px solid #1E90FF !important;
-}
-
-/* Make lane 1 cards slightly indented to see they're different */
-.timeline-card[data-lane="1"] {
-    margin-left: 20px !important;
-}
-
-.timeline-card {
-    position: absolute !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    /* Remove any transforms that could affect positioning */
-    transform: none !important;
-    -webkit-transform: none !important;
-    -moz-transform: none !important;
-    -ms-transform: none !important;
-    /* Reset any margins/padding that could shift position */
-    margin: 0 !important;
-    /* Make sure the top property is used */
-   /* top: var(--assigned-top, 20px) !important;
-}
-
-/* Force each card's individual top position */
-.timeline-card[style*="top: 20px"] { top: 20px !important; }
-.timeline-card[style*="top: 65px"] { top: 65px !important; }
-
-/* Add visual separation */
-.timeline-card {
-    border: 2px solid #000 !important;
-    background: white !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
-}
-
-/* Different background for lane 1 to verify */
-.timeline-card[data-lane="1"] {
-    background: #f0f0f0 !important;
-    border-left: 8px solid #DC143C !important;
-}
-
-.timeline-section {
-    height: auto !important;
-    min-height: 300px !important;
-    overflow: visible !important;
-}
-
-.timeline-card {
-    z-index: 100 !important;
-}
-
-.timeline-section {
-    height: 650px !important;  /* Make entire section taller */
-    min-height: 650px !important;
-}
-
-/* Ensure cards have enough height to display fully */
-.timeline-card {
-    height: auto !important;
-    min-height: 120px !important;  /* Minimum height for card content */
-    margin-bottom: 10px !important;  /* Extra breathing room */
-}
-
-/* Add background to see the full track area */
-.timeline-track {
-    background: linear-gradient(to bottom, rgba(220,20,60,0.05), rgba(30,144,255,0.05)) !important;
-}
-    
-.timeline-card {
-    padding: 15px !important;
-    line-height: 1.4 !important;
-}
-
-.card-title {
-    font-size: 0.9rem !important;
-    margin: 8px 0 4px !important;
-}
-
-.card-image {
-    height: 80px !important;  /* Consistent image height */
-    object-fit: cover !important;
-}
-/* FORCE INLINE STYLES TO WORK */
-.timeline-card {
-    top: auto !important;  /* Remove any default top */
-}
-
-.timeline-card.top,
-.timeline-card.bottom {
-    top: auto !important;  /* Remove any position-specific tops */
-}
-
-/* Let the inline styles take over completely */
-.timeline-card[style*="top:"] {
-    top: inherit !important;
-}
-
-/* Debug - add visual indicators */
-.timeline-card[data-lane="0"] { border-left: 8px solid red !important; }
-.timeline-card[data-lane="1"] { border-left: 8px solid blue !important; }
-.timeline-card[data-lane="2"] { border-left: 8px solid green !important; }
-
-/* ABSOLUTE LAST RESORT - Force inline styles */
-.timeline-card {
-    top: auto !important;
-    position: absolute !important;
-}
-
-/* Target each card individually by its style attribute */
-.timeline-card[style*="top: 20px"] { top: 20px !important; }
-.timeline-card[style*="top: 65px"] { top: 65px !important; }
-.timeline-card[style*="top: 110px"] { top: 110px !important; }
-.timeline-card[style*="top: 120px"] { top: 120px !important; }
-.timeline-card[style*="top: 155px"] { top: 155px !important; }
-.timeline-card[style*="top: 165px"] { top: 165px !important; }
-.timeline-card[style*="top: 200px"] { top: 200px !important; }
-.timeline-card[style*="top: 210px"] { top: 210px !important; }
-.timeline-card[style*="top: 220px"] { top: 220px !important; }
-
-/* OVERRIDE THE PROBLEM RULE */
-.timeline-card {
-    top: auto !important;  /* Remove the CSS variable */
-    --assigned-top: auto !important;  /* Clear the variable */
-}
-
-/* Let inline styles work */
-.timeline-card[style*="top:"] {
-    top: inherit !important;
-}
-
-/* Force lane-based positions */
-.timeline-card[data-lane="0"] { top: 20px !important; }
-.timeline-card[data-lane="1"] { top: 120px !important; }
-.timeline-card[data-lane="2"] { top: 220px !important; }
-.timeline-card[data-lane="3"] { top: 320px !important; }
-
-/* Reduce card height */
-.timeline-card {
-    height: auto !important;
-    max-height: 180px !important;  /* Limit card height */
-    overflow: hidden !important;    /* Hide overflow if needed */
-}
-
-.card-image {
-    height: 60px !important;  /* Smaller images */
-    object-fit: cover !important;
-}
-
-.card-title {
-    font-size: 0.85rem !important;
-    margin: 5px 0 2px !important;
-    line-height: 1.2 !important;
-    max-height: 2.4em !important;
-    overflow: hidden !important;
-}
-
-.card-year {
-    font-size: 0.75rem !important;
-}
-
-/* ULTIMATE OVERRIDE - MORE SPECIFIC THAN ANY OTHER */
-div.timeline-track,
-section .timeline-track,
-#top-timeline.timeline-track,
-#bottom-timeline.timeline-track {
-    height: 800px !important;
-    min-height: 800px !important;
-    max-height: 800px !important;
-    position: relative !important;
-    overflow: visible !important;
     background: rgba(0, 255, 0, 0.1) !important;
 }
