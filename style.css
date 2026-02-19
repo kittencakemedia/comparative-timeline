@@ -664,11 +664,16 @@
     font-size: 0.75rem !important;
 }
 
-/* FINAL TRACK HEIGHT - MUST BE AT THE VERY END */
+/* ABSOLUTE FINAL OVERRIDE FOR TRACK HEIGHT */
+#top-timeline.timeline-track,
+#bottom-timeline.timeline-track,
 .timeline-track {
     height: 800px !important;
     min-height: 800px !important;
-    max-height: none !important;
+    max-height: 800px !important;
     position: relative !important;
     overflow: visible !important;
+    display: block !important;
+    visibility: visible !important;
+    background: rgba(0, 255, 0, 0.1) !important; /* Light green so you can see it's applied */
 }
