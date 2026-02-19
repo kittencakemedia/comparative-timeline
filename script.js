@@ -80,7 +80,7 @@ yearToPixel(year, position) {
  calculateCardPositions(events, position) {
     const placedCards = [];
     const cardWidth = 140;
-    const verticalSpacing = 100; // INCREASED from 45 to 100px
+    const verticalSpacing = 220;  // Increased from 100 to 220px
     
     // Sort by year
     const sortedEvents = [...events].sort((a, b) => a.year - b.year);
