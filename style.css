@@ -350,7 +350,7 @@
     }
 }
 /* Optional: Connection lines for same-year events
-.timeline-track {
+. {
     position: relative;
 } */
 
@@ -386,10 +386,10 @@
     overflow: visible !important;
 }
 
-/* Debug - temporarily show boundaries 
+/* Debug - temporarily show boundaries */ 
 .timeline-track {
     border-right: 2px dashed red !important;
-} */
+} 
 /* DEBUG: See all cards clearly */
 .timeline-card {
     opacity: 1 !important;
@@ -501,10 +501,10 @@
     margin-bottom: 10px !important;  /* Extra breathing room */
 }
 
-/* Add background to see the full track area 
+/* Add background to see the full track area */
 .timeline-track {
     background: linear-gradient(to bottom, rgba(220,20,60,0.05), rgba(30,144,255,0.05)) !important;
-} */
+}
     
 .timeline-card {
     padding: 15px !important;
