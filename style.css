@@ -427,3 +427,45 @@ footer {
 .timeline-track {
     background: rgba(0, 255, 0, 0.1) !important;
 }
+
+
+/* CARD SIZING IMPROVEMENTS */
+.timeline-card {
+    width: 150px;
+    min-height: 130px;
+    padding: 10px;
+    font-size: 0.85rem;
+}
+
+.card-image {
+    height: 60px;
+}
+
+.card-title {
+    font-size: 0.85rem;
+    margin: 5px 0 2px;
+}
+
+.card-year {
+    font-size: 0.7rem;
+}
+
+/* ENSURE TRACK IS TALL ENOUGH FOR STACKED CARDS */
+.timeline-track {
+    height: 600px !important;
+    min-height: 600px !important;
+}
+
+/* IMPROVED YEAR MARKERS */
+.year-marker {
+    background-color: rgba(0, 0, 0, 0.15);
+    width: 1px;
+}
+
+.year-label {
+    font-weight: 600;
+    color: #555;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
