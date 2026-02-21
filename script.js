@@ -76,59 +76,44 @@ yearToPixel(year, position) {
     clearYearMarkers() {
         document.querySelectorAll('.year-marker, .year-label').forEach(el => el.remove());
     }
-    //back to basics..
+    //Here's the Entire Method to Copy
  calculateCardPositions(events, position) {
     const placedCards = [];
     const cardWidth = 140;
-    const verticalSpacing = 220;  // Increased from 100 to 220px
+    const verticalSpacing = 120; // Good spacing between stacked cards
     
-    // Sort by year
-    const sortedEvents = [...events].sort((a, b) => a.year - b.year);
-    
-    // Track used lanes for each year separately
-    const yearLanes = new Map(); // year -> Set of used lanes
-    
-    sortedEvents.forEach(event => {
-        const x = this.yearToPixel(event.year, position);
-        const year = event.year;
-        
-        // Get or create lane tracker for this year
-        if (!yearLanes.has(year)) {
-            yearLanes.set(year, new Set());
+    // Group events by year
+    const eventsByYear = {};
+    events.forEach(event => {
+        if (!eventsByYear[event.year]) {
+            eventsByYear[event.year] = [];
         }
-        const usedLanes = yearLanes.get(year);
-        
-        // Find smallest available lane for THIS YEAR ONLY
-        let laneIndex = 0;
-        while (usedLanes.has(laneIndex)) {
-            laneIndex++;
-        }
-        
-        // Mark this lane as used for this year
-        usedLanes.add(laneIndex);
-        
-        // Calculate Y position with MORE SPACE
-        const y = 20 + (laneIndex * verticalSpacing); // Now 20, 120, 220, etc.
-        
-        // Add slight horizontal cascade
-        const xOffset = laneIndex * 8;
-        const finalX = x + xOffset;
-        
-        placedCards.push({
-            event: event,
-            x: finalX,
-            y: y,
-            lane: laneIndex,
-            year: year
-        });
-        
-        console.log(`Year ${year}: ${event.title} -> lane ${laneIndex}, y=${y}`);
+        eventsByYear[event.year].push(event);
     });
     
-    // Log final lane usage by year
-    console.log('Lane usage by year:');
-    yearLanes.forEach((lanes, year) => {
-        console.log(`Year ${year}: lanes [${Array.from(lanes).join(', ')}]`);
+    // Process each year separately
+    Object.keys(eventsByYear).sort().forEach(year => {
+        const yearEvents = eventsByYear[year];
+        const baseX = this.yearToPixel(parseInt(year), position);
+        
+        yearEvents.forEach((event, index) => {
+            // Small horizontal offset to create cascade effect
+            const x = baseX + (index * 10);
+            
+            // Vertical position: base 20px + (lane * spacing)
+            const y = 20 + (index * verticalSpacing);
+            
+            placedCards.push({
+                event: event,
+                x: x,
+                y: y,
+                lane: index,
+                year: event.year,
+                position: position
+            });
+            
+            console.log(`${position} year ${year}: ${event.title} -> lane ${index}, y=${y}`);
+        });
     });
     
     return placedCards;
