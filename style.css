@@ -469,3 +469,30 @@ footer {
     border: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
+
+/* RESTORE YEAR RANGE LABELS */
+.top-section .era-label::after {
+    content: " (1920-1950)";
+    font-weight: normal;
+    font-size: 0.9rem;
+    margin-left: 5px;
+    opacity: 0.9;
+}
+
+.bottom-section .era-label::after {
+    content: " (2000-2030)";
+    font-weight: normal;
+    font-size: 0.9rem;
+    margin-left: 5px;
+    opacity: 0.9;
+}
+
+/* Ensure baseline labels are visible */
+.baseline-label {
+    display: block !important;
+    background: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
