@@ -80,7 +80,9 @@ yearToPixel(year, position) {
  calculateCardPositions(events, position) {
     const placedCards = [];
     const cardWidth = 140;
-    const verticalSpacing = 120; // Good spacing between stacked cards
+    // Make vertical spacing proportional to zoom level
+    const baseVerticalSpacing = 100;
+    const verticalSpacing = baseVerticalSpacing * (this.currentZoom / this.config.pixelsPerYear);
     
     // Group events by year
     const eventsByYear = {};
@@ -91,16 +93,15 @@ yearToPixel(year, position) {
         eventsByYear[event.year].push(event);
     });
     
-    // Process each year separately
+    // Process each year
     Object.keys(eventsByYear).sort().forEach(year => {
         const yearEvents = eventsByYear[year];
         const baseX = this.yearToPixel(parseInt(year), position);
         
         yearEvents.forEach((event, index) => {
-            // Small horizontal offset to create cascade effect
-            const x = baseX + (index * 10);
-            
-            // Vertical position: base 20px + (lane * spacing)
+            // Horizontal offset grows with zoom
+            const x = baseX + (index * (this.currentZoom / this.config.pixelsPerYear) * 15);
+            // Vertical spacing grows with zoom
             const y = 20 + (index * verticalSpacing);
             
             placedCards.push({
@@ -108,11 +109,8 @@ yearToPixel(year, position) {
                 x: x,
                 y: y,
                 lane: index,
-                year: event.year,
-                position: position
+                year: event.year
             });
-            
-            console.log(`${position} year ${year}: ${event.title} -> lane ${index}, y=${y}`);
         });
     });
     
