@@ -1,4 +1,38 @@
-// Main Timeline Application
+// Tag definitions
+const TAG_DEFINITIONS = {
+    1: { id: 1, name: "Emergency Powers & Crisis Exploitation", color: "#B22222" },
+    2: { id: 2, name: "Propaganda & Media Control", color: "#1E90FF" },
+    3: { id: 3, name: "Judiciary & Legal Undermining", color: "#228B22" },
+    4: { id: 4, name: "State-Sanctioned Violence & Intimidation", color: "#FFD700" },
+    5: { id: 5, name: "Surveillance & Internal Policing", color: "#8A2BE2" },
+    6: { id: 6, name: "Loyalty Purges & Political Patronage", color: "#DC143C" },
+    7: { id: 7, name: "Electoral Manipulation & Democratic Erosion", color: "#2E8B57" },
+    8: { id: 8, name: "Cult of Personality & Mass Mobilization", color: "#FF8C00" },
+    9: { id: 9, name: "Authoritarian Ideology & Nationalism", color: "#FF6EDF" },
+    10: { id: 10, name: "Legal Manipulation & Institutional Capture", color: "#FF8CDE" }
+};
+
+const TYPE_ICONS = {
+    'circle': 'fas fa-circle',
+    'rect': 'fas fa-square',
+    'smallrect': 'fas fa-square',
+    'bigrect': 'fas fa-square',
+    'diamond': 'fas fa-gem',
+    'vertical_rect': 'fas fa-columns',
+    'vertical_dot': 'fas fa-ellipsis-v',
+    'default': 'fas fa-flag'
+};
+
+// Timeline configuration
+const TIMELINE_CONFIG = {
+    topEra: { start: 1920, end: 1950, label: "Person A Era (1920-1950)" },
+    bottomEra: { start: 2000, end: 2030, label: "Person B Era (2000-2030)" },
+    pixelsPerYear: 60,
+    minZoom: 30,
+    maxZoom: 120
+};
+
+// Main Timeline Class
 class ComparativeTimeline {
     constructor() {
         this.events = timelineEvents;
@@ -18,6 +52,7 @@ class ComparativeTimeline {
         this.renderTimeline();
         this.createYearMarkers();
         this.bindEvents();
+        console.log('Timeline initialized with', this.events.length, 'events');
     }
     
     cacheElements() {
@@ -25,44 +60,124 @@ class ComparativeTimeline {
         this.bottomTimeline = document.getElementById('bottom-timeline');
         this.modal = document.getElementById('event-modal');
         this.closeModal = document.querySelector('.close-modal');
-        this.timelineContainer = document.querySelector('.timeline-container');
     }
     
-    // back to basics.
-yearToPixel(year, position) {
-    const era = position === 'top' ? this.config.topEra : this.config.bottomEra;
+    yearToPixel(year, position) {
+        const era = position === 'top' ? this.config.topEra : this.config.bottomEra;
+        const relativePosition = (year - era.start) / (era.end - era.start);
+        const totalWidth = (era.end - era.start) * this.currentZoom;
+        return 100 + (relativePosition * totalWidth) + this.currentOffset;
+    }
     
-    // Calculate relative position (0 to 1)
-    const relativePosition = (year - era.start) / (era.end - era.start);
+    calculateCardPositions(events, position) {
+        const placedCards = [];
+        const verticalSpacing = 100;
+        
+        // Group by year
+        const eventsByYear = {};
+        events.forEach(event => {
+            if (!eventsByYear[event.year]) eventsByYear[event.year] = [];
+            eventsByYear[event.year].push(event);
+        });
+        
+        // Process each year
+        Object.keys(eventsByYear).sort().forEach(year => {
+            const yearEvents = eventsByYear[year];
+            const baseX = this.yearToPixel(parseInt(year), position);
+            
+            yearEvents.forEach((event, index) => {
+                const x = baseX + (index * 12);
+                const y = 20 + (index * verticalSpacing);
+                
+                placedCards.push({
+                    event: event,
+                    x: x,
+                    y: y,
+                    lane: index,
+                    year: event.year
+                });
+            });
+        });
+        
+        return placedCards;
+    }
     
-    // Calculate total width
-    const totalWidth = (era.end - era.start) * this.currentZoom;
+    renderTimeline() {
+        // Clear tracks
+        if (this.topTimeline) this.topTimeline.innerHTML = '';
+        if (this.bottomTimeline) this.bottomTimeline.innerHTML = '';
+        
+        // Clear year markers
+        document.querySelectorAll('.year-marker, .year-label').forEach(el => el.remove());
+        
+        // Get events
+        const topEvents = this.events.filter(e => e.position === 'top');
+        const bottomEvents = this.events.filter(e => e.position === 'bottom');
+        
+        // Calculate and create cards
+        const topCards = this.calculateCardPositions(topEvents, 'top');
+        const bottomCards = this.calculateCardPositions(bottomEvents, 'bottom');
+        
+        topCards.forEach(card => this.createCard(card.event, card.x, card.y));
+        bottomCards.forEach(card => this.createCard(card.event, card.x, card.y));
+        
+        // Recreate year markers
+        this.createYearMarkers();
+    }
     
-    // Calculate pixel position
-    const pixelPos = 100 + (relativePosition * totalWidth) + this.currentOffset;
+    // NOTE: Method is called "createCard" not "createEventCard"
+    createCard(event, x, y) {
+        const card = document.createElement('div');
+        card.className = `timeline-card ${event.position}`;
+        card.style.left = `${x}px`;
+        card.style.top = `${y}px`;
+        card.dataset.id = event.id;
+        
+        const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
+        const displayDate = this.formatDate(event.date);
+        
+        card.innerHTML = `
+            <div class="card-icon">
+                <i class="${iconClass}"></i>
+            </div>
+            ${event.image ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'">` : ''}
+            <div class="card-title">${event.title}</div>
+            <div class="card-year">${displayDate}</div>
+        `;
+        
+        card.onclick = (e) => {
+            e.stopPropagation();
+            this.showEventDetails(event);
+        };
+        
+        if (event.position === 'top') {
+            this.topTimeline.appendChild(card);
+        } else {
+            this.bottomTimeline.appendChild(card);
+        }
+        
+        console.log(`Created card: ${event.title} at (${x}, ${y})`);
+    }
     
-    return pixelPos;
-}
-    
-    // Create year markers
     createYearMarkers() {
-        this.clearYearMarkers();
         this.createMarkersForEra('top', this.config.topEra);
         this.createMarkersForEra('bottom', this.config.bottomEra);
     }
     
     createMarkersForEra(position, era) {
-        const container = position === 'top' ? this.topTimeline.parentElement : this.bottomTimeline.parentElement;
+        const container = position === 'top' ? 
+            document.querySelector('.top-section') : 
+            document.querySelector('.bottom-section');
+        
+        if (!container) return;
         
         for (let year = era.start; year <= era.end; year += 5) {
             const pixelX = this.yearToPixel(year, position);
             
-            // Marker line
             const marker = document.createElement('div');
             marker.className = 'year-marker';
             marker.style.left = `${pixelX}px`;
             
-            // Label
             const label = document.createElement('div');
             label.className = `year-label ${position}-label`;
             label.textContent = year;
@@ -73,246 +188,85 @@ yearToPixel(year, position) {
         }
     }
     
-    clearYearMarkers() {
-        document.querySelectorAll('.year-marker, .year-label').forEach(el => el.remove());
-    }
-    //Here's the Entire Method to Copy
- calculateCardPositions(events, position) {
-    const placedCards = [];
-    const cardWidth = 140;
-    
-    // Calculate zoom factor relative to base zoom
-    const zoomFactor = this.currentZoom / this.config.pixelsPerYear;
-    console.log('Zoom factor:', zoomFactor);
-    
-    // Base vertical spacing grows with zoom
-    const baseSpacing = 100;
-    const verticalSpacing = baseSpacing * zoomFactor;
-    console.log('Vertical spacing:', verticalSpacing);
-    
-    // Group events by year
-    const eventsByYear = {};
-    events.forEach(event => {
-        if (!eventsByYear[event.year]) {
-            eventsByYear[event.year] = [];
-        }
-        eventsByYear[event.year].push(event);
-    });
-    
-    // Process each year
-    Object.keys(eventsByYear).sort().forEach(year => {
-        const yearEvents = eventsByYear[year];
-        const baseX = this.yearToPixel(parseInt(year), position);
-        
-        yearEvents.forEach((event, index) => {
-            // Horizontal offset - subtle cascade
-            const xOffset = index * (15 * zoomFactor);
-            const x = baseX + xOffset;
-            
-            // Vertical position based on lane index
-            const y = 20 + (index * verticalSpacing);
-            
-            console.log(`${position} ${year}: ${event.title.substring(0,20)} -> lane ${index}, y=${y}, zoom=${zoomFactor.toFixed(2)}`);
-            
-            placedCards.push({
-                event: event,
-                x: x,
-                y: y,
-                lane: index,
-                year: event.year
-            });
-        });
-    });
-    
-    return placedCards;
-}
-    // Render timeline
-    renderTimeline() {
-    // CRITICAL: Completely clear all cards first
-    if (this.topTimeline) {
-        while (this.topTimeline.firstChild) {
-            this.topTimeline.removeChild(this.topTimeline.firstChild);
-        }
-    }
-    if (this.bottomTimeline) {
-        while (this.bottomTimeline.firstChild) {
-            this.bottomTimeline.removeChild(this.bottomTimeline.firstChild);
-        }
-    }
-    
-    // Also clear year markers to prevent duplication
-    const markers = document.querySelectorAll('.year-marker, .year-label');
-    markers.forEach(marker => marker.remove());
-    
-    // Get events for each position
-    const topEvents = this.events.filter(e => e.position === 'top');
-    const bottomEvents = this.events.filter(e => e.position === 'bottom');
-    
-    // Calculate positions
-    const topCards = this.calculateCardPositions(topEvents, 'top');
-    const bottomCards = this.calculateCardPositions(bottomEvents, 'bottom');
-    
-    // Create new cards
-    topCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
-    bottomCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
-    
-    // Recreate year markers
-    this.createYearMarkers();
-    
-    console.log('Timeline re-rendered with', topCards.length, 'top cards,', bottomCards.length, 'bottom cards');
-}
-    
-    clearTimeline() {
-        if (this.topTimeline) this.topTimeline.innerHTML = '';
-        if (this.bottomTimeline) this.bottomTimeline.innerHTML = '';
-        this.clearYearMarkers();
-    }
-    
-ccreateEventCard(event, x, y, lane) {
-    const card = document.createElement('div');
-    card.className = `timeline-card ${event.position}`;
-    card.style.left = `${x}px`;
-    card.style.top = `${y}px`;
-    card.dataset.id = event.id;
-    card.dataset.lane = lane;  // This is critical for debugging
-    
-    const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
-    const displayDate = this.formatDate(event.date);
-    
-    card.innerHTML = `
-        <div class="card-icon">
-            <i class="${iconClass}"></i>
-        </div>
-        ${event.image ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.card-icon').style.fontSize='1.8rem';">` : ''}
-        <div class="card-title">${event.title}</div>
-        <div class="card-year">${displayDate}</div>
-    `;
-    
-    card.onclick = (e) => {
-        e.stopPropagation();
-        this.showEventDetails(event);
-    };
-    
-    if (event.position === 'top') {
-        this.topTimeline.appendChild(card);
-    } else {
-        this.bottomTimeline.appendChild(card);
-    }
-    
-    // Log the actual final position
-    console.log(`Created card: ${event.title} at (${x}, ${y}) lane ${lane}`);
-}
-    
     formatDate(dateString) {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short'
-        });
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
     }
     
-    // Event detail modal
     showEventDetails(event) {
-    console.log('Opening modal for:', event.title);
-    
-    // Get modal elements
-    const modal = document.getElementById('event-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDate = document.getElementById('modal-date');
-    const modalDesc = document.getElementById('modal-description');
-    const modalImage = document.getElementById('modal-image');
-    const imageFallback = document.getElementById('image-fallback');
-    const modalTags = document.getElementById('modal-tags');
-    const videoContainer = document.getElementById('modal-video-container');
-    const videoLink = document.getElementById('video-link');
-    const modalType = document.getElementById('modal-type');
-    const modalPosition = document.getElementById('modal-position');
-    
-    // Debug: Check if elements exist
-    console.log('Modal element found:', !!modal);
-    console.log('Title element found:', !!modalTitle);
-    console.log('Description element found:', !!modalDesc);
-    
-    if (!modal) {
-        console.error('CRITICAL: Modal element not found in HTML!');
-        return;
-    }
-    
-    // Populate basic fields
-    if (modalTitle) modalTitle.textContent = event.title || 'No title';
-    if (modalDate) modalDate.textContent = this.formatDate(event.date) || 'Date unknown';
-    if (modalDesc) modalDesc.textContent = event.description || 'No description available';
-    if (modalType) modalType.textContent = event.type || 'event';
-    if (modalPosition) modalPosition.textContent = event.position === 'top' ? 'Person A' : 'Person B';
-    
-    // Handle image
-    if (modalImage && imageFallback) {
-        if (event.image) {
-            modalImage.src = event.image;
-            modalImage.alt = event.title;
-            modalImage.style.display = 'block';
-            imageFallback.style.display = 'none';
-            modalImage.onerror = () => {
+        const modal = document.getElementById('event-modal');
+        if (!modal) return;
+        
+        const titleEl = document.getElementById('modal-title');
+        const dateEl = document.getElementById('modal-date');
+        const descEl = document.getElementById('modal-description');
+        const typeEl = document.getElementById('modal-type');
+        const positionEl = document.getElementById('modal-position');
+        const modalImage = document.getElementById('modal-image');
+        const fallback = document.getElementById('image-fallback');
+        const tagsContainer = document.getElementById('modal-tags');
+        const videoContainer = document.getElementById('modal-video-container');
+        const videoLink = document.getElementById('video-link');
+        
+        if (titleEl) titleEl.textContent = event.title;
+        if (dateEl) dateEl.textContent = this.formatDate(event.date);
+        if (descEl) descEl.textContent = event.description;
+        if (typeEl) typeEl.textContent = event.type;
+        if (positionEl) positionEl.textContent = event.position === 'top' ? 'Person A' : 'Person B';
+        
+        // Image handling
+        if (modalImage && fallback) {
+            if (event.image) {
+                modalImage.src = event.image;
+                modalImage.style.display = 'block';
+                fallback.style.display = 'none';
+            } else {
                 modalImage.style.display = 'none';
-                imageFallback.style.display = 'flex';
-            };
-        } else {
-            modalImage.style.display = 'none';
-            imageFallback.style.display = 'flex';
+                fallback.style.display = 'flex';
+            }
         }
-    }
-    
-    // Handle video
-    if (videoContainer && videoLink) {
-        if (event.video) {
-            videoContainer.style.display = 'block';
-            videoLink.href = event.video;
-            videoLink.innerHTML = event.video.includes('youtube') 
-                ? '<i class="fab fa-youtube"></i> Watch YouTube Video'
-                : '<i class="fab fa-vimeo"></i> Watch Video';
-        } else {
-            videoContainer.style.display = 'none';
+        
+        // Video handling
+        if (videoContainer && videoLink) {
+            if (event.video) {
+                videoContainer.style.display = 'block';
+                videoLink.href = event.video;
+            } else {
+                videoContainer.style.display = 'none';
+            }
         }
-    }
-    
-    // Handle tags
-    if (modalTags) {
-        modalTags.innerHTML = '';
-        if (event.tags && event.tags.length > 0) {
-            event.tags.forEach(tagId => {
-                const tagDef = TAG_DEFINITIONS[tagId];
-                if (tagDef) {
-                    const tagElement = document.createElement('span');
-                    tagElement.className = 'tag';
-                    tagElement.textContent = tagDef.name;
-                    tagElement.style.backgroundColor = tagDef.color;
-                    modalTags.appendChild(tagElement);
-                }
-            });
+        
+        // Tags
+        if (tagsContainer) {
+            tagsContainer.innerHTML = '';
+            if (event.tags) {
+                event.tags.forEach(tagId => {
+                    const tag = TAG_DEFINITIONS[tagId];
+                    if (tag) {
+                        const span = document.createElement('span');
+                        span.className = 'tag';
+                        span.textContent = tag.name;
+                        span.style.backgroundColor = tag.color;
+                        tagsContainer.appendChild(span);
+                    }
+                });
+            }
         }
+        
+        modal.style.display = 'block';
     }
-    
-    // FORCE modal to show
-    modal.style.display = 'block';
-    console.log('Modal display set to block');
-}
     
     setupModal() {
-        // Ensure modal starts hidden
         if (this.modal) {
             this.modal.style.display = 'none';
-        }
-        
-        this.closeModal.addEventListener('click', () => {
-            this.modal.style.display = 'none';
-        });
-        
-        window.addEventListener('click', (e) => {
-            if (e.target === this.modal) {
-                this.modal.style.display = 'none';
+            if (this.closeModal) {
+                this.closeModal.onclick = () => { this.modal.style.display = 'none'; };
             }
-        });
+            window.onclick = (e) => { 
+                if (e.target === this.modal) this.modal.style.display = 'none'; 
+            };
+        }
     }
     
     zoom(factor) {
@@ -330,35 +284,29 @@ ccreateEventCard(event, x, y, lane) {
     }
     
     bindEvents() {
-        // Zoom buttons
-        document.getElementById('zoom-in').addEventListener('click', () => this.zoom(1.2));
-        document.getElementById('zoom-out').addEventListener('click', () => this.zoom(0.8));
-        document.getElementById('reset-view').addEventListener('click', () => this.resetView());
+        const zoomIn = document.getElementById('zoom-in');
+        const zoomOut = document.getElementById('zoom-out');
+        const reset = document.getElementById('reset-view');
         
-        // Drag events for both timelines
-        [this.topTimeline, this.bottomTimeline].forEach(track => {
+        if (zoomIn) zoomIn.onclick = () => this.zoom(1.2);
+        if (zoomOut) zoomOut.onclick = () => this.zoom(0.8);
+        if (reset) reset.onclick = () => this.resetView();
+        
+        // Drag events
+        const tracks = [this.topTimeline, this.bottomTimeline];
+        tracks.forEach(track => {
             if (!track) return;
-            
-            track.addEventListener('mousedown', (e) => this.startDrag(e));
-            track.addEventListener('mousemove', (e) => this.drag(e));
-            track.addEventListener('mouseup', () => this.stopDrag());
-            track.addEventListener('mouseleave', () => this.stopDrag());
-            
-            track.addEventListener('touchstart', (e) => this.startDrag(e.touches[0]));
-            track.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                this.drag(e.touches[0]);
-            });
-            track.addEventListener('touchend', () => this.stopDrag());
+            track.onmousedown = (e) => this.startDrag(e);
         });
+        
+        window.onmousemove = (e) => this.drag(e);
+        window.onmouseup = () => this.stopDrag();
     }
     
     startDrag(e) {
         this.isDragging = true;
         this.dragStartX = e.clientX;
         this.dragStartOffset = this.currentOffset;
-        if (this.topTimeline) this.topTimeline.style.cursor = 'grabbing';
-        if (this.bottomTimeline) this.bottomTimeline.style.cursor = 'grabbing';
     }
     
     drag(e) {
@@ -370,18 +318,11 @@ ccreateEventCard(event, x, y, lane) {
     
     stopDrag() {
         this.isDragging = false;
-        if (this.topTimeline) this.topTimeline.style.cursor = 'grab';
-        if (this.bottomTimeline) this.bottomTimeline.style.cursor = 'grab';
     }
 }
 
-// Initialize
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure modal is hidden on load
-    const modal = document.getElementById('event-modal');
-    if (modal) modal.style.display = 'none';
-    
-    // Initialize timeline
     window.timeline = new ComparativeTimeline();
-    console.log('Timeline initialized');
+    console.log('Timeline initialized and available as window.timeline');
 });
