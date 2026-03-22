@@ -128,18 +128,39 @@ yearToPixel(year, position) {
 }
     // Render timeline
     renderTimeline() {
-        this.clearTimeline();
-        
-        const topEvents = this.events.filter(e => e.position === 'top');
-        const bottomEvents = this.events.filter(e => e.position === 'bottom');
-        
-        const topCards = this.calculateCardPositions(topEvents, 'top');
-        const bottomCards = this.calculateCardPositions(bottomEvents, 'bottom');
-        
-        topCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
-        bottomCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
-        this.createYearMarkers();
+    // CRITICAL: Completely clear all cards first
+    if (this.topTimeline) {
+        while (this.topTimeline.firstChild) {
+            this.topTimeline.removeChild(this.topTimeline.firstChild);
+        }
     }
+    if (this.bottomTimeline) {
+        while (this.bottomTimeline.firstChild) {
+            this.bottomTimeline.removeChild(this.bottomTimeline.firstChild);
+        }
+    }
+    
+    // Also clear year markers to prevent duplication
+    const markers = document.querySelectorAll('.year-marker, .year-label');
+    markers.forEach(marker => marker.remove());
+    
+    // Get events for each position
+    const topEvents = this.events.filter(e => e.position === 'top');
+    const bottomEvents = this.events.filter(e => e.position === 'bottom');
+    
+    // Calculate positions
+    const topCards = this.calculateCardPositions(topEvents, 'top');
+    const bottomCards = this.calculateCardPositions(bottomEvents, 'bottom');
+    
+    // Create new cards
+    topCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
+    bottomCards.forEach(card => this.createEventCard(card.event, card.x, card.y, card.lane));
+    
+    // Recreate year markers
+    this.createYearMarkers();
+    
+    console.log('Timeline re-rendered with', topCards.length, 'top cards,', bottomCards.length, 'bottom cards');
+}
     
     clearTimeline() {
         if (this.topTimeline) this.topTimeline.innerHTML = '';
@@ -147,13 +168,13 @@ yearToPixel(year, position) {
         this.clearYearMarkers();
     }
     
-createEventCard(event, x, y, lane) {  // Add lane parameter
+ccreateEventCard(event, x, y, lane) {
     const card = document.createElement('div');
     card.className = `timeline-card ${event.position}`;
     card.style.left = `${x}px`;
     card.style.top = `${y}px`;
     card.dataset.id = event.id;
-    card.dataset.lane = lane;  // Store lane for debugging
+    card.dataset.lane = lane;  // This is critical for debugging
     
     const iconClass = TYPE_ICONS[event.type] || TYPE_ICONS.default;
     const displayDate = this.formatDate(event.date);
@@ -177,6 +198,9 @@ createEventCard(event, x, y, lane) {  // Add lane parameter
     } else {
         this.bottomTimeline.appendChild(card);
     }
+    
+    // Log the actual final position
+    console.log(`Created card: ${event.title} at (${x}, ${y}) lane ${lane}`);
 }
     
     formatDate(dateString) {
