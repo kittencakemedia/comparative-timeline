@@ -80,9 +80,15 @@ yearToPixel(year, position) {
  calculateCardPositions(events, position) {
     const placedCards = [];
     const cardWidth = 140;
-    // Make vertical spacing proportional to zoom level
-    const baseVerticalSpacing = 100;
-    const verticalSpacing = baseVerticalSpacing * (this.currentZoom / this.config.pixelsPerYear);
+    
+    // Calculate zoom factor relative to base zoom
+    const zoomFactor = this.currentZoom / this.config.pixelsPerYear;
+    console.log('Zoom factor:', zoomFactor);
+    
+    // Base vertical spacing grows with zoom
+    const baseSpacing = 100;
+    const verticalSpacing = baseSpacing * zoomFactor;
+    console.log('Vertical spacing:', verticalSpacing);
     
     // Group events by year
     const eventsByYear = {};
@@ -99,10 +105,14 @@ yearToPixel(year, position) {
         const baseX = this.yearToPixel(parseInt(year), position);
         
         yearEvents.forEach((event, index) => {
-            // Horizontal offset grows with zoom
-            const x = baseX + (index * (this.currentZoom / this.config.pixelsPerYear) * 15);
-            // Vertical spacing grows with zoom
+            // Horizontal offset - subtle cascade
+            const xOffset = index * (15 * zoomFactor);
+            const x = baseX + xOffset;
+            
+            // Vertical position based on lane index
             const y = 20 + (index * verticalSpacing);
+            
+            console.log(`${position} ${year}: ${event.title.substring(0,20)} -> lane ${index}, y=${y}, zoom=${zoomFactor.toFixed(2)}`);
             
             placedCards.push({
                 event: event,
