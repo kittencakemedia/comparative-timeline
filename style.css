@@ -532,3 +532,121 @@ footer {
 .timeline-card[data-tag="1"] { border-left-color: #B22222; }
 .timeline-card[data-tag="2"] { border-left-color: #1E90FF; }
 /* Add more as needed */
+
+/* MODERN VISUAL POLISH - ADD AT VERY END */
+
+/* 1. SMOOTH CARDS WITH DEPTH */
+.timeline-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1) !important;
+    border: none !important;
+    border-left: 6px solid !important;
+    overflow: hidden !important;
+}
+
+.timeline-card:hover {
+    transform: translateY(-6px) scale(1.02) !important;
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 2. GRADIENT TRACK BACKGROUNDS */
+.top-section .timeline-track {
+    background: linear-gradient(90deg, 
+        rgba(220, 20, 60, 0.02) 0%, 
+        rgba(220, 20, 60, 0.05) 50%,
+        rgba(220, 20, 60, 0.02) 100%) !important;
+}
+
+.bottom-section .timeline-track {
+    background: linear-gradient(90deg, 
+        rgba(30, 144, 255, 0.02) 0%, 
+        rgba(30, 144, 255, 0.05) 50%,
+        rgba(30, 144, 255, 0.02) 100%) !important;
+}
+
+/* 3. BEAUTIFUL YEAR MARKERS */
+.year-marker {
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 50%, transparent 100%) !important;
+    width: 2px !important;
+}
+
+.year-label {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(4px) !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* 4. BASELINE WITH GLOW EFFECT */
+.baseline-line {
+    background: linear-gradient(90deg, transparent, #333, transparent) !important;
+    height: 3px !important;
+    box-shadow: 0 0 8px rgba(51, 51, 51, 0.3) !important;
+}
+
+.baseline-label {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(8px) !important;
+    font-weight: 600 !important;
+    padding: 6px 20px !important;
+    border-radius: 30px !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
+/* 5. CARD ICONS WITH COLOR */
+.card-icon {
+    background: rgba(0,0,0,0.03) !important;
+    border-radius: 50% !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.9rem !important;
+}
+
+.timeline-card.top .card-icon {
+    color: #DC143C !important;
+    background: rgba(220, 20, 60, 0.1) !important;
+}
+
+.timeline-card.bottom .card-icon {
+    color: #1E90FF !important;
+    background: rgba(30, 144, 255, 0.1) !important;
+}
+
+/* 6. CARD TITLE STYLING */
+.card-title {
+    font-weight: 700 !important;
+    letter-spacing: -0.2px !important;
+    color: #1a1a2e !important;
+}
+
+.card-year {
+    font-weight: 500 !important;
+    color: #666 !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* 7. CONTAINER WITH SOFT SHADOW */
+.timeline-container {
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 20px !important;
+    background: white !important;
+}
+
+/* 8. HEADER IMPROVEMENTS */
+header h1 {
+    background: linear-gradient(135deg, #DC143C, #1E90FF) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+}
