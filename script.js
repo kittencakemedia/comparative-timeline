@@ -1,4 +1,4 @@
-// Tag definitions
+// ========== DATA DEFINITIONS ==========
 const TAG_DEFINITIONS = {
     1: { id: 1, name: "Emergency Powers & Crisis Exploitation", color: "#B22222" },
     2: { id: 2, name: "Propaganda & Media Control", color: "#1E90FF" },
@@ -23,7 +23,6 @@ const TYPE_ICONS = {
     'default': 'fas fa-flag'
 };
 
-// Timeline configuration
 const TIMELINE_CONFIG = {
     topEra: { start: 1920, end: 1950, label: "Person A Era (1920-1950)" },
     bottomEra: { start: 2000, end: 2030, label: "Person B Era (2000-2030)" },
@@ -32,7 +31,102 @@ const TIMELINE_CONFIG = {
     maxZoom: 120
 };
 
-// Main Timeline Class
+// ========== EVENT DATA ==========
+const timelineEvents = [
+    {
+        id: 1,
+        date: "1933-02-27",
+        year: 1933,
+        title: "Reichstag Fire",
+        description: "The German parliament building is set on fire. The Nazi government blames communists and uses the event as a pretext to suspend civil liberties and eliminate political opposition.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png",
+        video: "",
+        position: "top",
+        type: "circle",
+        tags: [1, 2],
+        era: "Person A (1920-1950)"
+    },
+    {
+        id: 2,
+        date: "2020-11-07",
+        year: 2020,
+        title: "Trump's \"Rigged Election\" Narrative",
+        description: "After losing the 2020 presidential election, Trump and his allies persistently and falsely claim it was \"stolen\" through widespread fraud, aiming to undermine faith in the electoral process.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg",
+        video: "",
+        position: "bottom",
+        type: "rect",
+        tags: [1],
+        era: "Person B (2000-2030)"
+    },
+    {
+        id: 3,
+        date: "1933-03-23",
+        year: 1933,
+        title: "Passage of the Enabling Act",
+        description: "The Reichstag passes the Enabling Act, giving Adolf Hitler the power to make laws without the involvement of the parliament or president, effectively ending German democracy.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Reichstagsgeb%C3%A4ude_von_Westen.jpg",
+        video: "",
+        position: "top",
+        type: "smallrect",
+        tags: [1],
+        era: "Person A (1920-1950)"
+    },
+    {
+        id: 4,
+        date: "2021-01-06",
+        year: 2021,
+        title: "Trump's Pressure on Pence to Overturn Election",
+        description: "During the certification of the 2020 election, President Trump publicly pressured Vice President Pence to reject electoral votes, an action beyond the VP's constitutional power.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Mike_Pence_by_Gage_Skidmore_4.jpg",
+        video: "",
+        position: "bottom",
+        type: "bigrect",
+        tags: [1],
+        era: "Person B (2000-2030)"
+    },
+    {
+        id: 5,
+        date: "1934-06-30",
+        year: 1934,
+        title: "Night of the Long Knives",
+        description: "Hitler orders the murder of the leadership of the SA (Brownshirts) and other political rivals within his own party to consolidate his power and appease the regular army.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/2/22/Ernst_R%C3%B6hm_und_Heinrich_Himmler.JPG",
+        video: "",
+        position: "top",
+        type: "rect",
+        tags: [1, 3],
+        era: "Person A (1920-1950)"
+    },
+    {
+        id: 6,
+        date: "2017-05-09",
+        year: 2017,
+        title: "Firing of James Comey",
+        description: "President Trump fires the Director of the FBI, who was leading an investigation into potential links between Trump's campaign and Russia.",
+        image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/James_Comey_official_portrait.jpg",
+        video: "",
+        position: "bottom",
+        type: "diamond",
+        tags: [1],
+        era: "Person B (2000-2030)"
+    },
+    {
+        id: 7,
+        date: "2013-01-01",
+        year: 2013,
+        title: "Test Alignment Event",
+        description: "This event tests vertical alignment with 1933 events",
+        image: "",
+        video: "",
+        position: "bottom",
+        type: "circle",
+        tags: [1],
+        era: "Person B (2000-2030)"
+    }
+];
+
+// ========== TIMELINE CLASS ==========
 class ComparativeTimeline {
     constructor() {
         this.events = timelineEvents;
@@ -73,14 +167,12 @@ class ComparativeTimeline {
         const placedCards = [];
         const verticalSpacing = 100;
         
-        // Group by year
         const eventsByYear = {};
         events.forEach(event => {
             if (!eventsByYear[event.year]) eventsByYear[event.year] = [];
             eventsByYear[event.year].push(event);
         });
         
-        // Process each year
         Object.keys(eventsByYear).sort().forEach(year => {
             const yearEvents = eventsByYear[year];
             const baseX = this.yearToPixel(parseInt(year), position);
@@ -103,29 +195,23 @@ class ComparativeTimeline {
     }
     
     renderTimeline() {
-        // Clear tracks
         if (this.topTimeline) this.topTimeline.innerHTML = '';
         if (this.bottomTimeline) this.bottomTimeline.innerHTML = '';
         
-        // Clear year markers
         document.querySelectorAll('.year-marker, .year-label').forEach(el => el.remove());
         
-        // Get events
         const topEvents = this.events.filter(e => e.position === 'top');
         const bottomEvents = this.events.filter(e => e.position === 'bottom');
         
-        // Calculate and create cards
         const topCards = this.calculateCardPositions(topEvents, 'top');
         const bottomCards = this.calculateCardPositions(bottomEvents, 'bottom');
         
         topCards.forEach(card => this.createCard(card.event, card.x, card.y));
         bottomCards.forEach(card => this.createCard(card.event, card.x, card.y));
         
-        // Recreate year markers
         this.createYearMarkers();
     }
     
-    // NOTE: Method is called "createCard" not "createEventCard"
     createCard(event, x, y) {
         const card = document.createElement('div');
         card.className = `timeline-card ${event.position}`;
@@ -155,8 +241,6 @@ class ComparativeTimeline {
         } else {
             this.bottomTimeline.appendChild(card);
         }
-        
-        console.log(`Created card: ${event.title} at (${x}, ${y})`);
     }
     
     createYearMarkers() {
@@ -215,7 +299,6 @@ class ComparativeTimeline {
         if (typeEl) typeEl.textContent = event.type;
         if (positionEl) positionEl.textContent = event.position === 'top' ? 'Person A' : 'Person B';
         
-        // Image handling
         if (modalImage && fallback) {
             if (event.image) {
                 modalImage.src = event.image;
@@ -227,7 +310,6 @@ class ComparativeTimeline {
             }
         }
         
-        // Video handling
         if (videoContainer && videoLink) {
             if (event.video) {
                 videoContainer.style.display = 'block';
@@ -237,7 +319,6 @@ class ComparativeTimeline {
             }
         }
         
-        // Tags
         if (tagsContainer) {
             tagsContainer.innerHTML = '';
             if (event.tags) {
@@ -292,7 +373,6 @@ class ComparativeTimeline {
         if (zoomOut) zoomOut.onclick = () => this.zoom(0.8);
         if (reset) reset.onclick = () => this.resetView();
         
-        // Drag events
         const tracks = [this.topTimeline, this.bottomTimeline];
         tracks.forEach(track => {
             if (!track) return;
@@ -321,8 +401,8 @@ class ComparativeTimeline {
     }
 }
 
-// Initialize on page load
+// ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', () => {
     window.timeline = new ComparativeTimeline();
-    console.log('Timeline initialized and available as window.timeline');
+    console.log('Timeline initialized!');
 });
