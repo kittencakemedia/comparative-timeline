@@ -682,3 +682,38 @@ header h1 {
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important;
     border-radius: 20px !important;
 }
+
+
+/* Ensure year markers are visible */
+.year-marker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.year-label {
+    position: absolute;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #666;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    z-index: 6;
+}
+
+.top-section .year-label {
+    top: -25px;
+    transform: translateX(-50%);
+}
+
+.bottom-section .year-label {
+    bottom: -25px;
+    transform: translateX(-50%);
+}
