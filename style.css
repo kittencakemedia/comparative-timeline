@@ -717,3 +717,52 @@ header h1 {
     bottom: -25px;
     transform: translateX(-50%);
 }
+
+/* CRITICAL: Ensure containers allow absolute positioning */
+.top-section,
+.bottom-section {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* Year Markers - Force Visibility */
+.year-marker {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 2px !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Year Labels - Force Visibility */
+.year-label {
+    position: absolute !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    background: white !important;
+    padding: 2px 8px !important;
+    border-radius: 12px !important;
+    border: 1px solid #ddd !important;
+    white-space: nowrap !important;
+    z-index: 11 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+.top-section .year-label {
+    top: -28px !important;
+    transform: translateX(-50%) !important;
+}
+
+.bottom-section .year-label {
+    bottom: -28px !important;
+    transform: translateX(-50%) !important;
+}
