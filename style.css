@@ -650,3 +650,35 @@ header h1 {
     background-clip: text !important;
     color: transparent !important;
 }
+/* SIMPLE VISUAL POLISH - GUARANTEED TO SHOW */
+
+/* Rounder cards */
+.timeline-card {
+    border-radius: 16px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Hover lift effect */
+.timeline-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Gradient background on tracks */
+.timeline-track {
+    background: linear-gradient(90deg, 
+        rgba(220, 20, 60, 0.03) 0%, 
+        rgba(30, 144, 255, 0.03) 100%) !important;
+}
+
+/* Better year markers */
+.year-marker {
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.2), transparent) !important;
+    width: 2px !important;
+}
+
+/* Soft shadow on container */
+.timeline-container {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08) !important;
+    border-radius: 20px !important;
+}
