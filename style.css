@@ -848,3 +848,60 @@ header h1 {
     width: 1px !important;
     opacity: 0.4 !important;
 }
+
+
+/* YEAR MARKERS - VISIBLE LINES */
+.year-marker {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 1px !important;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5), rgba(0,0,0,0.2)) !important;
+    z-index: 5 !important;
+    pointer-events: none !important;
+}
+
+/* YEAR LABELS - VISIBLE NUMBERS */
+.year-label {
+    position: absolute !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    background: white !important;
+    color: #333 !important;
+    padding: 4px 10px !important;
+    border-radius: 20px !important;
+    border: 1px solid #ddd !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08) !important;
+    white-space: nowrap !important;
+    z-index: 20 !important;
+    font-family: monospace !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Top labels - above the top timeline */
+.top-section .year-label {
+    top: -30px !important;
+    transform: translateX(-50%) !important;
+    border-left: 3px solid #DC143C !important;
+}
+
+/* Bottom labels - below the bottom timeline */
+.bottom-section .year-label {
+    bottom: -30px !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+    border-left: 3px solid #1E90FF !important;
+}
+
+/* Ensure containers allow absolute positioning */
+.top-section,
+.bottom-section {
+    position: relative !important;
+    overflow: visible !important;
+    min-height: 100px !important;
+}
+
+/* Make sure timeline tracks don't clip the labels */
+.timeline-track {
+    overflow: visible !important;
+}
