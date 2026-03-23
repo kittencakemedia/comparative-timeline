@@ -798,3 +798,53 @@ header h1 {
     bottom: -25px !important;
     transform: translateX(-50%) !important;
 }
+
+/* YEAR LABELS - FORCE VISIBILITY WITH POSITIONING */
+.year-label {
+    position: absolute !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    background: white !important;
+    color: #333 !important;
+    padding: 4px 8px !important;
+    border-radius: 20px !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+    white-space: nowrap !important;
+    z-index: 20 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-family: var(--font-family, system-ui) !important;
+}
+
+/* Top era labels (Person A: 1920-1950) */
+.top-section .year-label {
+    top: -35px !important;
+    transform: translateX(-50%) !important;
+    background: linear-gradient(135deg, #fff, #fafafa) !important;
+    border-left: 3px solid #DC143C !important;
+}
+
+/* Bottom era labels (Person B: 2000-2030) */
+.bottom-section .year-label {
+    bottom: -35px !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+    background: linear-gradient(135deg, #fff, #fafafa) !important;
+    border-left: 3px solid #1E90FF !important;
+}
+
+/* Ensure containers allow absolute positioning */
+.top-section,
+.bottom-section {
+    position: relative !important;
+    overflow: visible !important;
+}
+
+/* Make the vertical line markers more subtle */
+.year-marker {
+    background: linear-gradient(to bottom, transparent, #aaa, transparent) !important;
+    width: 1px !important;
+    opacity: 0.4 !important;
+}
