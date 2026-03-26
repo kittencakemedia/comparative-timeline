@@ -967,3 +967,50 @@ header h1 {
 .bottom-section {
     overflow: visible !important;
 }
+
+/* FIX YEAR LABELS - OVERRIDE ANY CLIPPING */
+.timeline-container {
+    overflow: visible !important;
+    overflow-x: auto !important;  /* Keep horizontal scroll if needed */
+    overflow-y: visible !important;
+}
+
+.top-section,
+.bottom-section {
+    overflow: visible !important;
+}
+
+/* Ensure labels are properly styled */
+.top-section .year-label {
+    position: absolute !important;
+    top: -35px !important;
+    transform: translateX(-50%) !important;
+    background: white !important;
+    color: #333 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    border: 2px solid #DC143C !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    white-space: nowrap !important;
+    z-index: 1000 !important;
+    font-family: monospace !important;
+}
+
+.bottom-section .year-label {
+    position: absolute !important;
+    bottom: -35px !important;
+    transform: translateX(-50%) !important;
+    background: white !important;
+    color: #333 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    border: 2px solid #1E90FF !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    white-space: nowrap !important;
+    z-index: 1000 !important;
+    font-family: monospace !important;
+}
