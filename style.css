@@ -954,3 +954,16 @@ header h1 {
     z-index: 100 !important;
     font-family: monospace !important;
 }
+
+/* CRITICAL FIX: Allow year labels to be visible */
+.timeline-container {
+    overflow: visible !important;
+}
+
+/* Also ensure any parent containers don't clip */
+.timeline-container,
+.timeline-section,
+.top-section,
+.bottom-section {
+    overflow: visible !important;
+}
