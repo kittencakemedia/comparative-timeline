@@ -95,33 +95,64 @@ header h1 {
 .legend-color.top { background-color: var(--timeline-top-color); }
 .legend-color.bottom { background-color: var(--timeline-bottom-color); }
 
-/* TIMELINE CONTAINER */
+/* FIXED CONTAINER - No unwanted scroll bars */
 .timeline-container {
     position: relative;
     min-height: 900px;
     margin: 40px 0;
     border: 1px solid #ddd;
     border-radius: 8px;
-    overflow: hidden;
+    overflow-x: auto !important;    /* Allow horizontal scrolling for timeline */
+    overflow-y: visible !important;  /* Allow labels to be visible above/below */
 }
 
-/* TIMELINE SECTIONS */
-.timeline-section {
-    position: relative;
-    width: 100%;
-}
-
-.top-section {
-    height: 450px;
-    border-bottom: 2px solid var(--baseline-color);
-    background: linear-gradient(to bottom, rgba(220, 20, 60, 0.05), transparent);
-}
-
+/* Ensure sections don't clip labels */
+.top-section,
 .bottom-section {
-    height: 450px;
-    background: linear-gradient(to top, rgba(30, 144, 255, 0.05), transparent);
+    position: relative !important;
+    overflow: visible !important;
 }
 
+/* Year labels - above top timeline */
+.top-section .year-label {
+    position: absolute !important;
+    top: -35px !important;
+    transform: translateX(-50%) !important;
+    background: white !important;
+    color: #333 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    border: 2px solid #DC143C !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    white-space: nowrap !important;
+    z-index: 1000 !important;
+    font-family: monospace !important;
+    pointer-events: none !important;
+}
+
+/* Year labels - below bottom timeline */
+.bottom-section .year-label {
+    position: absolute !important;
+    bottom: -35px !important;
+    transform: translateX(-50%) !important;
+    background: white !important;
+    color: #333 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    border: 2px solid #1E90FF !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    white-space: nowrap !important;
+    z-index: 1000 !important;
+    font-family: monospace !important;
+    pointer-events: none !important;
+}
+
+
+/* Kris - stopped here */
 .era-label {
     position: absolute;
     top: 20px;
