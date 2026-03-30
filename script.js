@@ -247,30 +247,33 @@ class ComparativeTimeline {
         this.createMarkersForEra('top', this.config.topEra);
         this.createMarkersForEra('bottom', this.config.bottomEra);
     }
-    
     createMarkersForEra(position, era) {
-        const container = position === 'top' ? 
-            document.querySelector('.top-section') : 
-            document.querySelector('.bottom-section');
+    const container = position === 'top' ? 
+        document.querySelector('.top-section') : 
+        document.querySelector('.bottom-section');
+    
+    if (!container) return;
+    
+    // Clear existing markers for this era first to prevent duplicates
+    const existingMarkers = container.querySelectorAll('.year-marker, .year-label');
+    existingMarkers.forEach(marker => marker.remove());
+    
+    for (let year = era.start; year <= era.end; year += 5) {
+        const pixelX = this.yearToPixel(year, position);
         
-        if (!container) return;
+        const marker = document.createElement('div');
+        marker.className = 'year-marker';
+        marker.style.left = `${pixelX}px`;
         
-        for (let year = era.start; year <= era.end; year += 5) {
-            const pixelX = this.yearToPixel(year, position);
-            
-            const marker = document.createElement('div');
-            marker.className = 'year-marker';
-            marker.style.left = `${pixelX}px`;
-            
-            const label = document.createElement('div');
-            label.className = `year-label ${position}-label`;
-            label.textContent = year;
-            label.style.left = `${pixelX}px`;
-            
-            container.appendChild(marker);
-            container.appendChild(label);
-        }
+        const label = document.createElement('div');
+        label.className = `year-label ${position}-label`;
+        label.textContent = year;
+        label.style.left = `${pixelX}px`;
+        
+        container.appendChild(marker);
+        container.appendChild(label);
     }
+}
     
     formatDate(dateString) {
         if (!dateString) return '';
