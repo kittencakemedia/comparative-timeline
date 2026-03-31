@@ -1084,3 +1084,49 @@ header h1 {
 .timeline-track {
     overflow: visible !important;
 }
+
+
+/* Year Markers Container */
+.year-markers {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    margin: 0;
+    pointer-events: none;
+}
+
+.top-markers {
+    margin-top: -25px;
+    margin-bottom: 0;
+}
+
+.bottom-markers {
+    margin-top: 0;
+    margin-bottom: -25px;
+}
+
+.year-marker-label {
+    position: absolute;
+    transform: translateX(-50%);
+    background: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: monospace;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.top-markers .year-marker-label {
+    border: 2px solid #DC143C;
+    color: #DC143C;
+    top: 0;
+}
+
+.bottom-markers .year-marker-label {
+    border: 2px solid #1E90FF;
+    color: #1E90FF;
+    bottom: 0;
+}
