@@ -1,41 +1,27 @@
-# Comparative Timeline Prototype
+# Historical Parallels: Comparative Timeline
 
-A dual-axis, card-based comparative timeline for visualizing historical parallels between two figures from different eras.
+A dual-axis, interactive timeline comparing authoritarian behaviors across different political eras. This tool visualizes historical events from two distinct time periods (1920-1950 and 2000-2030) on a single, scrollable timeline for direct comparison.
 
-## Quick Start
+## 🌟 Live Demo
 
-1. **Download all 5 files** into the same folder:
-   - `index.html`
-   - `style.css`
-   - `script.js`
-   - `timeline-data.js`
-   - `README.md` (this file)
+[View the timeline](https://kittencakemedia.github.io/comparative-timeline)
 
-2. **Open `index.html`** in your web browser (Chrome or Firefox recommended).
+## 📋 Overview
 
-3. **Interact with the timeline:**
-   - Click event cards for detailed view
-   - Drag timeline to pan left/right
-   - Use zoom buttons (+/-) to adjust scale
-   - Click "Reset View" to return to default
+This project maps political events and behaviors to help users identify patterns and parallels between historical figures and contemporary politicians. The timeline features:
 
-## Features
+- **Dual-axis display**: Two independent timelines (Person A: 1920-1950, Person B: 2000-2030) stacked vertically for comparison
+- **Interactive cards**: Click any event for detailed information including images, descriptions, and category tags
+- **Zoom & pan**: Pinch or use buttons to zoom, drag horizontally to navigate
+- **Responsive design**: Works on desktop and touch devices
+- **Category tags**: Color-coded event types for quick identification
 
-- **Dual Timeline System:** Top (1920-1950) and Bottom (2000-2030) eras
-- **Modern Card Design:** Clean, responsive event cards with hover effects
-- **Interactive Details:** Modal popups with full event descriptions, images, and tags
-- **Flexible Styling:** Easily customizable colors via CSS variables
-- **Responsive:** Works on desktop and mobile devices
+## 🛠️ Technology Stack
 
-## Customization
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Hosting**: GitHub Pages
+- **Fonts**: Google Fonts (Inter)
+- **Icons**: Font Awesome 6
+- **Images**: Wikimedia Commons (public domain/fair use)
 
-### Changing Colors
-Edit the CSS variables in `style.css` at the top of the file:
-
-```css
-:root {
-    --timeline-top-color: #DC143C;      /* Change Person A color */
-    --timeline-bottom-color: #1E90FF;   /* Change Person B color */
-    --timeline-bg: #f8f9fa;             /* Background color */
-    /* ... other variables */
-}
+## 📁 File Structure
