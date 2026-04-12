@@ -163,6 +163,23 @@ h1 {
     white-space: pre;
 }
 
+.version-badge {
+    position: sticky;
+    bottom: 5px;
+    left: 10px;
+    float: left;
+    font-size: 8px;
+    color: rgba(0,0,0,0.15);
+    font-family: monospace;
+    z-index: 2;
+    pointer-events: none;
+    background: rgba(255,255,255,0.4);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: -30px;
+    margin-left: 10px;
+}
+
 .top-section {
     position: relative;
     min-height: 280px;
@@ -455,33 +472,4 @@ footer {
     font-size: 0.7rem;
     color: #aaa;
     margin-top: 10px;
-}
-.version-badge {
-    position: sticky;
-    bottom: 5px;
-    left: 10px;
-    float: left;
-    font-size: 8px;
-    color: rgba(0,0,0,0.15);
-    font-family: monospace;
-    z-index: 2;
-    pointer-events: none;
-    background: rgba(255,255,255,0.4);
-    padding: 2px 6px;
-    border-radius: 4px;
-}
-
-.version-badge {
-    position: sticky;
-    bottom: 5px;
-    left: 10px;
-    float: left;
-    font-size: 8px;
-    color: rgba(0,0,0,0.15);
-    font-family: monospace;
-    z-index: 2;
-    pointer-events: none;
-    background: rgba(255,255,255,0.4);
-    padding: 2px 6px;
-    border-radius: 4px;
 }
