@@ -9,7 +9,7 @@ class ComparativeTimeline {
         this.minZoom = 35;
         this.maxZoom = 160;
         this.version = "1.0.0-beta";
-        this.buildDate = "2024-04-12";
+        this.buildDate = "2026-04-12";
         this.init();
     }
 
