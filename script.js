@@ -18,6 +18,7 @@ class ComparativeTimeline {
         this.bindEvents();
         this.setupModal();
         this.setupPinchZoom();
+        this.updateVersion();  // <-- ADD THIS LINE
         console.log('Timeline ready - GitHub version');
     }
 
@@ -302,6 +303,17 @@ class ComparativeTimeline {
         window.addEventListener('touchmove', onDrag, { passive: false });
         window.addEventListener('touchend', onDragEnd);
     }
+
+
+    updateVersion() {
+    const versionEl = document.getElementById('version-number');
+    if (versionEl) {
+        const now = new Date();
+        const version = `v1.0.0-beta | ${now.toISOString().slice(0, 10)} | Build: ${Math.floor(now.getTime() / 1000)}`;
+        versionEl.textContent = version;
+    }
+}
+    
 }
 
 // Initialize
