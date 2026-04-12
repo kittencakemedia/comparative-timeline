@@ -308,3 +308,20 @@ class ComparativeTimeline {
 document.addEventListener('DOMContentLoaded', () => {
     window.timeline = new ComparativeTimeline();
 });
+
+// Auto-updating version - add this at the END of script.js
+function updateVersion() {
+    const versionEl = document.getElementById('version-number');
+    if (versionEl) {
+        const now = new Date();
+        const version = `v1.0.0-beta | ${now.toISOString().slice(0, 10)} | Build: ${Math.floor(now.getTime() / 1000)}`;
+        versionEl.textContent = version;
+    }
+}
+
+// Call it when timeline initializes
+// Add this line inside your init() method, after console.log
+// this.updateVersion();
+
+// Also call it on its own as a backup
+setTimeout(updateVersion, 100);
