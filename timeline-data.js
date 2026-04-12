@@ -1,4 +1,4 @@
-// Event data - easily add new events here
+// Event data - will be replaced with your spreadsheet data
 const timelineEvents = [
     { id: 1, date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire. The Nazi government blames communists and uses the event as a pretext to suspend civil liberties.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", type: "circle", tags: ["Emergency Powers"] },
     { id: 2, date: "2020-11-07", year: 2020, title: "Trump's 'Rigged Election' Narrative", description: "After losing the 2020 presidential election, Trump and his allies persistently and falsely claim it was 'stolen' through widespread fraud.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", type: "rect", tags: ["Electoral Manipulation"] },
