@@ -33,11 +33,24 @@ class ComparativeTimeline {
     }
 
     updateVersionDisplay() {
-        const versionEl = document.getElementById('version-number');
-        if (versionEl) {
-            versionEl.textContent = `v${this.version} | ${this.buildDate}`;
-        }
+    const versionEl = document.getElementById('version-number');
+    if (versionEl) {
+        // Try to get last modified date of the data file
+        fetch('timeline-data.js', { cache: 'no-store' })
+            .then(response => {
+                const lastModified = response.headers.get('Last-Modified');
+                if (lastModified) {
+                    const date = new Date(lastModified);
+                    versionEl.textContent = `v1.0.0-beta | ${date.toISOString().slice(0, 10)}`;
+                } else {
+                    versionEl.textContent = `v1.0.0-beta | ${new Date().toISOString().slice(0, 10)}`;
+                }
+            })
+            .catch(() => {
+                versionEl.textContent = `v1.0.0-beta | ${new Date().toISOString().slice(0, 10)}`;
+            });
     }
+}
 
     getTotalWidth() {
         const totalYears = (this.topEnd - this.topStart);
