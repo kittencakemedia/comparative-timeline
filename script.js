@@ -1,27 +1,40 @@
-// Main Timeline Class
+// ============================================
+// COMPARATIVE TIMELINE - MAIN SCRIPT
+// Updated to support mapped year display
+// ============================================
+
+// Timeline Class
 class ComparativeTimeline {
     constructor() {
         this.events = timelineEvents;
         this.topStart = 1920; this.topEnd = 1950;
-        this.bottomStart = 2000; this.bottomEnd = 2030;
+        this.bottomStart = 1920; this.bottomEnd = 1950;  // Trump uses Hitler's years for display
         this.zoom = 70;
         this.offset = 0;
         this.minZoom = 35;
         this.maxZoom = 160;
-        this.version = "1.0.0-beta";
-        this.buildDate = "2026-04-12";
         this.init();
     }
 
     init() {
         this.cacheElements();
-        this.createYearMarkers();
         this.renderTimeline();
         this.bindEvents();
         this.setupModal();
-        this.setupPinchZoom();
-        this.updateVersionDisplay();
-        console.log('Timeline ready - v' + this.version);
+        this.logDataQuality();
+        console.log('Timeline ready - Using mapped year display');
+    }
+
+    logDataQuality() {
+        const eventsWithImages = this.events.filter(e => e.image && e.image !== "");
+        const placeholders = this.events.filter(e => e.isPlaceholder);
+        console.log(`📊 Data Quality:`);
+        console.log(`   Total events: ${this.events.length}`);
+        console.log(`   Events with images: ${eventsWithImages.length}`);
+        console.log(`   Placeholders: ${placeholders.length}`);
+        if (placeholders.length > 0) {
+            console.log(`   ⚠️ Placeholders need replacement: ${placeholders.map(p => p.id).join(', ')}`);
+        }
     }
 
     cacheElements() {
@@ -32,30 +45,25 @@ class ComparativeTimeline {
         this.inner = document.getElementById('timeline-inner');
     }
 
-    updateVersionDisplay() {
-    const versionEl = document.getElementById('version-number');
-    if (versionEl) {
-        versionEl.textContent = `Beta | Last updated: ${document.lastModified}`;
-    }
-}
-
     getTotalWidth() {
         const totalYears = (this.topEnd - this.topStart);
-        const width = totalYears * this.zoom + 160;
+        const width = totalYears * this.zoom + 200;
         return Math.max(width, this.container.clientWidth);
     }
 
     updateInnerWidth() {
         const totalWidth = this.getTotalWidth();
-        this.inner.style.width = totalWidth + 'px';
-        this.topTrack.style.width = totalWidth + 'px';
-        this.bottomTrack.style.width = totalWidth + 'px';
+        if (this.inner) this.inner.style.width = totalWidth + 'px';
+        if (this.topTrack) this.topTrack.style.width = totalWidth + 'px';
+        if (this.bottomTrack) this.bottomTrack.style.width = totalWidth + 'px';
         return totalWidth;
     }
 
+    // Use the event's 'year' field for positioning (Hitler's year for mapped events)
     yearToPixel(year, position) {
-        const start = position === 'top' ? this.topStart : this.bottomStart;
-        const end = position === 'top' ? this.topEnd : this.bottomEnd;
+        // Both top and bottom now use the same 1920-1950 range for display
+        const start = 1920;
+        const end = 1950;
         const percent = (year - start) / (end - start);
         const totalYears = (end - start);
         const width = totalYears * this.zoom;
@@ -66,7 +74,7 @@ class ComparativeTimeline {
         const topContainer = document.getElementById('top-year-markers');
         if (topContainer) {
             topContainer.innerHTML = '';
-            for (let y = this.topStart; y <= this.topEnd; y += 5) {
+            for (let y = 1920; y <= 1950; y += 5) {
                 const left = this.yearToPixel(y, 'top');
                 const label = document.createElement('span');
                 label.className = 'year-marker-label';
@@ -79,7 +87,7 @@ class ComparativeTimeline {
         const bottomContainer = document.getElementById('bottom-year-markers');
         if (bottomContainer) {
             bottomContainer.innerHTML = '';
-            for (let y = this.bottomStart; y <= this.bottomEnd; y += 5) {
+            for (let y = 1920; y <= 1950; y += 5) {
                 const left = this.yearToPixel(y, 'bottom');
                 const label = document.createElement('span');
                 label.className = 'year-marker-label';
@@ -91,8 +99,8 @@ class ComparativeTimeline {
     }
 
     calculateVerticalPosition(eventsForYear, eventIndex) {
-        const baseY = 30;
-        const baseSpacing = 35;
+        const baseY = 20;
+        const baseSpacing = 55;
         const zoomFactor = this.zoom / 70;
         const spacing = baseSpacing * Math.pow(zoomFactor, 1.2);
         return baseY + (eventIndex * spacing);
@@ -100,16 +108,19 @@ class ComparativeTimeline {
 
     renderTimeline() {
         this.updateInnerWidth();
-        this.topTrack.innerHTML = '';
-        this.bottomTrack.innerHTML = '';
+        if (this.topTrack) this.topTrack.innerHTML = '';
+        if (this.bottomTrack) this.bottomTrack.innerHTML = '';
 
+        // Group events by year for stacking
         const groupedEvents = {};
         this.events.forEach(event => {
+            // Use 'year' field for positioning (already mapped to Hitler's year for Trump)
             const key = `${event.position}_${event.year}`;
             if (!groupedEvents[key]) groupedEvents[key] = [];
             groupedEvents[key].push(event);
         });
 
+        // Render events
         this.events.forEach(event => {
             const x = this.yearToPixel(event.year, event.position);
             const key = `${event.position}_${event.year}`;
@@ -120,6 +131,15 @@ class ComparativeTimeline {
         });
 
         this.createYearMarkers();
+    }
+
+    getDisplayImage(event) {
+        if (event.image && event.image !== "") {
+            return event.image;
+        }
+        // Use fallback icon as data URI if no image
+        const icon = event.fallbackIcon || "📌";
+        return null;  // Will trigger fallback display
     }
 
     createCard(event, x, y) {
@@ -133,40 +153,69 @@ class ComparativeTimeline {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const month = monthNames[date.getMonth()];
         
+        // Show actual year for Trump events if different from display year
+        let yearDisplay = `${month} ${yearOnly}`;
+        if (event.actualYear && event.actualYear !== event.year) {
+            yearDisplay = `${month} ${yearOnly} (Mapped to ${event.year})`;
+        }
+        
+        // Handle image or fallback
+        const imageHtml = event.image && event.image !== "" 
+            ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.card-icon').style.fontSize='1.5rem';">`
+            : `<div class="card-icon" style="font-size: 1.8rem; text-align: center;">${event.fallbackIcon || '📌'}</div>`;
+        
         card.innerHTML = `
-            <div class="card-icon"><i class="fas fa-${event.type === 'circle' ? 'circle' : 'square'}"></i></div>
-            ${event.image ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'">` : ''}
+            ${imageHtml}
             <div class="card-title">${event.title}</div>
-            <div class="card-year">${month} ${yearOnly}</div>
+            <div class="card-year">${yearDisplay}</div>
         `;
         
         card.onclick = () => this.showDetails(event);
         
-        if (event.position === 'top') this.topTrack.appendChild(card);
-        else this.bottomTrack.appendChild(card);
+        if (event.position === 'top') {
+            this.topTrack.appendChild(card);
+        } else {
+            this.bottomTrack.appendChild(card);
+        }
     }
 
     showDetails(event) {
         document.getElementById('modal-title').textContent = event.title;
-        document.getElementById('modal-date').textContent = new Date(event.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // Show date information including mapping if applicable
+        const eventDate = new Date(event.date);
+        const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        if (event.actualYear && event.actualYear !== event.year) {
+            document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year} (mapped to Hitler's timeline)</small>`;
+        } else {
+            document.getElementById('modal-date').textContent = dateStr;
+        }
+        
         document.getElementById('modal-description').textContent = event.description;
         
+        // Handle image display in modal
         const imageContainer = document.getElementById('modal-image-container');
         if (event.image && event.image !== '') {
             imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
         } else {
-            imageContainer.innerHTML = '<div class="image-fallback"><i class="fas fa-image"></i><br>No image available</div>';
+            const icon = event.fallbackIcon || '📌';
+            imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
         }
         
+        // Handle tags
         const tagsContainer = document.getElementById('modal-tags');
         tagsContainer.innerHTML = '';
-        event.tags.forEach(tag => {
-            const span = document.createElement('span');
-            span.className = 'tag';
-            span.textContent = tag;
-            span.style.backgroundColor = TAG_COLORS[tag] || '#666';
-            tagsContainer.appendChild(span);
-        });
+        if (event.tags) {
+            event.tags.forEach(tag => {
+                const tagDef = TAG_DEFINITIONS ? Object.values(TAG_DEFINITIONS).find(t => t.name === tag) : null;
+                const color = tagDef ? tagDef.color : '#666';
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.textContent = tag;
+                span.style.backgroundColor = color;
+                tagsContainer.appendChild(span);
+            });
+        }
         
         this.modal.style.display = 'flex';
     }
@@ -180,13 +229,7 @@ class ComparativeTimeline {
     zoomIn() {
         let newZoom = this.zoom * 1.25;
         if (newZoom <= this.maxZoom) {
-            const containerRect = this.container.getBoundingClientRect();
-            const centerX = containerRect.left + containerRect.width / 2;
             this.zoom = newZoom;
-            this.renderTimeline();
-            const newContainerRect = this.container.getBoundingClientRect();
-            const newCenterX = newContainerRect.left + newContainerRect.width / 2;
-            this.offset += (centerX - newCenterX) * 0.5;
             this.renderTimeline();
         }
     }
@@ -194,26 +237,21 @@ class ComparativeTimeline {
     zoomOut() {
         let newZoom = this.zoom * 0.8;
         if (newZoom >= this.minZoom) {
-            const containerRect = this.container.getBoundingClientRect();
-            const centerX = containerRect.left + containerRect.width / 2;
             this.zoom = newZoom;
-            this.renderTimeline();
-            const newContainerRect = this.container.getBoundingClientRect();
-            const newCenterX = newContainerRect.left + newContainerRect.width / 2;
-            this.offset += (centerX - newCenterX) * 0.5;
             this.renderTimeline();
         }
     }
 
     fitToScreen() {
+        if (!this.container) return;
         const visibleWidth = this.container.clientWidth - 40;
-        const currentWidth = (this.topEnd - this.topStart) * this.zoom;
+        const currentWidth = (1950 - 1920) * this.zoom;
         const targetZoom = (visibleWidth / currentWidth) * this.zoom;
         let newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
         this.zoom = newZoom;
         this.offset = 0;
         this.renderTimeline();
-        setTimeout(() => { this.container.scrollLeft = 0; }, 10);
+        setTimeout(() => { if (this.container) this.container.scrollLeft = 0; }, 10);
     }
 
     resetView() {
@@ -223,69 +261,25 @@ class ComparativeTimeline {
         if (this.container) this.container.scrollLeft = 0;
     }
 
-    setupPinchZoom() {
-        let initialPinchDistance = 0;
-        let initialZoom = this.zoom;
-        let initialOffset = this.offset;
-        
-        const getPinchDistance = (touches) => {
-            const dx = touches[0].clientX - touches[1].clientX;
-            const dy = touches[0].clientY - touches[1].clientY;
-            return Math.sqrt(dx * dx + dy * dy);
-        };
-        
-        const getPinchCenter = (touches) => {
-            return {
-                x: (touches[0].clientX + touches[1].clientX) / 2,
-                y: (touches[0].clientY + touches[1].clientY) / 2
-            };
-        };
-        
-        this.container.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                e.preventDefault();
-                initialPinchDistance = getPinchDistance(e.touches);
-                initialZoom = this.zoom;
-                initialOffset = this.offset;
-            }
-        });
-        
-        this.container.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2) {
-                e.preventDefault();
-                const newDistance = getPinchDistance(e.touches);
-                const center = getPinchCenter(e.touches);
-                const scale = newDistance / initialPinchDistance;
-                let newZoom = initialZoom * scale;
-                newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
-                
-                if (newZoom !== this.zoom) {
-                    const zoomRatio = newZoom / this.zoom;
-                    const containerRect = this.container.getBoundingClientRect();
-                    const relativeX = (center.x - containerRect.left + this.container.scrollLeft) / this.getTotalWidth();
-                    this.zoom = newZoom;
-                    this.renderTimeline();
-                    const newTotalWidth = this.getTotalWidth();
-                    const newScrollX = relativeX * newTotalWidth - (center.x - containerRect.left);
-                    this.container.scrollLeft = newScrollX;
-                }
-            }
-        });
-    }
-
     bindEvents() {
-        document.getElementById('zoom-in').onclick = () => this.zoomIn();
-        document.getElementById('zoom-out').onclick = () => this.zoomOut();
-        document.getElementById('reset-view').onclick = () => this.resetView();
-        document.getElementById('fit-view').onclick = () => this.fitToScreen();
+        const zoomInBtn = document.getElementById('zoom-in');
+        const zoomOutBtn = document.getElementById('zoom-out');
+        const resetBtn = document.getElementById('reset-view');
+        const fitBtn = document.getElementById('fit-view');
         
+        if (zoomInBtn) zoomInBtn.onclick = () => this.zoomIn();
+        if (zoomOutBtn) zoomOutBtn.onclick = () => this.zoomOut();
+        if (resetBtn) resetBtn.onclick = () => this.resetView();
+        if (fitBtn) fitBtn.onclick = () => this.fitToScreen();
+        
+        // Drag to pan
         let isDragging = false, dragStart = 0, startOffset = 0;
         const onDragStart = (e) => {
             if (e.touches && e.touches.length > 1) return;
             isDragging = true;
             dragStart = e.clientX || (e.touches ? e.touches[0].clientX : 0);
             startOffset = this.offset;
-            document.body.style.cursor = 'grabbing';
+            if (this.container) this.container.style.cursor = 'grabbing';
         };
         const onDrag = (e) => {
             if (!isDragging) return;
@@ -296,16 +290,12 @@ class ComparativeTimeline {
         };
         const onDragEnd = () => {
             isDragging = false;
-            document.body.style.cursor = 'default';
+            if (this.container) this.container.style.cursor = 'default';
         };
         
-        if (this.topTrack) {
-            this.topTrack.addEventListener('mousedown', onDragStart);
-            this.topTrack.addEventListener('touchstart', onDragStart, { passive: false });
-        }
-        if (this.bottomTrack) {
-            this.bottomTrack.addEventListener('mousedown', onDragStart);
-            this.bottomTrack.addEventListener('touchstart', onDragStart, { passive: false });
+        if (this.container) {
+            this.container.addEventListener('mousedown', onDragStart);
+            this.container.addEventListener('touchstart', onDragStart, { passive: false });
         }
         window.addEventListener('mousemove', onDrag);
         window.addEventListener('mouseup', onDragEnd);
