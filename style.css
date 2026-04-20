@@ -10,6 +10,7 @@ body {
     color: #1a1a2e;
     line-height: 1.5;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .container {
@@ -88,26 +89,49 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
-/* Timeline Container - CRITICAL: no vertical scrollbar */
-.timeline-container {
-    position: relative;
+/* SINGLE SCROLLABLE CONTAINER */
+.timeline-wrapper {
     background: white;
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     overflow-x: auto;
     overflow-y: visible;
     width: 100%;
+    position: relative;
+}
+
+/* Custom horizontal scrollbar styling */
+.timeline-wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.timeline-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.timeline-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+.timeline-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.timeline-container {
+    min-width: 3200px;
+    position: relative;
 }
 
 .timeline-inner {
     position: relative;
     width: 100%;
     z-index: 1;
-    display: inline-block;
 }
 
 /* Watermark */
-.timeline-inner::before {
+.timeline-container::before {
     content: "";
     position: absolute;
     top: 0;
@@ -123,10 +147,9 @@ h1 {
 }
 
 .watermark-text {
-    position: sticky;
+    position: absolute;
     bottom: 15px;
     right: 20px;
-    float: right;
     font-size: 10px;
     color: rgba(0,0,0,0.12);
     font-family: monospace;
@@ -136,15 +159,12 @@ h1 {
     padding: 3px 10px;
     border-radius: 4px;
     letter-spacing: 1px;
-    margin-top: -30px;
-    margin-right: 10px;
 }
 
 .version-badge {
-    position: sticky;
+    position: absolute;
     bottom: 5px;
     left: 10px;
-    float: left;
     font-size: 8px;
     color: rgba(0,0,0,0.15);
     font-family: monospace;
@@ -153,28 +173,24 @@ h1 {
     background: rgba(255,255,255,0.4);
     padding: 2px 6px;
     border-radius: 4px;
-    margin-top: -30px;
-    margin-left: 10px;
 }
 
 .top-section {
     position: relative;
-    min-height: 400px;
+    min-height: 420px;
     background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.12) 100%);
     border-radius: 12px 12px 0 0;
     margin: 0;
     padding: 20px 0 10px 0;
-    width: 100%;
 }
 
 .bottom-section {
     position: relative;
-    min-height: 400px;
+    min-height: 420px;
     background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.12) 100%);
     border-radius: 0 0 12px 12px;
     margin: 0;
     padding: 10px 0 20px 0;
-    width: 100%;
 }
 
 .era-label {
@@ -204,10 +220,10 @@ h1 {
     border: 1.5px solid #1E90FF;
 }
 
-/* Timeline Track with Vertical Scrolling ONLY for cards */
+/* Timeline Track - Vertical scroll only */
 .timeline-track {
     position: relative;
-    height: 500px;
+    height: 450px;
     margin: 10px 0;
     overflow-y: auto;
     overflow-x: visible;
@@ -228,7 +244,7 @@ h1 {
     border-radius: 4px;
 }
 
-/* Year Markers - Sticky */
+/* Year Markers - Sticky within track */
 .year-markers {
     position: sticky;
     top: 0;
@@ -237,6 +253,7 @@ h1 {
     padding: 8px 0;
     border-bottom: 1px solid #eee;
     margin-bottom: 5px;
+    height: 35px;
 }
 
 .year-marker-label {
@@ -351,7 +368,7 @@ h1 {
     z-index: 5;
 }
 
-/* Modal - FIXED: centered in viewport */
+/* Modal - Fixed to viewport */
 .modal {
     display: none;
     position: fixed;
@@ -369,8 +386,11 @@ h1 {
     background: white;
     width: 90%;
     max-width: 500px;
+    max-height: 85vh;
     border-radius: 16px;
+    overflow-y: auto;
     animation: modalFade 0.3s ease;
+    margin: 20px;
 }
 
 @keyframes modalFade {
@@ -382,16 +402,16 @@ h1 {
     padding: 16px 20px;
     background: linear-gradient(135deg, #DC143C, #1E90FF);
     color: white;
-    border-radius: 16px 16px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
-.modal-header h2 { font-size: 1.2rem; margin-bottom: 4px; }
+.modal-header h2 { font-size: 1.2rem; margin-bottom: 4px; padding-right: 30px; }
 .modal-date { font-size: 0.75rem; opacity: 0.9; }
 
 .modal-body {
     padding: 18px;
-    max-height: 70vh;
-    overflow-y: auto;
 }
 
 .modal-image-container {
@@ -430,7 +450,9 @@ h1 {
 }
 
 .close-modal {
-    float: right;
+    position: absolute;
+    top: 12px;
+    right: 16px;
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
