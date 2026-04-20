@@ -1,6 +1,6 @@
 // ============================================
 // COMPARATIVE TIMELINE - MAIN SCRIPT
-// Updated to support mapped year display
+// Full working version with modal centering
 // ============================================
 
 // Timeline Class
@@ -8,7 +8,7 @@ class ComparativeTimeline {
     constructor() {
         this.events = timelineEvents;
         this.topStart = 1920; this.topEnd = 1950;
-        this.bottomStart = 1920; this.bottomEnd = 1950;  // Trump uses Hitler's years for display
+        this.bottomStart = 1920; this.bottomEnd = 1950;
         this.zoom = 70;
         this.offset = 0;
         this.minZoom = 35;
@@ -21,20 +21,7 @@ class ComparativeTimeline {
         this.renderTimeline();
         this.bindEvents();
         this.setupModal();
-        this.logDataQuality();
-        console.log('Timeline ready - Using mapped year display');
-    }
-
-    logDataQuality() {
-        const eventsWithImages = this.events.filter(e => e.image && e.image !== "");
-        const placeholders = this.events.filter(e => e.isPlaceholder);
-        console.log(`📊 Data Quality:`);
-        console.log(`   Total events: ${this.events.length}`);
-        console.log(`   Events with images: ${eventsWithImages.length}`);
-        console.log(`   Placeholders: ${placeholders.length}`);
-        if (placeholders.length > 0) {
-            console.log(`   ⚠️ Placeholders need replacement: ${placeholders.map(p => p.id).join(', ')}`);
-        }
+        console.log('Timeline ready - Full working version');
     }
 
     cacheElements() {
@@ -48,7 +35,7 @@ class ComparativeTimeline {
     getTotalWidth() {
         const totalYears = (this.topEnd - this.topStart);
         const width = totalYears * this.zoom + 200;
-        return Math.max(width, this.container.clientWidth);
+        return Math.max(width, this.container ? this.container.clientWidth : 1200);
     }
 
     updateInnerWidth() {
@@ -59,9 +46,7 @@ class ComparativeTimeline {
         return totalWidth;
     }
 
-    // Use the event's 'year' field for positioning (Hitler's year for mapped events)
     yearToPixel(year, position) {
-        // Both top and bottom now use the same 1920-1950 range for display
         const start = 1920;
         const end = 1950;
         const percent = (year - start) / (end - start);
@@ -111,16 +96,13 @@ class ComparativeTimeline {
         if (this.topTrack) this.topTrack.innerHTML = '';
         if (this.bottomTrack) this.bottomTrack.innerHTML = '';
 
-        // Group events by year for stacking
         const groupedEvents = {};
         this.events.forEach(event => {
-            // Use 'year' field for positioning (already mapped to Hitler's year for Trump)
             const key = `${event.position}_${event.year}`;
             if (!groupedEvents[key]) groupedEvents[key] = [];
             groupedEvents[key].push(event);
         });
 
-        // Render events
         this.events.forEach(event => {
             const x = this.yearToPixel(event.year, event.position);
             const key = `${event.position}_${event.year}`;
@@ -131,15 +113,6 @@ class ComparativeTimeline {
         });
 
         this.createYearMarkers();
-    }
-
-    getDisplayImage(event) {
-        if (event.image && event.image !== "") {
-            return event.image;
-        }
-        // Use fallback icon as data URI if no image
-        const icon = event.fallbackIcon || "📌";
-        return null;  // Will trigger fallback display
     }
 
     createCard(event, x, y) {
@@ -153,7 +126,6 @@ class ComparativeTimeline {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const month = monthNames[date.getMonth()];
         
-        // Show actual year for Trump events if different from display year
         let yearDisplay = `${month} ${yearOnly}`;
         if (event.actualYear && event.actualYear !== event.year) {
             yearDisplay = `${month} ${yearOnly} (Mapped to ${event.year})`;
@@ -180,9 +152,11 @@ class ComparativeTimeline {
     }
 
     showDetails(event) {
+        const modal = this.modal;
+        if (!modal) return;
+        
         document.getElementById('modal-title').textContent = event.title;
         
-        // Show date information including mapping if applicable
         const eventDate = new Date(event.date);
         const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         if (event.actualYear && event.actualYear !== event.year) {
@@ -193,7 +167,6 @@ class ComparativeTimeline {
         
         document.getElementById('modal-description').textContent = event.description;
         
-        // Handle image display in modal
         const imageContainer = document.getElementById('modal-image-container');
         if (event.image && event.image !== '') {
             imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
@@ -202,28 +175,48 @@ class ComparativeTimeline {
             imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
         }
         
-        // Handle tags
         const tagsContainer = document.getElementById('modal-tags');
         tagsContainer.innerHTML = '';
         if (event.tags) {
             event.tags.forEach(tag => {
-                const tagDef = TAG_DEFINITIONS ? Object.values(TAG_DEFINITIONS).find(t => t.name === tag) : null;
-                const color = tagDef ? tagDef.color : '#666';
                 const span = document.createElement('span');
                 span.className = 'tag';
                 span.textContent = tag;
-                span.style.backgroundColor = color;
+                span.style.backgroundColor = this.getTagColor(tag);
                 tagsContainer.appendChild(span);
             });
         }
         
-        this.modal.style.display = 'flex';
+        // Show modal centered
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+    }
+
+    getTagColor(tag) {
+        const colors = {
+            "Emergency Powers & Crisis Exploitation": "#B22222",
+            "Propaganda & Media Control": "#1E90FF",
+            "Judiciary & Legal Undermining": "#228B22",
+            "State-Sanctioned Violence & Intimidation": "#FFD700",
+            "Surveillance & Internal Policing": "#8A2BE2",
+            "Loyalty Purges & Political Patronage": "#DC143C",
+            "Electoral Manipulation & Democratic Erosion": "#2E8B57",
+            "Cult of Personality & Mass Mobilization": "#FF8C00",
+            "Authoritarian Ideology & Nationalism": "#FF6EDF",
+            "Legal Manipulation & Institutional Capture": "#FF8CDE"
+        };
+        return colors[tag] || "#666";
     }
 
     setupModal() {
         const closeBtn = document.querySelector('.close-modal');
-        if (closeBtn) closeBtn.onclick = () => this.modal.style.display = 'none';
-        window.onclick = (e) => { if (e.target === this.modal) this.modal.style.display = 'none'; };
+        if (closeBtn) closeBtn.onclick = () => {
+            if (this.modal) this.modal.style.display = 'none';
+        };
+        window.onclick = (e) => {
+            if (e.target === this.modal) this.modal.style.display = 'none';
+        };
     }
 
     zoomIn() {
