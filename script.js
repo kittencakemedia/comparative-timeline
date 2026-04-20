@@ -1,14 +1,17 @@
 // ============================================
 // COMPARATIVE TIMELINE - MAIN SCRIPT
-// Full working version with modal centering
+// Fixed: Separate year ranges for top and bottom
 // ============================================
 
-// Timeline Class
 class ComparativeTimeline {
     constructor() {
         this.events = timelineEvents;
-        this.topStart = 1920; this.topEnd = 1950;
-        this.bottomStart = 1920; this.bottomEnd = 1950;
+        // Top timeline: Hitler actual years (1920-1950)
+        this.topStart = 1920;
+        this.topEnd = 1950;
+        // Bottom timeline: Trump actual years (2000-2030) for markers
+        this.bottomStart = 2000;
+        this.bottomEnd = 2030;
         this.zoom = 70;
         this.offset = 0;
         this.minZoom = 35;
@@ -21,15 +24,15 @@ class ComparativeTimeline {
         this.renderTimeline();
         this.bindEvents();
         this.setupModal();
-        console.log('Timeline ready - Full working version');
+        console.log('Timeline ready - Separate year ranges');
     }
 
     cacheElements() {
         this.topTrack = document.getElementById('top-timeline');
         this.bottomTrack = document.getElementById('bottom-timeline');
         this.modal = document.getElementById('event-modal');
-        this.container = document.getElementById('timeline-container');
-        this.inner = document.getElementById('timeline-inner');
+        this.container = document.querySelector('.timeline-wrapper');
+        this.inner = document.querySelector('.timeline-container');
     }
 
     getTotalWidth() {
@@ -46,7 +49,9 @@ class ComparativeTimeline {
         return totalWidth;
     }
 
+    // For positioning cards: Trump cards use Hitler's year (mapped)
     yearToPixel(year, position) {
+        // Both use the same 1920-1950 range for positioning
         const start = 1920;
         const end = 1950;
         const percent = (year - start) / (end - start);
@@ -55,12 +60,18 @@ class ComparativeTimeline {
         return 80 + (percent * width) + this.offset;
     }
 
+    // For year markers: Top uses 1920-1950, Bottom uses 2000-2030
     createYearMarkers() {
+        // Top markers (1920-1950) - positioned above top timeline
         const topContainer = document.getElementById('top-year-markers');
         if (topContainer) {
             topContainer.innerHTML = '';
-            for (let y = 1920; y <= 1950; y += 5) {
-                const left = this.yearToPixel(y, 'top');
+            for (let y = this.topStart; y <= this.topEnd; y += 5) {
+                // Use the same positioning logic for consistency
+                const percent = (y - this.topStart) / (this.topEnd - this.topStart);
+                const totalYears = (this.topEnd - this.topStart);
+                const width = totalYears * this.zoom;
+                const left = 80 + (percent * width) + this.offset;
                 const label = document.createElement('span');
                 label.className = 'year-marker-label';
                 label.textContent = y;
@@ -69,11 +80,17 @@ class ComparativeTimeline {
             }
         }
 
+        // Bottom markers (2000-2030) - positioned below bottom timeline
         const bottomContainer = document.getElementById('bottom-year-markers');
         if (bottomContainer) {
             bottomContainer.innerHTML = '';
-            for (let y = 1920; y <= 1950; y += 5) {
-                const left = this.yearToPixel(y, 'bottom');
+            for (let y = this.bottomStart; y <= this.bottomEnd; y += 5) {
+                // Map 2000-2030 to same pixel positions as 1920-1950
+                // 2000 maps to 1920, 2030 maps to 1950
+                const relativePercent = (y - this.bottomStart) / (this.bottomEnd - this.bottomStart);
+                const totalYears = (this.topEnd - this.topStart);
+                const width = totalYears * this.zoom;
+                const left = 80 + (relativePercent * width) + this.offset;
                 const label = document.createElement('span');
                 label.className = 'year-marker-label';
                 label.textContent = y;
@@ -98,6 +115,7 @@ class ComparativeTimeline {
 
         const groupedEvents = {};
         this.events.forEach(event => {
+            // Use 'year' field for positioning (Hitler's year for Trump events)
             const key = `${event.position}_${event.year}`;
             if (!groupedEvents[key]) groupedEvents[key] = [];
             groupedEvents[key].push(event);
@@ -126,14 +144,14 @@ class ComparativeTimeline {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const month = monthNames[date.getMonth()];
         
+        // Show actual year for Trump events
         let yearDisplay = `${month} ${yearOnly}`;
-        if (event.actualYear && event.actualYear !== event.year) {
-            yearDisplay = `${month} ${yearOnly} (Mapped to ${event.year})`;
+        if (event.position === 'bottom' && event.actualYear) {
+            yearDisplay = `${month} ${event.actualYear}`;
         }
         
-        // Handle image or fallback
         const imageHtml = event.image && event.image !== "" 
-            ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none'; this.parentElement.querySelector('.card-icon').style.fontSize='1.5rem';">`
+            ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none';">`
             : `<div class="card-icon" style="font-size: 1.8rem; text-align: center;">${event.fallbackIcon || '📌'}</div>`;
         
         card.innerHTML = `
@@ -159,7 +177,7 @@ class ComparativeTimeline {
         
         const eventDate = new Date(event.date);
         const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        if (event.actualYear && event.actualYear !== event.year) {
+        if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
             document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year} (mapped to Hitler's timeline)</small>`;
         } else {
             document.getElementById('modal-date').textContent = dateStr;
@@ -187,10 +205,7 @@ class ComparativeTimeline {
             });
         }
         
-        // Show modal centered
         modal.style.display = 'flex';
-        modal.style.justifyContent = 'center';
-        modal.style.alignItems = 'center';
     }
 
     getTagColor(tag) {
@@ -238,7 +253,7 @@ class ComparativeTimeline {
     fitToScreen() {
         if (!this.container) return;
         const visibleWidth = this.container.clientWidth - 40;
-        const currentWidth = (1950 - 1920) * this.zoom;
+        const currentWidth = (this.topEnd - this.topStart) * this.zoom;
         const targetZoom = (visibleWidth / currentWidth) * this.zoom;
         let newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
         this.zoom = newZoom;
@@ -265,7 +280,6 @@ class ComparativeTimeline {
         if (resetBtn) resetBtn.onclick = () => this.resetView();
         if (fitBtn) fitBtn.onclick = () => this.fitToScreen();
         
-        // Drag to pan
         let isDragging = false, dragStart = 0, startOffset = 0;
         const onDragStart = (e) => {
             if (e.touches && e.touches.length > 1) return;
@@ -297,7 +311,6 @@ class ComparativeTimeline {
     }
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
     window.timeline = new ComparativeTimeline();
 });
