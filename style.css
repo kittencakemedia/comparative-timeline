@@ -88,6 +88,7 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
+/* Timeline Container - CRITICAL: no vertical scrollbar */
 .timeline-container {
     position: relative;
     background: white;
@@ -105,6 +106,7 @@ h1 {
     display: inline-block;
 }
 
+/* Watermark */
 .timeline-inner::before {
     content: "";
     position: absolute;
@@ -113,20 +115,8 @@ h1 {
     right: 0;
     bottom: 0;
     background-image: 
-        repeating-linear-gradient(
-            45deg,
-            rgba(0,0,0,0.03) 0px,
-            rgba(0,0,0,0.03) 40px,
-            transparent 40px,
-            transparent 80px
-        ),
-        repeating-linear-gradient(
-            -45deg,
-            rgba(220,20,60,0.02) 0px,
-            rgba(220,20,60,0.02) 30px,
-            transparent 30px,
-            transparent 60px
-        );
+        repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 40px, transparent 40px, transparent 80px),
+        repeating-linear-gradient(-45deg, rgba(220,20,60,0.02) 0px, rgba(220,20,60,0.02) 30px, transparent 30px, transparent 60px);
     pointer-events: none;
     z-index: 0;
     border-radius: 16px;
@@ -150,19 +140,6 @@ h1 {
     margin-right: 10px;
 }
 
-.timeline-inner::after {
-    content: "HITLER 1933-1945";
-    position: absolute;
-    bottom: 15px;
-    right: 20px;
-    font-size: 9px;
-    color: rgba(0,0,0,0.08);
-    font-family: monospace;
-    pointer-events: none;
-    z-index: 1;
-    white-space: pre;
-}
-
 .version-badge {
     position: sticky;
     bottom: 5px;
@@ -182,7 +159,7 @@ h1 {
 
 .top-section {
     position: relative;
-    min-height: 280px;
+    min-height: 400px;
     background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.12) 100%);
     border-radius: 12px 12px 0 0;
     margin: 0;
@@ -192,7 +169,7 @@ h1 {
 
 .bottom-section {
     position: relative;
-    min-height: 280px;
+    min-height: 400px;
     background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.12) 100%);
     border-radius: 0 0 12px 12px;
     margin: 0;
@@ -227,27 +204,39 @@ h1 {
     border: 1.5px solid #1E90FF;
 }
 
+/* Timeline Track with Vertical Scrolling ONLY for cards */
 .timeline-track {
     position: relative;
-    height: 400px;
+    height: 500px;
     margin: 10px 0;
+    overflow-y: auto;
+    overflow-x: visible;
+    scrollbar-width: thin;
 }
 
+.timeline-track::-webkit-scrollbar {
+    width: 8px;
+}
+
+.timeline-track::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.timeline-track::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+/* Year Markers - Sticky */
 .year-markers {
-    position: relative;
-    width: 100%;
-    height: 28px;
-    pointer-events: none;
-}
-
-.top-markers {
-    margin-top: -5px;
-    margin-bottom: 0;
-}
-
-.bottom-markers {
-    margin-top: 0;
-    margin-bottom: -5px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 20;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
 }
 
 .year-marker-label {
@@ -267,20 +256,16 @@ h1 {
 .top-markers .year-marker-label {
     border: 1.5px solid #DC143C;
     color: #DC143C;
-    bottom: 0;
-    top: auto;
 }
 
 .bottom-markers .year-marker-label {
     border: 1.5px solid #1E90FF;
     color: #1E90FF;
-    top: 0;
-    bottom: auto;
 }
 
 .timeline-card {
     position: absolute;
-    width: 155px;
+    width: 160px;
     background: white;
     border-radius: 10px;
     padding: 8px;
@@ -366,6 +351,7 @@ h1 {
     z-index: 5;
 }
 
+/* Modal - FIXED: centered in viewport */
 .modal {
     display: none;
     position: fixed;
@@ -373,19 +359,18 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10000;
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
     background: white;
-    max-width: 500px;
     width: 90%;
+    max-width: 500px;
     border-radius: 16px;
-    overflow: hidden;
-    animation: modalFade 0.25s ease;
+    animation: modalFade 0.3s ease;
 }
 
 @keyframes modalFade {
@@ -397,6 +382,7 @@ h1 {
     padding: 16px 20px;
     background: linear-gradient(135deg, #DC143C, #1E90FF);
     color: white;
+    border-radius: 16px 16px 0 0;
 }
 
 .modal-header h2 { font-size: 1.2rem; margin-bottom: 4px; }
@@ -426,12 +412,6 @@ h1 {
     text-align: center;
     border-radius: 8px;
     color: #999;
-}
-
-.modal-body p {
-    margin-bottom: 12px;
-    line-height: 1.5;
-    font-size: 0.9rem;
 }
 
 .modal-tags {
@@ -472,23 +452,4 @@ footer {
     font-size: 0.7rem;
     color: #aaa;
     margin-top: 10px;
-}
-
-/* Modern thin scroll bar */
-.timeline-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.timeline-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.timeline-container::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.timeline-container::-webkit-scrollbar-thumb:hover {
-    background: #555;
 }
