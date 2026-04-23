@@ -1,6 +1,6 @@
 // ============================================
 // COMPARATIVE TIMELINE - MAIN SCRIPT
-// Fixed: Separate year ranges for top and bottom
+// Fixed: Modal centering, Auto-updating version
 // ============================================
 
 class ComparativeTimeline {
@@ -24,26 +24,45 @@ class ComparativeTimeline {
         this.renderTimeline();
         this.bindEvents();
         this.setupModal();
-        console.log('Timeline ready - Separate year ranges');
+        this.updateVersionDisplay();
+        console.log('Timeline ready - Modal centered, auto-version');
+    }
+
+    updateVersionDisplay() {
+        const versionEl = document.getElementById('version-number');
+        if (versionEl) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit' 
+            });
+            const timeStr = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            versionEl.textContent = `Beta | ${dateStr} ${timeStr}`;
+        }
     }
 
     cacheElements() {
         this.topTrack = document.getElementById('top-timeline');
         this.bottomTrack = document.getElementById('bottom-timeline');
         this.modal = document.getElementById('event-modal');
-        this.container = document.querySelector('.timeline-wrapper');
-        this.inner = document.querySelector('.timeline-container');
+        this.wrapper = document.querySelector('.timeline-wrapper');
+        this.container = document.querySelector('.timeline-container');
     }
 
     getTotalWidth() {
         const totalYears = (this.topEnd - this.topStart);
         const width = totalYears * this.zoom + 200;
-        return Math.max(width, this.container ? this.container.clientWidth : 1200);
+        return Math.max(width, this.wrapper ? this.wrapper.clientWidth : 1200);
     }
 
     updateInnerWidth() {
         const totalWidth = this.getTotalWidth();
-        if (this.inner) this.inner.style.width = totalWidth + 'px';
+        if (this.container) this.container.style.width = totalWidth + 'px';
         if (this.topTrack) this.topTrack.style.width = totalWidth + 'px';
         if (this.bottomTrack) this.bottomTrack.style.width = totalWidth + 'px';
         return totalWidth;
@@ -51,7 +70,6 @@ class ComparativeTimeline {
 
     // For positioning cards: Trump cards use Hitler's year (mapped)
     yearToPixel(year, position) {
-        // Both use the same 1920-1950 range for positioning
         const start = 1920;
         const end = 1950;
         const percent = (year - start) / (end - start);
@@ -60,14 +78,12 @@ class ComparativeTimeline {
         return 80 + (percent * width) + this.offset;
     }
 
-    // For year markers: Top uses 1920-1950, Bottom uses 2000-2030
     createYearMarkers() {
-        // Top markers (1920-1950) - positioned above top timeline
+        // Top markers (1920-1950)
         const topContainer = document.getElementById('top-year-markers');
         if (topContainer) {
             topContainer.innerHTML = '';
             for (let y = this.topStart; y <= this.topEnd; y += 5) {
-                // Use the same positioning logic for consistency
                 const percent = (y - this.topStart) / (this.topEnd - this.topStart);
                 const totalYears = (this.topEnd - this.topStart);
                 const width = totalYears * this.zoom;
@@ -80,13 +96,11 @@ class ComparativeTimeline {
             }
         }
 
-        // Bottom markers (2000-2030) - positioned below bottom timeline
+        // Bottom markers (2000-2030)
         const bottomContainer = document.getElementById('bottom-year-markers');
         if (bottomContainer) {
             bottomContainer.innerHTML = '';
             for (let y = this.bottomStart; y <= this.bottomEnd; y += 5) {
-                // Map 2000-2030 to same pixel positions as 1920-1950
-                // 2000 maps to 1920, 2030 maps to 1950
                 const relativePercent = (y - this.bottomStart) / (this.bottomEnd - this.bottomStart);
                 const totalYears = (this.topEnd - this.topStart);
                 const width = totalYears * this.zoom;
@@ -115,7 +129,6 @@ class ComparativeTimeline {
 
         const groupedEvents = {};
         this.events.forEach(event => {
-            // Use 'year' field for positioning (Hitler's year for Trump events)
             const key = `${event.position}_${event.year}`;
             if (!groupedEvents[key]) groupedEvents[key] = [];
             groupedEvents[key].push(event);
@@ -144,7 +157,6 @@ class ComparativeTimeline {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const month = monthNames[date.getMonth()];
         
-        // Show actual year for Trump events
         let yearDisplay = `${month} ${yearOnly}`;
         if (event.position === 'bottom' && event.actualYear) {
             yearDisplay = `${month} ${event.actualYear}`;
@@ -160,7 +172,10 @@ class ComparativeTimeline {
             <div class="card-year">${yearDisplay}</div>
         `;
         
-        card.onclick = () => this.showDetails(event);
+        card.onclick = (e) => {
+            e.stopPropagation();
+            this.showDetails(event);
+        };
         
         if (event.position === 'top') {
             this.topTrack.appendChild(card);
@@ -205,7 +220,15 @@ class ComparativeTimeline {
             });
         }
         
+        // FIX: Ensure modal is centered in viewport
         modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        
+        // Force browser to center the modal
+        setTimeout(() => {
+            modal.scrollIntoView({ behavior: 'instant', block: 'center' });
+        }, 10);
     }
 
     getTagColor(tag) {
@@ -226,9 +249,11 @@ class ComparativeTimeline {
 
     setupModal() {
         const closeBtn = document.querySelector('.close-modal');
-        if (closeBtn) closeBtn.onclick = () => {
-            if (this.modal) this.modal.style.display = 'none';
-        };
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                if (this.modal) this.modal.style.display = 'none';
+            };
+        }
         window.onclick = (e) => {
             if (e.target === this.modal) this.modal.style.display = 'none';
         };
@@ -251,22 +276,22 @@ class ComparativeTimeline {
     }
 
     fitToScreen() {
-        if (!this.container) return;
-        const visibleWidth = this.container.clientWidth - 40;
+        if (!this.wrapper) return;
+        const visibleWidth = this.wrapper.clientWidth - 40;
         const currentWidth = (this.topEnd - this.topStart) * this.zoom;
         const targetZoom = (visibleWidth / currentWidth) * this.zoom;
         let newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
         this.zoom = newZoom;
         this.offset = 0;
         this.renderTimeline();
-        setTimeout(() => { if (this.container) this.container.scrollLeft = 0; }, 10);
+        setTimeout(() => { if (this.wrapper) this.wrapper.scrollLeft = 0; }, 10);
     }
 
     resetView() {
         this.zoom = 70;
         this.offset = 0;
         this.renderTimeline();
-        if (this.container) this.container.scrollLeft = 0;
+        if (this.wrapper) this.wrapper.scrollLeft = 0;
     }
 
     bindEvents() {
@@ -286,7 +311,7 @@ class ComparativeTimeline {
             isDragging = true;
             dragStart = e.clientX || (e.touches ? e.touches[0].clientX : 0);
             startOffset = this.offset;
-            if (this.container) this.container.style.cursor = 'grabbing';
+            if (this.wrapper) this.wrapper.style.cursor = 'grabbing';
         };
         const onDrag = (e) => {
             if (!isDragging) return;
@@ -297,12 +322,12 @@ class ComparativeTimeline {
         };
         const onDragEnd = () => {
             isDragging = false;
-            if (this.container) this.container.style.cursor = 'default';
+            if (this.wrapper) this.wrapper.style.cursor = 'default';
         };
         
-        if (this.container) {
-            this.container.addEventListener('mousedown', onDragStart);
-            this.container.addEventListener('touchstart', onDragStart, { passive: false });
+        if (this.wrapper) {
+            this.wrapper.addEventListener('mousedown', onDragStart);
+            this.wrapper.addEventListener('touchstart', onDragStart, { passive: false });
         }
         window.addEventListener('mousemove', onDrag);
         window.addEventListener('mouseup', onDragEnd);
