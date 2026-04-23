@@ -10,6 +10,7 @@ body {
     color: #1a1a2e;
     line-height: 1.5;
     padding: 20px;
+    overflow-x: hidden;
 }
 
 .container {
@@ -88,7 +89,7 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
-/* Scrollable wrapper - NO gray bar */
+/* Scrollable wrapper - NO GRAY BAR */
 .timeline-wrapper {
     background: white;
     border-radius: 16px;
@@ -99,26 +100,30 @@ h1 {
     position: relative;
 }
 
-/* Remove any default scrollbar styling that might add gray */
+/* Custom scrollbar styling - thin and modern */
 .timeline-wrapper::-webkit-scrollbar {
-    height: 10px;
-    background: transparent;
+    height: 8px;
+    background: #f1f1f1;
+    border-radius: 4px;
 }
 
 .timeline-wrapper::-webkit-scrollbar-track {
     background: #f1f1f1;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 .timeline-wrapper::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.timeline-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 .timeline-container {
     position: relative;
     display: inline-block;
-    min-width: 100%;
 }
 
 .timeline-inner {
@@ -376,31 +381,29 @@ h1 {
     z-index: 5;
 }
 
-/* Modal - FIXED: Centered without page scroll */
+/* Modal - FIXED: truly centered in viewport */
 .modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 10000;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    overflow-y: auto;
 }
 
 .modal-content {
     background: white;
     width: 90%;
     max-width: 500px;
-    max-height: 85vh;
     border-radius: 16px;
     overflow-y: auto;
+    max-height: 85vh;
     animation: modalFade 0.3s ease;
-    margin: 20px;
 }
 
 @keyframes modalFade {
