@@ -88,7 +88,7 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
-/* Scrollable wrapper - NO extra gray bar */
+/* Scrollable wrapper - NO gray bar */
 .timeline-wrapper {
     background: white;
     border-radius: 16px;
@@ -99,8 +99,10 @@ h1 {
     position: relative;
 }
 
+/* Remove any default scrollbar styling that might add gray */
 .timeline-wrapper::-webkit-scrollbar {
     height: 10px;
+    background: transparent;
 }
 
 .timeline-wrapper::-webkit-scrollbar-track {
@@ -114,9 +116,9 @@ h1 {
 }
 
 .timeline-container {
-    min-width: max-content;
     position: relative;
     display: inline-block;
+    min-width: 100%;
 }
 
 .timeline-inner {
@@ -374,18 +376,20 @@ h1 {
     z-index: 5;
 }
 
-/* Modal - FIXED CENTERING */
+/* Modal - FIXED: Centered without page scroll */
 .modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 10000;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
