@@ -1,6 +1,6 @@
 // ============================================
 // COMPARATIVE TIMELINE - MAIN SCRIPT
-// Fixed: Modal centering without page scroll
+// Fixed: Modal centering, Version on code change
 // ============================================
 
 class ComparativeTimeline {
@@ -23,24 +23,21 @@ class ComparativeTimeline {
         this.bindEvents();
         this.setupModal();
         this.updateVersionDisplay();
-        console.log('Timeline ready - Modal centered without page scroll');
+        console.log('Timeline ready - Modal centered');
     }
 
     updateVersionDisplay() {
         const versionEl = document.getElementById('version-number');
         if (versionEl) {
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit' 
-            });
-            const timeStr = now.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            versionEl.textContent = `Beta | ${dateStr} ${timeStr}`;
+            // Use a build timestamp from the script file's last modified time
+            // This updates only when the file changes
+            const buildTime = document.querySelector('script[src*="script.js"]')?.getAttribute('data-timestamp');
+            if (buildTime) {
+                versionEl.textContent = `Beta | ${buildTime}`;
+            } else {
+                // Fallback: manual version - change this number when you update code
+                versionEl.textContent = `Beta | Build 2024.04.22-001`;
+            }
         }
     }
 
@@ -215,7 +212,7 @@ class ComparativeTimeline {
             });
         }
         
-        // Simple modal display - NO scrollIntoView
+        // Simple modal display
         modal.style.display = 'flex';
     }
 
