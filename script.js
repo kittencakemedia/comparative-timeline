@@ -1,15 +1,13 @@
 // ============================================
 // COMPARATIVE TIMELINE - MAIN SCRIPT
-// Fixed: Modal centering, Auto-updating version
+// Fixed: Modal centering without page scroll
 // ============================================
 
 class ComparativeTimeline {
     constructor() {
         this.events = timelineEvents;
-        // Top timeline: Hitler actual years (1920-1950)
         this.topStart = 1920;
         this.topEnd = 1950;
-        // Bottom timeline: Trump actual years (2000-2030) for markers
         this.bottomStart = 2000;
         this.bottomEnd = 2030;
         this.zoom = 70;
@@ -25,7 +23,7 @@ class ComparativeTimeline {
         this.bindEvents();
         this.setupModal();
         this.updateVersionDisplay();
-        console.log('Timeline ready - Modal centered, auto-version');
+        console.log('Timeline ready - Modal centered without page scroll');
     }
 
     updateVersionDisplay() {
@@ -68,7 +66,6 @@ class ComparativeTimeline {
         return totalWidth;
     }
 
-    // For positioning cards: Trump cards use Hitler's year (mapped)
     yearToPixel(year, position) {
         const start = 1920;
         const end = 1950;
@@ -79,7 +76,6 @@ class ComparativeTimeline {
     }
 
     createYearMarkers() {
-        // Top markers (1920-1950)
         const topContainer = document.getElementById('top-year-markers');
         if (topContainer) {
             topContainer.innerHTML = '';
@@ -96,7 +92,6 @@ class ComparativeTimeline {
             }
         }
 
-        // Bottom markers (2000-2030)
         const bottomContainer = document.getElementById('bottom-year-markers');
         if (bottomContainer) {
             bottomContainer.innerHTML = '';
@@ -220,15 +215,8 @@ class ComparativeTimeline {
             });
         }
         
-        // FIX: Ensure modal is centered in viewport
+        // Simple modal display - NO scrollIntoView
         modal.style.display = 'flex';
-        modal.style.justifyContent = 'center';
-        modal.style.alignItems = 'center';
-        
-        // Force browser to center the modal
-        setTimeout(() => {
-            modal.scrollIntoView({ behavior: 'instant', block: 'center' });
-        }, 10);
     }
 
     getTagColor(tag) {
