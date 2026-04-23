@@ -167,24 +167,22 @@ h1 {
     border-radius: 4px;
 }
 
-/* TOP SECTION - Red */
+/* TOP SECTION */
 .top-section {
     position: relative;
-    min-height: 400px;
     background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.12) 100%);
     border-radius: 12px 12px 0 0;
     margin: 0;
-    padding: 30px 0 10px 0;
+    padding: 10px 0 5px 0;
 }
 
-/* BOTTOM SECTION - Blue */
+/* BOTTOM SECTION */
 .bottom-section {
     position: relative;
-    min-height: 400px;
     background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.12) 100%);
     border-radius: 0 0 12px 12px;
     margin: 0;
-    padding: 10px 0 30px 0;
+    padding: 5px 0 10px 0;
 }
 
 /* Era Labels */
@@ -201,16 +199,15 @@ h1 {
 }
 
 .top-section .era-label {
-    top: 5px;
+    top: -12px;
     left: 15px;
     color: #DC143C;
     border: 1.5px solid #DC143C;
 }
 
 .bottom-section .era-label {
-    bottom: 5px;
+    bottom: -12px;
     right: 15px;
-    top: auto;
     color: #1E90FF;
     border: 1.5px solid #1E90FF;
 }
@@ -218,8 +215,8 @@ h1 {
 /* Timeline Track - Vertical scroll only */
 .timeline-track {
     position: relative;
-    height: 380px;
-    margin: 10px 0;
+    height: 400px;
+    margin: 5px 0;
     overflow-y: auto;
     overflow-x: visible;
     scrollbar-width: thin;
@@ -239,24 +236,24 @@ h1 {
     border-radius: 4px;
 }
 
-/* Year Markers - Different positions for top and bottom */
+/* Year Markers */
 .top-markers {
     position: relative;
-    height: 35px;
-    margin-top: -15px;
+    height: 32px;
+    margin-top: 0;
     margin-bottom: 5px;
     background: white;
-    border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
     z-index: 15;
 }
 
 .bottom-markers {
     position: relative;
-    height: 35px;
+    height: 32px;
     margin-top: 5px;
-    margin-bottom: -15px;
+    margin-bottom: 0;
     background: white;
-    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
     z-index: 15;
 }
 
@@ -276,13 +273,13 @@ h1 {
 .top-markers .year-marker-label {
     border: 1.5px solid #DC143C;
     color: #DC143C;
-    top: 5px;
+    top: -12px;
 }
 
 .bottom-markers .year-marker-label {
     border: 1.5px solid #1E90FF;
     color: #1E90FF;
-    bottom: 5px;
+    bottom: -12px;
     top: auto;
 }
 
@@ -376,7 +373,7 @@ h1 {
     z-index: 5;
 }
 
-/* Modal - Fixed to viewport */
+/* Modal - FIXED: truly centered */
 .modal {
     display: none;
     position: fixed;
@@ -398,7 +395,6 @@ h1 {
     border-radius: 16px;
     overflow-y: auto;
     animation: modalFade 0.3s ease;
-    margin: 20px;
 }
 
 @keyframes modalFade {
