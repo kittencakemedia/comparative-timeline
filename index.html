@@ -22,41 +22,35 @@
         </div>
         
         <div class="legend">
-            <div class="legend-item"><span class="legend-color red"></span> Hitler (1923-1945)</div>
-            <div class="legend-item"><span class="legend-color blue"></span> Trump (2015-2025)</div>
+            <div class="legend-item"><span class="legend-color red"></span> Hitler Era (1923-1944)</div>
+            <div class="legend-item"><span class="legend-color blue"></span> Trump Era (Mapped to Hitler's Timeline)</div>
         </div>
     </header>
 
-    <div class="timeline-wrapper">
-        <div class="timeline-container">
-            <div class="timeline-inner">
-                <!-- TOP SECTION: Timeline first, then markers at bottom -->
-                <div class="top-section">
-                    <div class="timeline-track" id="top-timeline"></div>
-                    <div class="year-markers top-markers" id="top-year-markers"></div>
-                    <div class="era-label"><i class="fas fa-landmark"></i> Hitler Era (1923-1945)</div>
-                </div>
-
-                <!-- BASELINE -->
-                <div class="baseline-container">
-                    <div class="baseline-line"></div>
-                    <div class="baseline-label">⚖️ COMPARATIVE BASELINE</div>
-                </div>
-
-                <!-- BOTTOM SECTION: Markers at top, then timeline -->
-                <div class="bottom-section">
-                    <div class="year-markers bottom-markers" id="bottom-year-markers"></div>
-                    <div class="timeline-track" id="bottom-timeline"></div>
-                    <div class="era-label"><i class="fas fa-chart-line"></i> Trump Era (2015-2025)</div>
-                </div>
+    <div class="timeline-container">
+        <div class="timeline-inner">
+            <div class="top-section">
+                <div class="era-label"><i class="fas fa-landmark"></i> Hitler Era (1923-1944)</div>
+                <div class="timeline-track" id="top-timeline"></div>
+                <div class="year-markers top-markers" id="top-year-markers"></div>
             </div>
-            <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
-            <div class="version-badge" id="version-number">v1.0.0 | 2024-04-21</div>
-        </div>
-    </div>
 
+            <div class="baseline-container">
+                <div class="baseline-line"></div>
+                <div class="baseline-label">⚖️ COMPARATIVE BASELINE</div>
+            </div>
+
+            <div class="bottom-section">
+                <div class="timeline-track" id="bottom-timeline"></div>
+                <div class="year-markers bottom-markers" id="bottom-year-markers"></div>
+                <div class="era-label"><i class="fas fa-chart-line"></i> Trump Era (Mapped to Hitler's Timeline)</div>
+            </div>
+        </div>
+        <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
+        <div class="version-badge" id="version-number">Beta | Build 2026.04.23</div>
+    </div>
     <div class="zoom-hint">
-        💡 Tip: Scroll horizontally to navigate years | Each timeline has its own vertical scrollbar for stacked events
+        💡 Tip: Scroll horizontally to navigate years | Each timeline has its own vertical scrollbar
     </div>
 
     <footer>
@@ -80,9 +74,6 @@
 </div>
 
 <script src="timeline-data.js"></script>
-    
-<!--
-<script src="script.js"></script> -->
-<script src="script.js?v=20260423-001"></script>   
+<script src="script.js"></script>
 </body>
 </html>
