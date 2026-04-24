@@ -177,51 +177,64 @@ class ComparativeTimeline {
     }
 
     showDetails(event) {
-        const modal = this.modal;
-        if (!modal) return;
-        
-        document.getElementById('modal-title').textContent = event.title;
-        
-        const eventDate = new Date(event.date);
-        const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
-            document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year} (mapped to Hitler's timeline)</small>`;
-        } else {
-            document.getElementById('modal-date').textContent = dateStr;
-        }
-        
-        document.getElementById('modal-description').textContent = event.description;
-        
-        const imageContainer = document.getElementById('modal-image-container');
-        if (event.image && event.image !== '') {
-            imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
-        } else {
-            const icon = event.fallbackIcon || '📌';
-            imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
-        }
-        
-        const tagsContainer = document.getElementById('modal-tags');
-        tagsContainer.innerHTML = '';
-        if (event.tags) {
-            event.tags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'tag';
-                span.textContent = tag;
-                span.style.backgroundColor = this.getTagColor(tag);
-                tagsContainer.appendChild(span);
-            });
-            
-            // Position modal at center of viewport
-            const modal = this.modal;
-            modal.style.display = 'flex';
-            modal.style.position = 'fixed';
-            modal.style.top = '50%';
-            modal.style.left = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            modal.style.width = '90%';
-            modal.style.maxWidth = '500px';
-
-        }
+    // Get modal element
+    const modal = document.getElementById('event-modal');
+    if (!modal) return;
+    
+    // Populate modal content
+    document.getElementById('modal-title').textContent = event.title;
+    
+    const eventDate = new Date(event.date);
+    const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
+        document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year} (mapped to Hitler's timeline)</small>`;
+    } else {
+        document.getElementById('modal-date').textContent = dateStr;
+    }
+    
+    document.getElementById('modal-description').textContent = event.description;
+    
+    const imageContainer = document.getElementById('modal-image-container');
+    if (event.image && event.image !== '') {
+        imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
+    } else {
+        const icon = event.fallbackIcon || '📌';
+        imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
+    }
+    
+    const tagsContainer = document.getElementById('modal-tags');
+    tagsContainer.innerHTML = '';
+    if (event.tags) {
+        event.tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.textContent = tag;
+            span.style.backgroundColor = this.getTagColor(tag);
+            tagsContainer.appendChild(span);
+        });
+    }
+    
+    // CRITICAL: Clear any existing inline styles and set display correctly
+    modal.style.display = 'flex';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.right = '0';
+    modal.style.bottom = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    modal.style.zIndex = '10000';
+    
+    // Ensure the modal content is centered
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.style.margin = '0';
+        modalContent.style.position = 'relative';
+    }
+}
         
         // Simple modal display
         modal.style.display = 'flex';
