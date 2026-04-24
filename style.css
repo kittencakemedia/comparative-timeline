@@ -10,7 +10,6 @@ body {
     color: #1a1a2e;
     line-height: 1.5;
     padding: 20px;
-    overflow-x: hidden;
 }
 
 .container {
@@ -89,7 +88,7 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
-/* Scrollable wrapper - NO GRAY BAR */
+/* Timeline Wrapper - NO GRAY BAR */
 .timeline-wrapper {
     background: white;
     border-radius: 16px;
@@ -97,33 +96,24 @@ h1 {
     overflow-x: auto;
     overflow-y: visible;
     width: 100%;
-    position: relative;
 }
 
-/* Custom scrollbar styling - thin and modern */
+/* Thin horizontal scrollbar only */
 .timeline-wrapper::-webkit-scrollbar {
     height: 8px;
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.timeline-wrapper::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #e0e0e0;
     border-radius: 4px;
 }
 
 .timeline-wrapper::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: #aaa;
     border-radius: 4px;
-}
-
-.timeline-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
 }
 
 .timeline-container {
     position: relative;
     display: inline-block;
+    min-width: 100%;
 }
 
 .timeline-inner {
@@ -131,7 +121,7 @@ h1 {
     width: 100%;
 }
 
-/* Watermark */
+/* Watermark - subtle pattern */
 .timeline-container::before {
     content: "";
     position: absolute;
@@ -139,9 +129,7 @@ h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-        repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 40px, transparent 40px, transparent 80px),
-        repeating-linear-gradient(-45deg, rgba(220,20,60,0.02) 0px, rgba(220,20,60,0.02) 30px, transparent 30px, transparent 60px);
+    background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 40px, transparent 40px, transparent 80px);
     pointer-events: none;
     z-index: 0;
     border-radius: 16px;
@@ -152,11 +140,11 @@ h1 {
     bottom: 15px;
     right: 20px;
     font-size: 10px;
-    color: rgba(0,0,0,0.12);
+    color: rgba(0,0,0,0.15);
     font-family: monospace;
     z-index: 2;
     pointer-events: none;
-    background: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.5);
     padding: 3px 10px;
     border-radius: 4px;
 }
@@ -175,21 +163,19 @@ h1 {
     border-radius: 4px;
 }
 
-/* TOP SECTION */
+/* Top Section */
 .top-section {
     position: relative;
-    background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.12) 100%);
+    background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.1) 100%);
     border-radius: 12px 12px 0 0;
-    margin: 0;
     padding: 10px 0 5px 0;
 }
 
-/* BOTTOM SECTION */
+/* Bottom Section */
 .bottom-section {
     position: relative;
-    background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.12) 100%);
+    background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.1) 100%);
     border-radius: 0 0 12px 12px;
-    margin: 0;
     padding: 5px 0 10px 0;
 }
 
@@ -220,14 +206,13 @@ h1 {
     border: 1.5px solid #1E90FF;
 }
 
-/* Timeline Track - Vertical scroll only */
+/* Timeline Track - Vertical scroll */
 .timeline-track {
     position: relative;
     height: 400px;
     margin: 5px 0;
     overflow-y: auto;
     overflow-x: visible;
-    scrollbar-width: thin;
 }
 
 .timeline-track::-webkit-scrollbar {
@@ -240,7 +225,7 @@ h1 {
 }
 
 .timeline-track::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #bbb;
     border-radius: 4px;
 }
 
@@ -248,21 +233,17 @@ h1 {
 .top-markers {
     position: relative;
     height: 32px;
-    margin-top: 0;
     margin-bottom: 5px;
     background: white;
     border-top: 1px solid #eee;
-    z-index: 15;
 }
 
 .bottom-markers {
     position: relative;
     height: 32px;
     margin-top: 5px;
-    margin-bottom: 0;
     background: white;
     border-bottom: 1px solid #eee;
-    z-index: 15;
 }
 
 .year-marker-label {
@@ -291,7 +272,7 @@ h1 {
     top: auto;
 }
 
-/* Timeline Cards */
+/* Cards */
 .timeline-card {
     position: absolute;
     width: 160px;
@@ -306,7 +287,7 @@ h1 {
 
 .timeline-card:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     z-index: 20;
 }
 
@@ -351,7 +332,6 @@ h1 {
 .baseline-container {
     position: relative;
     height: 36px;
-    margin: 0;
     background: white;
 }
 
@@ -361,7 +341,7 @@ h1 {
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #555, #555, transparent);
+    background: #555;
     transform: translateY(-50%);
 }
 
@@ -381,25 +361,24 @@ h1 {
     z-index: 5;
 }
 
-/* Modal - FIXED: truly centered in viewport */
+/* Modal - Centered properly */
 .modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 10000;
     justify-content: center;
     align-items: center;
-    overflow-y: auto;
 }
 
 .modal-content {
     background: white;
-    width: 90%;
-    max-width: 500px;
+    width: 100%;
     border-radius: 16px;
     overflow-y: auto;
     max-height: 85vh;
@@ -417,7 +396,6 @@ h1 {
     color: white;
     position: sticky;
     top: 0;
-    z-index: 1;
 }
 
 .modal-header h2 { font-size: 1.2rem; margin-bottom: 4px; padding-right: 30px; }
