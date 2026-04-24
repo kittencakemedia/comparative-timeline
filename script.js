@@ -210,6 +210,17 @@ class ComparativeTimeline {
                 span.style.backgroundColor = this.getTagColor(tag);
                 tagsContainer.appendChild(span);
             });
+            
+            // Position modal at center of viewport
+            const modal = this.modal;
+            modal.style.display = 'flex';
+            modal.style.position = 'fixed';
+            modal.style.top = '50%';
+            modal.style.left = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            modal.style.width = '90%';
+            modal.style.maxWidth = '500px';
+
         }
         
         // Simple modal display
