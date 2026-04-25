@@ -1,6 +1,6 @@
 // ============================================
 // COMPARATIVE TIMELINE - MAIN SCRIPT
-// Fixed: Modal centering, Version on code change
+// Complete working version
 // ============================================
 
 class ComparativeTimeline {
@@ -22,42 +22,26 @@ class ComparativeTimeline {
         this.renderTimeline();
         this.bindEvents();
         this.setupModal();
-        this.updateVersionDisplay();
-        console.log('Timeline ready - Modal centered');
-    }
-
-    updateVersionDisplay() {
-        const versionEl = document.getElementById('version-number');
-        if (versionEl) {
-            // Use a build timestamp from the script file's last modified time
-            // This updates only when the file changes
-            const buildTime = document.querySelector('script[src*="script.js"]')?.getAttribute('data-timestamp');
-            if (buildTime) {
-                versionEl.textContent = `Beta | ${buildTime}`;
-            } else {
-                // Fallback: manual version - change this number when you update code
-                versionEl.textContent = `Beta | Build 2024.04.22-001`;
-            }
-        }
+        console.log('Timeline ready - Cards should be visible');
     }
 
     cacheElements() {
         this.topTrack = document.getElementById('top-timeline');
         this.bottomTrack = document.getElementById('bottom-timeline');
         this.modal = document.getElementById('event-modal');
-        this.wrapper = document.querySelector('.timeline-wrapper');
-        this.container = document.querySelector('.timeline-container');
+        this.container = document.getElementById('timeline-container');
+        this.inner = document.getElementById('timeline-inner');
     }
 
     getTotalWidth() {
         const totalYears = (this.topEnd - this.topStart);
         const width = totalYears * this.zoom + 200;
-        return Math.max(width, this.wrapper ? this.wrapper.clientWidth : 1200);
+        return Math.max(width, this.container ? this.container.clientWidth : 1200);
     }
 
     updateInnerWidth() {
         const totalWidth = this.getTotalWidth();
-        if (this.container) this.container.style.width = totalWidth + 'px';
+        if (this.inner) this.inner.style.width = totalWidth + 'px';
         if (this.topTrack) this.topTrack.style.width = totalWidth + 'px';
         if (this.bottomTrack) this.bottomTrack.style.width = totalWidth + 'px';
         return totalWidth;
@@ -177,64 +161,40 @@ class ComparativeTimeline {
     }
 
     showDetails(event) {
-    // Get modal element
-    const modal = document.getElementById('event-modal');
-    if (!modal) return;
-    
-    // Populate modal content
-    document.getElementById('modal-title').textContent = event.title;
-    
-    const eventDate = new Date(event.date);
-    const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
-        document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year} (mapped to Hitler's timeline)</small>`;
-    } else {
-        document.getElementById('modal-date').textContent = dateStr;
-    }
-    
-    document.getElementById('modal-description').textContent = event.description;
-    
-    const imageContainer = document.getElementById('modal-image-container');
-    if (event.image && event.image !== '') {
-        imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
-    } else {
-        const icon = event.fallbackIcon || '📌';
-        imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
-    }
-    
-    const tagsContainer = document.getElementById('modal-tags');
-    tagsContainer.innerHTML = '';
-    if (event.tags) {
-        event.tags.forEach(tag => {
-            const span = document.createElement('span');
-            span.className = 'tag';
-            span.textContent = tag;
-            span.style.backgroundColor = this.getTagColor(tag);
-            tagsContainer.appendChild(span);
-        });
-    }
-    
-    // CRITICAL: Clear any existing inline styles and set display correctly
-    modal.style.display = 'flex';
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.right = '0';
-    modal.style.bottom = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'center';
-    modal.style.zIndex = '10000';
-    
-    // Ensure the modal content is centered
-    const modalContent = document.querySelector('.modal-content');
-    if (modalContent) {
-        modalContent.style.margin = '0';
-        modalContent.style.position = 'relative';
-    }
-}
+        const modal = this.modal;
+        if (!modal) return;
+        
+        document.getElementById('modal-title').textContent = event.title;
+        
+        const eventDate = new Date(event.date);
+        const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
+            document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year}</small>`;
+        } else {
+            document.getElementById('modal-date').textContent = dateStr;
+        }
+        
+        document.getElementById('modal-description').textContent = event.description;
+        
+        const imageContainer = document.getElementById('modal-image-container');
+        if (event.image && event.image !== '') {
+            imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
+        } else {
+            const icon = event.fallbackIcon || '📌';
+            imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
+        }
+        
+        const tagsContainer = document.getElementById('modal-tags');
+        tagsContainer.innerHTML = '';
+        if (event.tags) {
+            event.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.textContent = tag;
+                span.style.backgroundColor = this.getTagColor(tag);
+                tagsContainer.appendChild(span);
+            });
+        }
         
         // Simple modal display
         modal.style.display = 'flex';
@@ -285,22 +245,22 @@ class ComparativeTimeline {
     }
 
     fitToScreen() {
-        if (!this.wrapper) return;
-        const visibleWidth = this.wrapper.clientWidth - 40;
+        if (!this.container) return;
+        const visibleWidth = this.container.clientWidth - 40;
         const currentWidth = (this.topEnd - this.topStart) * this.zoom;
         const targetZoom = (visibleWidth / currentWidth) * this.zoom;
         let newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
         this.zoom = newZoom;
         this.offset = 0;
         this.renderTimeline();
-        setTimeout(() => { if (this.wrapper) this.wrapper.scrollLeft = 0; }, 10);
+        setTimeout(() => { if (this.container) this.container.scrollLeft = 0; }, 10);
     }
 
     resetView() {
         this.zoom = 70;
         this.offset = 0;
         this.renderTimeline();
-        if (this.wrapper) this.wrapper.scrollLeft = 0;
+        if (this.container) this.container.scrollLeft = 0;
     }
 
     bindEvents() {
@@ -320,7 +280,7 @@ class ComparativeTimeline {
             isDragging = true;
             dragStart = e.clientX || (e.touches ? e.touches[0].clientX : 0);
             startOffset = this.offset;
-            if (this.wrapper) this.wrapper.style.cursor = 'grabbing';
+            if (this.container) this.container.style.cursor = 'grabbing';
         };
         const onDrag = (e) => {
             if (!isDragging) return;
@@ -331,12 +291,12 @@ class ComparativeTimeline {
         };
         const onDragEnd = () => {
             isDragging = false;
-            if (this.wrapper) this.wrapper.style.cursor = 'default';
+            if (this.container) this.container.style.cursor = 'default';
         };
         
-        if (this.wrapper) {
-            this.wrapper.addEventListener('mousedown', onDragStart);
-            this.wrapper.addEventListener('touchstart', onDragStart, { passive: false });
+        if (this.container) {
+            this.container.addEventListener('mousedown', onDragStart);
+            this.container.addEventListener('touchstart', onDragStart, { passive: false });
         }
         window.addEventListener('mousemove', onDrag);
         window.addEventListener('mouseup', onDragEnd);
