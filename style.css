@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
@@ -88,9 +88,8 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
-/* Timeline Container */
-.timeline-container {
-    position: relative;
+/* Timeline Wrapper - wider */
+.timeline-wrapper {
     background: white;
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
@@ -99,15 +98,33 @@ h1 {
     width: 100%;
 }
 
-.timeline-inner {
+.timeline-wrapper::-webkit-scrollbar {
+    height: 10px;
+}
+
+.timeline-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.timeline-wrapper::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 5px;
+}
+
+.timeline-container {
     position: relative;
-    width: 100%;
-    z-index: 1;
+    min-width: 3800px;
     display: inline-block;
 }
 
+.timeline-inner {
+    position: relative;
+    width: 100%;
+}
+
 /* Watermark */
-.timeline-inner::before {
+.timeline-container::before {
     content: "";
     position: absolute;
     top: 0;
@@ -123,10 +140,9 @@ h1 {
 }
 
 .watermark-text {
-    position: sticky;
+    position: absolute;
     bottom: 15px;
     right: 20px;
-    float: right;
     font-size: 10px;
     color: rgba(0,0,0,0.12);
     font-family: monospace;
@@ -135,16 +151,12 @@ h1 {
     background: rgba(255,255,255,0.6);
     padding: 3px 10px;
     border-radius: 4px;
-    letter-spacing: 1px;
-    margin-top: -30px;
-    margin-right: 10px;
 }
 
 .version-badge {
-    position: sticky;
+    position: absolute;
     bottom: 5px;
     left: 10px;
-    float: left;
     font-size: 9px;
     color: rgba(0,0,0,0.4);
     font-family: monospace;
@@ -153,32 +165,29 @@ h1 {
     background: rgba(255,255,255,0.7);
     padding: 2px 6px;
     border-radius: 4px;
-    margin-top: -30px;
-    margin-left: 10px;
 }
 
-/* Top Section */
+/* TOP SECTION */
 .top-section {
     position: relative;
     background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.12) 100%);
     border-radius: 12px 12px 0 0;
     margin: 0;
-    padding: 20px 0 10px 0;
-    width: 100%;
+    padding: 10px 0 5px 0;
 }
 
+/* BOTTOM SECTION */
 .bottom-section {
     position: relative;
     background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.12) 100%);
     border-radius: 0 0 12px 12px;
     margin: 0;
-    padding: 10px 0 20px 0;
-    width: 100%;
+    padding: 5px 0 10px 0;
 }
 
+/* Era Labels */
 .era-label {
     position: absolute;
-    top: 5px;
     background: white;
     padding: 5px 16px;
     border-radius: 20px;
@@ -190,15 +199,15 @@ h1 {
 }
 
 .top-section .era-label {
+    top: -12px;
     left: 15px;
     color: #DC143C;
     border: 1.5px solid #DC143C;
 }
 
 .bottom-section .era-label {
+    bottom: -12px;
     right: 15px;
-    bottom: 5px;
-    top: auto;
     color: #1E90FF;
     border: 1.5px solid #1E90FF;
 }
@@ -207,7 +216,7 @@ h1 {
 .timeline-track {
     position: relative;
     height: 450px;
-    margin: 10px 0;
+    margin: 5px 0;
     overflow-y: auto;
     overflow-x: visible;
     scrollbar-width: thin;
@@ -228,14 +237,24 @@ h1 {
 }
 
 /* Year Markers */
-.year-markers {
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 20;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
+.top-markers {
+    position: relative;
+    height: 35px;
+    margin-top: 0;
     margin-bottom: 5px;
+    background: white;
+    border-top: 1px solid #eee;
+    z-index: 15;
+}
+
+.bottom-markers {
+    position: relative;
+    height: 35px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    background: white;
+    border-bottom: 1px solid #eee;
+    z-index: 15;
 }
 
 .year-marker-label {
@@ -249,23 +268,25 @@ h1 {
     font-family: monospace;
     white-space: nowrap;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    z-index: 15;
 }
 
 .top-markers .year-marker-label {
     border: 1.5px solid #DC143C;
     color: #DC143C;
+    top: -14px;
 }
 
 .bottom-markers .year-marker-label {
     border: 1.5px solid #1E90FF;
     color: #1E90FF;
+    bottom: -14px;
+    top: auto;
 }
 
 /* Cards */
 .timeline-card {
     position: absolute;
-    width: 160px;
+    width: 170px;
     background: white;
     border-radius: 10px;
     padding: 8px;
@@ -352,7 +373,7 @@ h1 {
     z-index: 5;
 }
 
-/* Modal - Working version */
+/* Modal - Fixed centering */
 .modal {
     display: none;
     position: fixed;
