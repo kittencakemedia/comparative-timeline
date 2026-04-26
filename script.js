@@ -160,45 +160,60 @@ class ComparativeTimeline {
         }
     }
 
-    showDetails(event) {
-        const modal = this.modal;
-        if (!modal) return;
-        
-        document.getElementById('modal-title').textContent = event.title;
-        
-        const eventDate = new Date(event.date);
-        const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
-            document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year}</small>`;
-        } else {
-            document.getElementById('modal-date').textContent = dateStr;
-        }
-        
-        document.getElementById('modal-description').textContent = event.description;
-        
-        const imageContainer = document.getElementById('modal-image-container');
-        if (event.image && event.image !== '') {
-            imageContainer.innerHTML = `<img class="modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
-        } else {
-            const icon = event.fallbackIcon || '📌';
-            imageContainer.innerHTML = `<div class="image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
-        }
-        
-        const tagsContainer = document.getElementById('modal-tags');
-        tagsContainer.innerHTML = '';
-        if (event.tags) {
-            event.tags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'tag';
-                span.textContent = tag;
-                span.style.backgroundColor = this.getTagColor(tag);
-                tagsContainer.appendChild(span);
-            });
-        }
-        
-        // Simple modal display
-        modal.style.display = 'flex';
+showDetails(event) {
+    // Get modal element by new class name
+    const modal = document.querySelector('.event-modal');
+    if (!modal) return;
+    
+    // Populate content
+    document.getElementById('modal-title').textContent = event.title;
+    
+    const eventDate = new Date(event.date);
+    const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
+        document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year}</small>`;
+    } else {
+        document.getElementById('modal-date').textContent = dateStr;
     }
+    
+    document.getElementById('modal-description').textContent = event.description;
+    
+    const imageContainer = document.getElementById('modal-image-container');
+    if (event.image && event.image !== '') {
+        imageContainer.innerHTML = `<img class="event-modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'event-modal-image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
+    } else {
+        const icon = event.fallbackIcon || '📌';
+        imageContainer.innerHTML = `<div class="event-modal-image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
+    }
+    
+    const tagsContainer = document.getElementById('modal-tags');
+    tagsContainer.innerHTML = '';
+    if (event.tags) {
+        event.tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'event-modal-tag';
+            span.textContent = tag;
+            span.style.backgroundColor = this.getTagColor(tag);
+            tagsContainer.appendChild(span);
+        });
+    }
+    
+    // Show modal - simple display
+    modal.style.display = 'flex';
+}
+
+setupModal() {
+    const closeBtn = document.querySelector('.event-modal-close');
+    const modal = document.querySelector('.event-modal');
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            if (modal) modal.style.display = 'none';
+        };
+    }
+    window.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
+}
 
     getTagColor(tag) {
         const colors = {
