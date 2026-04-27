@@ -594,3 +594,105 @@ footer {
     font-weight: 600;
     color: white;
 }
+
+/* ============================================
+   WORKING MODAL - From test-working.html
+   ============================================ */
+.test-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 500px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    z-index: 100000;
+    animation: modalFadeIn 0.2s ease;
+}
+
+.test-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.test-modal-header {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #DC143C, #1E90FF);
+    color: white;
+    border-radius: 16px 16px 0 0;
+}
+
+.test-modal-header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+    padding-right: 30px;
+}
+
+.test-modal-date {
+    font-size: 0.75rem;
+    opacity: 0.9;
+}
+
+.test-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    opacity: 0.8;
+}
+
+.test-modal-close:hover {
+    opacity: 1;
+}
+
+.test-modal-body {
+    padding: 18px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.test-modal-image {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.test-modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.test-modal-tag {
+    padding: 3px 10px;
+    border-radius: 16px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+}
