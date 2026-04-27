@@ -6,7 +6,435 @@
     <title>Comparative Timeline - Historical Parallels</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ========== COMPLETE CSS - NO EXTERNAL DEPENDENCIES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #DC143C, #1E90FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .controls button {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .controls button:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+        }
+
+        .legend-color.red { background: #DC143C; }
+        .legend-color.blue { background: #1E90FF; }
+
+        .timeline-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: visible;
+            width: 100%;
+        }
+
+        .timeline-inner {
+            min-width: 3800px;
+            position: relative;
+        }
+
+        .top-section {
+            background: linear-gradient(180deg, rgba(220,20,60,0.02) 0%, rgba(220,20,60,0.12) 100%);
+            border-radius: 12px 12px 0 0;
+            padding: 20px 0 10px;
+            position: relative;
+        }
+
+        .bottom-section {
+            background: linear-gradient(0deg, rgba(30,144,255,0.02) 0%, rgba(30,144,255,0.12) 100%);
+            border-radius: 0 0 12px 12px;
+            padding: 10px 0 20px;
+            position: relative;
+        }
+
+        .era-label {
+            position: absolute;
+            background: white;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 20;
+            white-space: nowrap;
+        }
+
+        .top-section .era-label {
+            top: -12px;
+            left: 15px;
+            color: #DC143C;
+            border: 1.5px solid #DC143C;
+        }
+
+        .bottom-section .era-label {
+            bottom: -12px;
+            right: 15px;
+            color: #1E90FF;
+            border: 1.5px solid #1E90FF;
+        }
+
+        .timeline-track {
+            position: relative;
+            height: 450px;
+            margin: 10px 0;
+            overflow-y: auto;
+            overflow-x: visible;
+        }
+
+        .timeline-track::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .timeline-track::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .timeline-track::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .year-markers {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 20;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 5px;
+        }
+
+        .year-marker-label {
+            position: absolute;
+            transform: translateX(-50%);
+            background: white;
+            padding: 3px 8px;
+            border-radius: 16px;
+            font-size: 10px;
+            font-weight: 600;
+            font-family: monospace;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 15;
+        }
+
+        .top-markers .year-marker-label {
+            border: 1.5px solid #DC143C;
+            color: #DC143C;
+        }
+
+        .bottom-markers .year-marker-label {
+            border: 1.5px solid #1E90FF;
+            color: #1E90FF;
+        }
+
+        .timeline-card {
+            position: absolute;
+            width: 160px;
+            background: white;
+            border-radius: 10px;
+            padding: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+            z-index: 20;
+        }
+
+        .timeline-card.top {
+            border-left: 4px solid #DC143C;
+        }
+
+        .timeline-card.bottom {
+            border-left: 4px solid #1E90FF;
+        }
+
+        .card-icon {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+            line-height: 1.3;
+        }
+
+        .card-year {
+            font-size: 0.65rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        .baseline-container {
+            position: relative;
+            height: 36px;
+            background: white;
+        }
+
+        .baseline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #555, #555, transparent);
+            transform: translateY(-50%);
+        }
+
+        .baseline-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 3px 18px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            z-index: 5;
+        }
+
+        /* ===== WORKING MODAL - PROVEN TO WORK ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 99999;
+        }
+
+        .modal-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            z-index: 100000;
+            animation: modalFadeIn 0.2s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -48%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #DC143C, #1E90FF);
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            padding-right: 30px;
+        }
+
+        .modal-date {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 18px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .modal-tag {
+            padding: 3px 10px;
+            border-radius: 16px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .watermark-text {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 10px;
+            color: rgba(0,0,0,0.12);
+            font-family: monospace;
+            z-index: 2;
+            pointer-events: none;
+            background: rgba(255,255,255,0.6);
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+
+        .version-badge {
+            position: absolute;
+            bottom: 5px;
+            left: 10px;
+            font-size: 9px;
+            color: rgba(0,0,0,0.4);
+            font-family: monospace;
+            z-index: 2;
+            pointer-events: none;
+            background: rgba(255,255,255,0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            color: #999;
+            font-size: 0.7rem;
+        }
+
+        .zoom-hint {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -22,37 +450,32 @@
         </div>
         
         <div class="legend">
-            <div class="legend-item"><span class="legend-color red"></span> Hitler Era (1923-1944)</div>
+            <div class="legend-item"><span class="legend-color red"></span> Hitler Era (1923-1945)</div>
             <div class="legend-item"><span class="legend-color blue"></span> Trump Era (Mapped to Hitler's Timeline)</div>
         </div>
     </header>
 
-    <div class="timeline-wrapper">
-        <div class="timeline-container" id="timeline-container">
-            <div class="timeline-inner" id="timeline-inner">
-                <!-- TOP SECTION: Timeline first, then markers at BOTTOM -->
-                <div class="top-section">
-                    <div class="timeline-track" id="top-timeline"></div>
-                    <div class="year-markers top-markers" id="top-year-markers"></div>
-                    <div class="era-label"><i class="fas fa-landmark"></i> Hitler Era (1923-1944)</div>
-                </div>
-
-                <!-- BASELINE -->
-                <div class="baseline-container">
-                    <div class="baseline-line"></div>
-                    <div class="baseline-label">⚖️ COMPARATIVE BASELINE</div>
-                </div>
-
-                <!-- BOTTOM SECTION: Markers at TOP, then timeline -->
-                <div class="bottom-section">
-                    <div class="year-markers bottom-markers" id="bottom-year-markers"></div>
-                    <div class="timeline-track" id="bottom-timeline"></div>
-                    <div class="era-label"><i class="fas fa-chart-line"></i> Trump Era (Mapped to Hitler's Timeline)</div>
-                </div>
+    <div class="timeline-container">
+        <div class="timeline-inner">
+            <div class="top-section">
+                <div class="timeline-track" id="top-timeline"></div>
+                <div class="year-markers top-markers" id="top-year-markers"></div>
+                <div class="era-label"><i class="fas fa-landmark"></i> Hitler Era (1923-1945)</div>
             </div>
-            <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
-            <div class="version-badge" id="version-number">Beta | v1.0</div>
+
+            <div class="baseline-container">
+                <div class="baseline-line"></div>
+                <div class="baseline-label">⚖️ COMPARATIVE BASELINE</div>
+            </div>
+
+            <div class="bottom-section">
+                <div class="year-markers bottom-markers" id="bottom-year-markers"></div>
+                <div class="timeline-track" id="bottom-timeline"></div>
+                <div class="era-label"><i class="fas fa-chart-line"></i> Trump Era (Mapped to Hitler's Timeline)</div>
+            </div>
         </div>
+        <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
+        <div class="version-badge" id="version-number">Beta | v1.0</div>
     </div>
     <div class="zoom-hint">
         💡 Tip: Scroll horizontally to navigate years | Each timeline has its own vertical scrollbar
@@ -63,23 +486,352 @@
     </footer>
 </div>
 
-<!-- Working Modal - From test-working.html -->
-<div class="test-modal-overlay" id="modal-overlay"></div>
-<div class="test-modal" id="test-modal">
-    <div class="test-modal-header">
-        <span class="test-modal-close" id="modal-close">&times;</span>
+<!-- WORKING MODAL - Separate from timeline CSS -->
+<div class="modal-overlay" id="modal-overlay"></div>
+<div class="modal-container" id="modal-container">
+    <div class="modal-header">
+        <span class="modal-close" id="modal-close">&times;</span>
         <h2 id="modal-title">Event Title</h2>
-        <div class="test-modal-date" id="modal-date">Date</div>
+        <div class="modal-date" id="modal-date">Date</div>
     </div>
-    <div class="test-modal-body">
-        <img class="test-modal-image" id="modal-image" style="display: none;">
-        <div id="modal-image-fallback" style="display: none; text-align: center; padding: 30px; background: #f5f5f5; border-radius: 8px;">📷 No image available</div>
+    <div class="modal-body">
+        <img class="modal-image" id="modal-image" style="display: none;">
+        <div id="modal-image-fallback" style="display: none; text-align: center; padding: 30px; background: #f5f5f5; border-radius: 8px;">
+            <i class="fas fa-image"></i><br>No image available
+        </div>
         <p id="modal-description">Description</p>
-        <div id="modal-tags" class="test-modal-tags"></div>
+        <div id="modal-tags" class="modal-tags"></div>
     </div>
 </div>
 
 <script src="timeline-data.js"></script>
-<script src="script.js"></script>
+<script>
+    // ============================================
+    // COMPLETE TIMELINE SCRIPT (Embedded to ensure consistency)
+    // ============================================
+    
+    class ComparativeTimeline {
+        constructor() {
+            this.events = timelineEvents;
+            this.topStart = 1920;
+            this.topEnd = 1950;
+            this.bottomStart = 2000;
+            this.bottomEnd = 2030;
+            this.zoom = 70;
+            this.offset = 0;
+            this.minZoom = 35;
+            this.maxZoom = 160;
+            this.init();
+        }
+
+        init() {
+            this.cacheElements();
+            this.renderTimeline();
+            this.bindEvents();
+            this.setupModal();
+            console.log('Timeline ready - ' + this.events.length + ' events loaded');
+        }
+
+        cacheElements() {
+            this.topTrack = document.getElementById('top-timeline');
+            this.bottomTrack = document.getElementById('bottom-timeline');
+            this.container = document.querySelector('.timeline-container');
+        }
+
+        getTotalWidth() {
+            const totalYears = (this.topEnd - this.topStart);
+            const width = totalYears * this.zoom + 200;
+            return Math.max(width, this.container ? this.container.clientWidth : 1200);
+        }
+
+        updateInnerWidth() {
+            const totalWidth = this.getTotalWidth();
+            const inner = document.querySelector('.timeline-inner');
+            if (inner) inner.style.width = totalWidth + 'px';
+            if (this.topTrack) this.topTrack.style.width = totalWidth + 'px';
+            if (this.bottomTrack) this.bottomTrack.style.width = totalWidth + 'px';
+            return totalWidth;
+        }
+
+        yearToPixel(year, position) {
+            const start = 1920;
+            const end = 1950;
+            const percent = (year - start) / (end - start);
+            const totalYears = (end - start);
+            const width = totalYears * this.zoom;
+            return 80 + (percent * width) + this.offset;
+        }
+
+        createYearMarkers() {
+            const topContainer = document.getElementById('top-year-markers');
+            if (topContainer) {
+                topContainer.innerHTML = '';
+                for (let y = this.topStart; y <= this.topEnd; y += 5) {
+                    const left = this.yearToPixel(y, 'top');
+                    const label = document.createElement('span');
+                    label.className = 'year-marker-label';
+                    label.textContent = y;
+                    label.style.left = left + 'px';
+                    topContainer.appendChild(label);
+                }
+            }
+
+            const bottomContainer = document.getElementById('bottom-year-markers');
+            if (bottomContainer) {
+                bottomContainer.innerHTML = '';
+                for (let y = this.bottomStart; y <= this.bottomEnd; y += 5) {
+                    const percent = (y - this.bottomStart) / (this.bottomEnd - this.bottomStart);
+                    const totalYears = (this.topEnd - this.topStart);
+                    const width = totalYears * this.zoom;
+                    const left = 80 + (percent * width) + this.offset;
+                    const label = document.createElement('span');
+                    label.className = 'year-marker-label';
+                    label.textContent = y;
+                    label.style.left = left + 'px';
+                    bottomContainer.appendChild(label);
+                }
+            }
+        }
+
+        calculateVerticalPosition(eventsForYear, eventIndex) {
+            const baseY = 20;
+            const baseSpacing = 55;
+            const zoomFactor = this.zoom / 70;
+            const spacing = baseSpacing * Math.pow(zoomFactor, 1.2);
+            return baseY + (eventIndex * spacing);
+        }
+
+        renderTimeline() {
+            this.updateInnerWidth();
+            if (this.topTrack) this.topTrack.innerHTML = '';
+            if (this.bottomTrack) this.bottomTrack.innerHTML = '';
+
+            const groupedEvents = {};
+            this.events.forEach(event => {
+                const key = `${event.position}_${event.year}`;
+                if (!groupedEvents[key]) groupedEvents[key] = [];
+                groupedEvents[key].push(event);
+            });
+
+            this.events.forEach(event => {
+                const x = this.yearToPixel(event.year, event.position);
+                const key = `${event.position}_${event.year}`;
+                const eventsInYear = groupedEvents[key];
+                const eventIndex = eventsInYear.findIndex(e => e.id === event.id);
+                const y = this.calculateVerticalPosition(eventsInYear, eventIndex);
+                this.createCard(event, x, y);
+            });
+
+            this.createYearMarkers();
+        }
+
+        createCard(event, x, y) {
+            const card = document.createElement('div');
+            card.className = `timeline-card ${event.position}`;
+            card.style.left = x + 'px';
+            card.style.top = y + 'px';
+            
+            const date = new Date(event.date);
+            const yearOnly = date.getFullYear();
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const month = monthNames[date.getMonth()];
+            
+            let yearDisplay = `${month} ${yearOnly}`;
+            if (event.position === 'bottom' && event.actualYear) {
+                yearDisplay = `${month} ${event.actualYear}`;
+            }
+            
+            const imageHtml = event.image && event.image !== "" 
+                ? `<img class="card-image" src="${event.image}" alt="${event.title}" loading="lazy" onerror="this.style.display='none';">`
+                : `<div class="card-icon" style="font-size: 1.5rem; text-align: center;">📌</div>`;
+            
+            card.innerHTML = `
+                ${imageHtml}
+                <div class="card-title">${event.title}</div>
+                <div class="card-year">${yearDisplay}</div>
+            `;
+            
+            card.onclick = (e) => {
+                e.stopPropagation();
+                this.showModal(event);
+            };
+            
+            if (event.position === 'top') {
+                this.topTrack.appendChild(card);
+            } else {
+                this.bottomTrack.appendChild(card);
+            }
+        }
+
+        // ===== WORKING MODAL METHODS =====
+        showModal(event) {
+            const overlay = document.getElementById('modal-overlay');
+            const modal = document.getElementById('modal-container');
+            
+            if (!overlay || !modal) return;
+            
+            // Set content
+            document.getElementById('modal-title').textContent = event.title;
+            
+            const eventDate = new Date(event.date);
+            const dateStr = eventDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            if (event.position === 'bottom' && event.actualYear && event.actualYear !== event.year) {
+                document.getElementById('modal-date').innerHTML = `${dateStr}<br><small>📌 Displayed at year ${event.year}</small>`;
+            } else {
+                document.getElementById('modal-date').textContent = dateStr;
+            }
+            
+            document.getElementById('modal-description').textContent = event.description;
+            
+            // Handle image
+            const img = document.getElementById('modal-image');
+            const fallback = document.getElementById('modal-image-fallback');
+            
+            if (event.image && event.image !== '') {
+                img.src = event.image;
+                img.style.display = 'block';
+                fallback.style.display = 'none';
+                img.onerror = () => {
+                    img.style.display = 'none';
+                    fallback.style.display = 'block';
+                };
+            } else {
+                img.style.display = 'none';
+                fallback.style.display = 'block';
+            }
+            
+            // Handle tags
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            if (event.tags) {
+                event.tags.forEach(tag => {
+                    const span = document.createElement('span');
+                    span.className = 'modal-tag';
+                    span.textContent = tag;
+                    span.style.backgroundColor = this.getTagColor(tag);
+                    tagsContainer.appendChild(span);
+                });
+            }
+            
+            // Show modal
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+        }
+        
+        setupModal() {
+            const closeBtn = document.getElementById('modal-close');
+            const overlay = document.getElementById('modal-overlay');
+            const modal = document.getElementById('modal-container');
+            
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    if (overlay) overlay.style.display = 'none';
+                    if (modal) modal.style.display = 'none';
+                };
+            }
+            
+            if (overlay) {
+                overlay.onclick = () => {
+                    if (overlay) overlay.style.display = 'none';
+                    if (modal) modal.style.display = 'none';
+                };
+            }
+        }
+        
+        getTagColor(tag) {
+            const colors = {
+                "Emergency Powers & Crisis Exploitation": "#B22222",
+                "Propaganda & Media Control": "#1E90FF",
+                "Judiciary & Legal Undermining": "#228B22",
+                "State-Sanctioned Violence & Intimidation": "#FFD700",
+                "Surveillance & Internal Policing": "#8A2BE2",
+                "Loyalty Purges & Political Patronage": "#DC143C",
+                "Electoral Manipulation & Democratic Erosion": "#2E8B57",
+                "Cult of Personality & Mass Mobilization": "#FF8C00",
+                "Authoritarian Ideology & Nationalism": "#FF6EDF",
+                "Legal Manipulation & Institutional Capture": "#FF8CDE"
+            };
+            return colors[tag] || "#666";
+        }
+
+        zoomIn() {
+            let newZoom = this.zoom * 1.25;
+            if (newZoom <= this.maxZoom) {
+                this.zoom = newZoom;
+                this.renderTimeline();
+            }
+        }
+
+        zoomOut() {
+            let newZoom = this.zoom * 0.8;
+            if (newZoom >= this.minZoom) {
+                this.zoom = newZoom;
+                this.renderTimeline();
+            }
+        }
+
+        fitToScreen() {
+            if (!this.container) return;
+            const visibleWidth = this.container.clientWidth - 40;
+            const currentWidth = (this.topEnd - this.topStart) * this.zoom;
+            const targetZoom = (visibleWidth / currentWidth) * this.zoom;
+            let newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, targetZoom));
+            this.zoom = newZoom;
+            this.offset = 0;
+            this.renderTimeline();
+            setTimeout(() => { if (this.container) this.container.scrollLeft = 0; }, 10);
+        }
+
+        resetView() {
+            this.zoom = 70;
+            this.offset = 0;
+            this.renderTimeline();
+            if (this.container) this.container.scrollLeft = 0;
+        }
+
+        bindEvents() {
+            document.getElementById('zoom-in').onclick = () => this.zoomIn();
+            document.getElementById('zoom-out').onclick = () => this.zoomOut();
+            document.getElementById('reset-view').onclick = () => this.resetView();
+            document.getElementById('fit-view').onclick = () => this.fitToScreen();
+            
+            let isDragging = false, dragStart = 0, startOffset = 0;
+            const container = this.container;
+            
+            const onDragStart = (e) => {
+                if (e.touches && e.touches.length > 1) return;
+                isDragging = true;
+                dragStart = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+                startOffset = this.offset;
+                if (container) container.style.cursor = 'grabbing';
+            };
+            const onDrag = (e) => {
+                if (!isDragging) return;
+                const currentX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+                const delta = currentX - dragStart;
+                this.offset = startOffset + delta;
+                this.renderTimeline();
+            };
+            const onDragEnd = () => {
+                isDragging = false;
+                if (container) container.style.cursor = 'default';
+            };
+            
+            if (container) {
+                container.addEventListener('mousedown', onDragStart);
+                container.addEventListener('touchstart', onDragStart, { passive: false });
+            }
+            window.addEventListener('mousemove', onDrag);
+            window.addEventListener('mouseup', onDragEnd);
+            window.addEventListener('touchmove', onDrag, { passive: false });
+            window.addEventListener('touchend', onDragEnd);
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        window.timeline = new ComparativeTimeline();
+    });
+</script>
 </body>
 </html>
