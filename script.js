@@ -216,16 +216,23 @@ class ComparativeTimeline {
 }
 
 setupModal() {
-    const closeBtn = document.querySelector('.event-modal-close');
-    const modal = document.querySelector('.event-modal');
+    const closeBtn = document.getElementById('modal-close');
+    const modal = document.getElementById('test-modal');
+    const overlay = document.getElementById('modal-overlay');
+    
     if (closeBtn) {
         closeBtn.onclick = () => {
             if (modal) modal.style.display = 'none';
+            if (overlay) overlay.style.display = 'none';
         };
     }
-    window.onclick = (e) => {
-        if (e.target === modal) modal.style.display = 'none';
-    };
+    
+    if (overlay) {
+        overlay.onclick = () => {
+            if (modal) modal.style.display = 'none';
+            if (overlay) overlay.style.display = 'none';
+        };
+    }
 }
 
     getTagColor(tag) {
