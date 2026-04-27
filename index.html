@@ -63,19 +63,19 @@
     </footer>
 </div>
 
-<!-- Modal - Simplified and placed outside container -->
-<div id="event-modal" class="event-modal">
-    <div class="event-modal-content">
-        <div class="event-modal-header">
-            <span class="event-modal-close">&times;</span>
-            <h2 id="modal-title">Event Title</h2>
-            <div class="event-modal-date" id="modal-date">Date</div>
-        </div>
-        <div class="event-modal-body">
-            <div id="modal-image-container" class="event-modal-image-container"></div>
-            <p id="modal-description">Description</p>
-            <div id="modal-tags" class="event-modal-tags"></div>
-        </div>
+<!-- Working Modal - From test-working.html -->
+<div class="test-modal-overlay" id="modal-overlay"></div>
+<div class="test-modal" id="test-modal">
+    <div class="test-modal-header">
+        <span class="test-modal-close" id="modal-close">&times;</span>
+        <h2 id="modal-title">Event Title</h2>
+        <div class="test-modal-date" id="modal-date">Date</div>
+    </div>
+    <div class="test-modal-body">
+        <img class="test-modal-image" id="modal-image" style="display: none;">
+        <div id="modal-image-fallback" style="display: none; text-align: center; padding: 30px; background: #f5f5f5; border-radius: 8px;">📷 No image available</div>
+        <p id="modal-description">Description</p>
+        <div id="modal-tags" class="test-modal-tags"></div>
     </div>
 </div>
 
