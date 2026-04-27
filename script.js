@@ -160,10 +160,12 @@ class ComparativeTimeline {
         }
     }
 
-showDetails(event) {
-    // Get modal element by new class name
-    const modal = document.querySelector('.event-modal');
-    if (!modal) return;
+    showDetails(event) {
+    // Get modal elements
+    const modal = document.getElementById('test-modal');
+    const overlay = document.getElementById('modal-overlay');
+    
+    if (!modal || !overlay) return;
     
     // Populate content
     document.getElementById('modal-title').textContent = event.title;
@@ -178,28 +180,39 @@ showDetails(event) {
     
     document.getElementById('modal-description').textContent = event.description;
     
-    const imageContainer = document.getElementById('modal-image-container');
+    // Handle image
+    const img = document.getElementById('modal-image');
+    const fallback = document.getElementById('modal-image-fallback');
+    
     if (event.image && event.image !== '') {
-        imageContainer.innerHTML = `<img class="event-modal-image" src="${event.image}" alt="${event.title}" onerror="this.parentElement.innerHTML='<div class=\'event-modal-image-fallback\'><i class=\'fas fa-image\'></i><br>Image not available</div>'">`;
+        img.src = event.image;
+        img.style.display = 'block';
+        fallback.style.display = 'none';
+        img.onerror = () => {
+            img.style.display = 'none';
+            fallback.style.display = 'block';
+        };
     } else {
-        const icon = event.fallbackIcon || '📌';
-        imageContainer.innerHTML = `<div class="event-modal-image-fallback" style="font-size: 3rem; padding: 20px;">${icon}<br><span style="font-size: 0.8rem;">No image available</span></div>`;
+        img.style.display = 'none';
+        fallback.style.display = 'block';
     }
     
+    // Handle tags
     const tagsContainer = document.getElementById('modal-tags');
     tagsContainer.innerHTML = '';
     if (event.tags) {
         event.tags.forEach(tag => {
             const span = document.createElement('span');
-            span.className = 'event-modal-tag';
+            span.className = 'test-modal-tag';
             span.textContent = tag;
             span.style.backgroundColor = this.getTagColor(tag);
             tagsContainer.appendChild(span);
         });
     }
     
-    // Show modal - simple display
-    modal.style.display = 'flex';
+    // Show modal
+    overlay.style.display = 'block';
+    modal.style.display = 'block';
 }
 
 setupModal() {
