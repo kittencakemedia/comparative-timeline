@@ -670,7 +670,7 @@
             }
         }
 
-    showModal(event) {
+showModal(event) {
     const overlay = document.getElementById('modal-overlay');
     const modal = document.getElementById('modal-container');
     
@@ -719,24 +719,26 @@
         });
     }
     
-    // FORCE VIEWPORT CENTERING - Critical fix
-    overlay.style.display = 'block';
-    modal.style.display = 'block';
-    
-    // Ensure modal is centered in viewport, not document
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.right = 'auto';
-    modal.style.bottom = 'auto';
-    
-    // Also ensure overlay covers only viewport
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.right = '0';
-    overlay.style.bottom = '0';
+    // === CRITICAL FIX: Display modal with delay and force viewport centering ===
+    setTimeout(() => {
+        overlay.style.display = 'block';
+        modal.style.display = 'block';
+        
+        // Force modal to be centered in the visible viewport
+        modal.style.position = 'fixed';
+        modal.style.top = '50%';
+        modal.style.left = '50%';
+        modal.style.transform = 'translate(-50%, -50%)';
+        modal.style.right = 'auto';
+        modal.style.bottom = 'auto';
+        
+        // Ensure overlay covers only viewport
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.right = '0';
+        overlay.style.bottom = '0';
+    }, 50);
 }
         
         setupModal() {
