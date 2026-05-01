@@ -152,7 +152,7 @@
     </div>
 </div>
 
-<script src="timeline-data.js"></script>
+<script src="timeline-data-simple.js"></script>
 <script>
     // Timeline Class
     class Timeline {
@@ -228,8 +228,10 @@
                 <div class="card-title">${event.title}</div>
                 <div class="card-year">${yearDisplay}</div>
             `;
-            card.onclick = () => this.showModal(event);
-            
+            card.onclick = () => {
+                console.log('Card clicked:', event.title);  // ADD THIS LINE
+                this.showModal(event);
+      };
             if (event.position === 'top') this.topTrack.appendChild(card);
             else this.bottomTrack.appendChild(card);
         }
