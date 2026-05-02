@@ -331,4 +331,13 @@
         
         bindEvents() {
             document.getElementById('zoom-in').onclick = () => this.zoomIn();
-            document.getElementById('zoom-out').onclick = () => this.zoom
+            document.getElementById('zoom-out').onclick = () => this.zoomOut();
+            document.getElementById('reset-view').onclick = () => this.resetView();
+            document.getElementById('fit-view').onclick = () => this.fitToScreen();
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => { new Timeline(); });
+</script>
+</body>
+</html>
