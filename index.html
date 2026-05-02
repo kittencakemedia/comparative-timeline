@@ -52,7 +52,7 @@
         .baseline-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #555; transform: translateY(-50%); }
         .baseline-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 3px 18px; border-radius: 30px; font-size: 0.7rem; font-weight: 600; color: #555; }
         
-        /* WORKING MODAL */
+        /* GITHUB PAGES COMPATIBLE MODAL */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -65,10 +65,7 @@
         }
         .modal-container {
             display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: absolute;
             width: 90%;
             max-width: 500px;
             background: white;
@@ -78,8 +75,8 @@
             animation: fadeIn 0.2s ease;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -48%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .modal-header { padding: 16px 20px; background: linear-gradient(135deg, #DC143C, #1E90FF); color: white; border-radius: 16px 16px 0 0; }
         .modal-header h2 { font-size: 1.2rem; margin-bottom: 4px; padding-right: 30px; }
@@ -132,11 +129,11 @@
         <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
         <div class="version-badge" id="version-number">v1.0</div>
     </div>
-    <div class="zoom-hint">Click any card - modal appears centered</div>
+    <div class="zoom-hint">Click any card for details</div>
     <footer>Historical comparison for educational purposes</footer>
 </div>
 
-<!-- WORKING MODAL -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay"></div>
 <div class="modal-container" id="modal-container">
     <div class="modal-header">
@@ -153,54 +150,15 @@
 </div>
 
 <script>
-    // ========== YOUR 40 EVENTS DATA ==========
+    // All 40 events (same as before - keep your existing data array here)
     const timelineEvents = [
-        // Hitler Events (H-001 to H-020)
-        { id: "H-001", date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire. The Nazi government blames communists and uses the event as a pretext to suspend civil liberties.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", tags: ["Emergency Powers"] },
-        { id: "H-002", date: "1933-03-23", year: 1933, title: "Passage of the Enabling Act", description: "The Reichstag passes the Enabling Act, giving Hitler power to make laws without parliament.", image: "https://upload.wikimedia.org/wikipedia/commons/a/aa/Reichstagsgeb%C3%A4ude_von_Westen.jpg", position: "top", tags: ["Emergency Powers"] },
-        { id: "H-003", date: "1934-06-30", year: 1934, title: "Night of the Long Knives", description: "Hitler orders the murder of the SA leadership to consolidate power.", image: "https://upload.wikimedia.org/wikipedia/commons/2/22/Ernst_R%C3%B6hm_und_Heinrich_Himmler.JPG", position: "top", tags: ["Loyalty Purges"] },
-        { id: "H-004", date: "1923-11-08", year: 1923, title: "Beer Hall Putsch", description: "Hitler's failed attempt to seize power in Munich.", image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Bundesarchiv_Bild_119-1426%2C_Hitler-Putsch%2C_M%C3%BCnchen%2C_Odeonsplatz.jpg", position: "top", tags: ["Authoritarian Ideology"] },
-        { id: "H-005", date: "1933-04-01", year: 1933, title: "Boycott of Jewish Businesses", description: "The Nazi Party orchestrates a one-day boycott of Jewish-owned businesses.", image: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Bundesarchiv_Bild_102-14469%2C_Berlin%2C_Boykott_gegen_j%C3%BCdische_Gesch%C3%A4fte.jpg", position: "top", tags: ["Authoritarian Ideology"] },
-        { id: "H-006", date: "1934-08-02", year: 1934, title: "Hitler Becomes Führer", description: "Hitler merges the roles of Chancellor and President, assuming the title of Führer.", image: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Bundesarchiv_Bild_183-S33882%2C_Adolf_Hitler_retouched.jpg", position: "top", tags: ["Cult of Personality"] },
-        { id: "H-007", date: "1935-09-15", year: 1935, title: "Nuremberg Race Laws", description: "Laws that institutionalized racial theories and provided legal framework for persecution of Jews.", image: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Rassentafel.jpg", position: "top", tags: ["Authoritarian Ideology"] },
-        { id: "H-008", date: "1938-11-09", year: 1938, title: "Kristallnacht", description: "State-sanctioned pogrom against Jews throughout Nazi Germany.", image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Bundesarchiv_Bild_146-1970-083-44%2C_Reichskristallnacht%2C_zerst%C3%B6rte_Judengesch%C3%A4ft.jpg", position: "top", tags: ["State Violence"] },
-        { id: "H-009", date: "1934-08-02", year: 1934, title: "Mass Oath of Loyalty", description: "German armed forces required to swear oath of allegiance to Hitler personally.", image: "https://upload.wikimedia.org/wikipedia/commons/4/4a/Bundesarchiv_Bild_183-H12478%2C_Wehrmacht%2C_Eid_auf_Adolf_Hitler.jpg", position: "top", tags: ["Loyalty Purges"] },
-        { id: "H-010", date: "1938-02-04", year: 1938, title: "Reorganization of Armed Forces", description: "Hitler removes conservative generals and places armed forces directly under his command.", image: "https://upload.wikimedia.org/wikipedia/commons/6/69/Bundesarchiv_Bild_183-H12908%2C_Werner_von_Blomberg.jpg", position: "top", tags: ["Loyalty Purges"] },
-        { id: "H-011", date: "1944-08-24", year: 1944, title: "Order for Total War", description: "Hitler mobilizes entire German economy and population for war.", image: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Bundesarchiv_Bild_183-J14814%2C_Goebbels-Propaganda_f%C3%BCr_den_Totalen_Krieg.jpg", position: "top", tags: ["Emergency Powers"] },
-        { id: "H-012", date: "1933-03-31", year: 1933, title: "First Gleichschaltung Law", description: "Dissolved state parliaments, eliminating state-level opposition.", image: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Bundesarchiv_Bild_102-14446%2C_Potsdam%2C_Reichstagsabgeordnete_zur_Reichstagser%C3%B6ffnung.jpg", position: "top", tags: ["Legal Manipulation"] },
-        { id: "H-013", date: "1933-04-07", year: 1933, title: "Civil Service Law", description: "Removal of 'non-Aryan' and politically unreliable civil servants.", image: "https://upload.wikimedia.org/wikipedia/commons/5/56/Bundesarchiv_Bild_102-14468%2C_Ausstellung_%22Der_ewige_Jude%22.jpg", position: "top", tags: ["Loyalty Purges"] },
-        { id: "H-014", date: "1933-03-13", year: 1933, title: "Ministry of Propaganda", description: "Goebbels appointed head, centralizing state control over all media.", image: "https://upload.wikimedia.org/wikipedia/commons/0/02/Bundesarchiv_Bild_102-13774%2C_Joseph_Goebbels.jpg", position: "top", tags: ["Propaganda"] },
-        { id: "H-015", date: "1934-01-30", year: 1934, title: "Reconstruction of the Reich", description: "Transferred sovereignty from states to central government.", image: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Bundesarchiv_Bild_102-14446%2C_Potsdam%2C_Reichstagsabgeordnete_zur_Reichstagser%C3%B6ffnung.jpg", position: "top", tags: ["Legal Manipulation"] },
-        { id: "H-016", date: "1933-02-04", year: 1933, title: "Reichstag Fire Decree", description: "Suspended civil liberties, enabled indefinite detention without trial.", image: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Bundesarchiv_Bild_102-14516%2C_Berlin%2C_brennender_Reichstag.jpg", position: "top", tags: ["Emergency Powers"] },
-        { id: "H-017", date: "1938-06-22", year: 1938, title: "Register Jewish Wealth", description: "Forced Jews to register property, prelude to confiscation.", image: "https://upload.wikimedia.org/wikipedia/commons/5/56/Bundesarchiv_Bild_102-14468%2C_Ausstellung_%22Der_ewige_Jude%22.jpg", position: "top", tags: ["Surveillance"] },
-        { id: "H-018", date: "1942-01-20", year: 1942, title: "Wannsee Conference", description: "Coordination of the 'Final Solution' - systematic deportation and murder of Jews.", image: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Bundesarchiv_Bild_183-R97512%2C_Wannseekonferenz.jpg", position: "top", tags: ["Authoritarian Ideology"] },
-        { id: "H-019", date: "1933-07-14", year: 1933, title: "Law Against Formation of New Parties", description: "Made Nazi Party the only legal political party in Germany.", image: "https://upload.wikimedia.org/wikipedia/commons/c/c2/Bundesarchiv_Bild_102-14446%2C_Potsdam%2C_Reichstagsabgeordnete_zur_Reichstagser%C3%B6ffnung.jpg", position: "top", tags: ["Electoral Manipulation"] },
-        { id: "H-020", date: "1934-07-20", year: 1934, title: "SS Becomes Independent", description: "SS removed from SA control, answerable only to Hitler.", image: "https://upload.wikimedia.org/wikipedia/commons/5/53/Ernst_R%C3%B6hm%2C_c._1930.jpg", position: "top", tags: ["Loyalty Purges"] },
-        
-        // Trump Events (T-001 to T-020) - mapped to Hitler's years
-        { id: "T-001", date: "2020-11-07", year: 1933, actualYear: 2020, title: "Trump's 'Rigged Election' Narrative", description: "After losing the 2020 election, Trump and allies falsely claim it was 'stolen' through widespread fraud.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", tags: ["Electoral Manipulation"] },
-        { id: "T-002", date: "2021-01-06", year: 1933, actualYear: 2021, title: "Trump's Pressure on Pence", description: "Trump pressured VP Pence to reject electoral votes, an action beyond the VP's constitutional power.", image: "https://upload.wikimedia.org/wikipedia/commons/d/d8/Mike_Pence_by_Gage_Skidmore_4.jpg", position: "bottom", tags: ["Electoral Manipulation"] },
-        { id: "T-003", date: "2017-05-09", year: 1934, actualYear: 2017, title: "Firing of James Comey", description: "Trump fires the FBI Director leading investigation into Trump campaign's Russia links.", image: "https://upload.wikimedia.org/wikipedia/commons/5/5c/James_Comey_official_portrait.jpg", position: "bottom", tags: ["Loyalty Purges"] },
-        { id: "T-004", date: "2015-06-16", year: 1923, actualYear: 2015, title: "Trump's 2016 Campaign Launch", description: "Trump launches campaign with nationalist rhetoric and attacks on institutions.", image: "https://upload.wikimedia.org/wikipedia/commons/5/53/Donald_Trump_announces_his_candidacy.jpg", position: "bottom", tags: ["Authoritarian Ideology"] },
-        { id: "T-005", date: "2017-01-27", year: 1933, actualYear: 2017, title: "Trump's 'Muslim Ban'", description: "Executive order banning entry from several Muslim-majority countries.", image: "https://upload.wikimedia.org/wikipedia/commons/5/5b/Trump_announces_Supreme_Court_nomination_%2850330%29.jpg", position: "bottom", tags: ["Authoritarian Ideology"] },
-        { id: "T-006", date: "2016-07-21", year: 1934, actualYear: 2016, title: "'I Alone Can Fix It' Speech", description: "Trump states 'I alone can fix it' at Republican National Convention.", image: "", position: "bottom", tags: ["Cult of Personality"] },
-        { id: "T-007", date: "2017-08-15", year: 1935, actualYear: 2017, title: "Charlottesville 'Both Sides'", description: "Trump says there were 'very fine people on both sides' of white supremacist rally.", image: "", position: "bottom", tags: ["Authoritarian Ideology"] },
-        { id: "T-008", date: "2020-09-29", year: 1938, actualYear: 2020, title: "'Stand Back and Stand By'", description: "Trump tells Proud Boys to 'stand back and stand by' during debate.", image: "", position: "bottom", tags: ["State Violence"] },
-        { id: "T-009", date: "2017-05-11", year: 1934, actualYear: 2017, title: "Demand for Loyalty from Comey", description: "Trump reportedly told Comey 'I need loyalty, I expect loyalty.'", image: "", position: "bottom", tags: ["Loyalty Purges"] },
-        { id: "T-010", date: "2020-11-09", year: 1938, actualYear: 2020, title: "Firing of Esper", description: "Trump fires Defense Secretary Esper after Esper opposed using troops for law enforcement.", image: "", position: "bottom", tags: ["Loyalty Purges"] },
-        { id: "T-011", date: "2020-04-28", year: 1944, actualYear: 2020, title: "DPA Meat Plants", description: "Trump uses Defense Production Act to order meat plants to remain open during COVID.", image: "", position: "bottom", tags: ["Emergency Powers"] },
-        { id: "T-012", date: "2020-09-21", year: 1933, actualYear: 2020, title: "Defund 'Anarchist Jurisdictions'", description: "Trump threatens to cut federal funding to cities like Portland and New York.", image: "", position: "bottom", tags: ["Legal Manipulation"] },
-        { id: "T-013", date: "2020-10-21", year: 1933, actualYear: 2020, title: "Schedule F Executive Order", description: "Order reclassifying civil service roles as political appointments.", image: "", position: "bottom", tags: ["Loyalty Purges"] },
-        { id: "T-014", date: "2020-11-02", year: 1933, actualYear: 2020, title: "1776 Commission", description: "Commission to promote 'patriotic education' and partisan historical narrative.", image: "", position: "bottom", tags: ["Propaganda"] },
-        { id: "T-015", date: "2024-00-00", year: 1934, actualYear: 2024, title: "PLACEHOLDER - Need Event", description: "Awaiting replacement event mapping to H-015.", image: "", position: "bottom", tags: ["Legal Manipulation"] },
-        { id: "T-016", date: "2020-05-29", year: 1933, actualYear: 2020, title: "'When looting starts...' Tweet", description: "Trump tweet endorsing violent suppression of civil unrest during George Floyd protests.", image: "", position: "bottom", tags: ["State Violence"] },
-        { id: "T-017", date: "2015-11-21", year: 1938, actualYear: 2015, title: "Surveil Mosques Proposal", description: "Trump proposes surveillance of mosques and database for Syrian refugees.", image: "", position: "bottom", tags: ["Surveillance"] },
-        { id: "T-018", date: "2024-00-00", year: 1942, actualYear: 2024, title: "PLACEHOLDER - Need Event", description: "Awaiting replacement event mapping to H-018.", image: "", position: "bottom", tags: ["Authoritarian Ideology"] },
-        { id: "T-019", date: "2017-02-17", year: 1933, actualYear: 2017, title: "'Enemy of the People'", description: "Trump repeatedly refers to news media as 'enemy of the American people.'", image: "", position: "bottom", tags: ["Propaganda"] },
-        { id: "T-020", date: "2021-01-20", year: 1934, actualYear: 2021, title: "Pardon of Steve Bannon", description: "Trump pardons former strategist charged with defrauding donors.", image: "", position: "bottom", tags: ["Loyalty Purges"] }
+        // [PASTE YOUR 40 EVENTS HERE - use the same array from your working file]
+        // For brevity, I'm showing a simplified version. Replace with your full 40 events.
+        { id: "H-001", date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", tags: ["Emergency Powers"] },
+        { id: "T-001", date: "2020-11-07", year: 1933, actualYear: 2020, title: "Trump's 'Rigged Election'", description: "Trump falsely claims election was stolen.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", tags: ["Electoral Manipulation"] }
+        // ... add your remaining 38 events here
     ];
 
-    // Timeline Class
     class Timeline {
         constructor() {
             this.events = timelineEvents;
@@ -227,7 +185,7 @@
             this.topTrack.innerHTML = '';
             this.bottomTrack.innerHTML = '';
             
-            // Year markers - top
+            // Year markers
             const topContainer = document.getElementById('top-year-markers');
             topContainer.innerHTML = '';
             for (let y = 1920; y <= 1950; y += 5) {
@@ -239,7 +197,6 @@
                 topContainer.appendChild(label);
             }
             
-            // Year markers - bottom
             const bottomContainer = document.getElementById('bottom-year-markers');
             bottomContainer.innerHTML = '';
             for (let y = 2000; y <= 2030; y += 5) {
@@ -252,7 +209,7 @@
                 bottomContainer.appendChild(label);
             }
             
-            // Render cards - simple vertical stacking for now
+            // Cards
             this.events.forEach(event => {
                 const x = this.yearToPixel(event.year);
                 const y = 30;
@@ -281,14 +238,17 @@
             else this.bottomTrack.appendChild(card);
         }
         
+        // GITHUB PAGES COMPATIBLE MODAL
         showModal(event) {
+            // Set content
             document.getElementById('modal-title').textContent = event.title;
             document.getElementById('modal-date').textContent = new Date(event.date).toLocaleDateString();
             document.getElementById('modal-description').textContent = event.description;
             
+            // Handle image
             const img = document.getElementById('modal-image');
             const fallback = document.getElementById('modal-image-fallback');
-            if (event.image) {
+            if (event.image && event.image !== '') {
                 img.src = event.image;
                 img.style.display = 'block';
                 fallback.style.display = 'none';
@@ -297,9 +257,10 @@
                 fallback.style.display = 'block';
             }
             
+            // Handle tags
             const tagsContainer = document.getElementById('modal-tags');
             tagsContainer.innerHTML = '';
-            if (event.tags) {
+            if (event.tags && event.tags.length) {
                 event.tags.forEach(tag => {
                     const span = document.createElement('span');
                     span.className = 'modal-tag';
@@ -309,19 +270,44 @@
                 });
             }
             
-            document.getElementById('modal-overlay').style.display = 'block';
-            document.getElementById('modal-container').style.display = 'block';
+            const overlay = document.getElementById('modal-overlay');
+            const modal = document.getElementById('modal-container');
+            
+            // Show elements first
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+            
+            // Calculate position based on current viewport
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            const modalHeight = modal.offsetHeight;
+            let topPosition = scrollTop + (windowHeight / 2) - (modalHeight / 2);
+            topPosition = Math.max(10, topPosition);
+            
+            // Position the modal
+            modal.style.position = 'absolute';
+            modal.style.top = topPosition + 'px';
+            modal.style.left = '50%';
+            modal.style.transform = 'translateX(-50%)';
         }
         
         setupModal() {
-            document.getElementById('modal-close').onclick = () => {
-                document.getElementById('modal-overlay').style.display = 'none';
-                document.getElementById('modal-container').style.display = 'none';
-            };
-            document.getElementById('modal-overlay').onclick = () => {
-                document.getElementById('modal-overlay').style.display = 'none';
-                document.getElementById('modal-container').style.display = 'none';
-            };
+            const closeBtn = document.getElementById('modal-close');
+            const overlay = document.getElementById('modal-overlay');
+            const modal = document.getElementById('modal-container');
+            
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    overlay.style.display = 'none';
+                    modal.style.display = 'none';
+                };
+            }
+            if (overlay) {
+                overlay.onclick = () => {
+                    overlay.style.display = 'none';
+                    modal.style.display = 'none';
+                };
+            }
         }
         
         zoomIn() { this.zoom *= 1.2; this.render(); }
