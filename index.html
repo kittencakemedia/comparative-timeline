@@ -20,8 +20,9 @@
         .legend-color.red { background: #DC143C; }
         .legend-color.blue { background: #1E90FF; }
         
+        /* Remove any transform/position that could create containing block */
         .timeline-container { background: white; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); overflow-x: auto; }
-        .timeline-inner { min-width: 3800px; position: relative; }
+        .timeline-inner { min-width: 3800px; }
         
         .top-section { background: linear-gradient(180deg, rgba(220,20,60,0.02), rgba(220,20,60,0.1)); border-radius: 12px 12px 0 0; padding: 20px 0 10px; position: relative; }
         .bottom-section { background: linear-gradient(0deg, rgba(30,144,255,0.02), rgba(30,144,255,0.1)); border-radius: 0 0 12px 12px; padding: 10px 0 20px; position: relative; }
@@ -51,41 +52,6 @@
         .baseline-container { position: relative; height: 36px; background: white; }
         .baseline-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #555; transform: translateY(-50%); }
         .baseline-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 3px 18px; border-radius: 30px; font-size: 0.7rem; font-weight: 600; color: #555; }
-        
-        /* MODAL - Designed for GitHub Pages */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 99999;
-        }
-        .modal-container {
-            display: none;
-            position: fixed;
-            width: 90%;
-            max-width: 500px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            z-index: 100000;
-            animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .modal-header { padding: 16px 20px; background: linear-gradient(135deg, #DC143C, #1E90FF); color: white; border-radius: 16px 16px 0 0; }
-        .modal-header h2 { font-size: 1.2rem; margin-bottom: 4px; padding-right: 30px; }
-        .modal-date { font-size: 0.75rem; opacity: 0.9; }
-        .modal-close { position: absolute; top: 12px; right: 16px; font-size: 24px; cursor: pointer; color: white; opacity: 0.8; }
-        .modal-body { padding: 18px; max-height: 70vh; overflow-y: auto; }
-        .modal-image { max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 15px; }
-        .modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-        .modal-tag { padding: 3px 10px; border-radius: 16px; font-size: 0.7rem; font-weight: 600; color: white; }
         
         footer { text-align: center; margin-top: 25px; color: #999; font-size: 0.7rem; }
         .zoom-hint { text-align: center; font-size: 0.7rem; color: #aaa; margin-top: 10px; }
@@ -129,24 +95,8 @@
     <footer>Historical comparison for educational purposes</footer>
 </div>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay"></div>
-<div class="modal-container" id="modal-container">
-    <div class="modal-header">
-        <span class="modal-close" id="modal-close">&times;</span>
-        <h2 id="modal-title">Event Title</h2>
-        <div class="modal-date" id="modal-date">Date</div>
-    </div>
-    <div class="modal-body">
-        <img class="modal-image" id="modal-image" style="display: none;">
-        <div id="modal-image-fallback" style="display: none; text-align: center; padding: 30px; background: #f5f5f5; border-radius: 8px;">📷 No image</div>
-        <p id="modal-description">Description</p>
-        <div id="modal-tags" class="modal-tags"></div>
-    </div>
-</div>
-
 <script>
-    // Sample events for testing
+    // Sample events
     const timelineEvents = [
         { id: 1, date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", tags: ["Emergency Powers"] },
         { id: 2, date: "2020-11-07", year: 1933, actualYear: 2020, title: "Trump's 'Rigged Election'", description: "Trump falsely claims election was stolen.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", tags: ["Electoral Manipulation"] }
@@ -165,7 +115,7 @@
             this.bottomTrack = document.getElementById('bottom-timeline');
             this.render();
             this.bindEvents();
-            this.setupModal();
+            this.createModal();
             console.log('Timeline ready');
         }
         
@@ -232,6 +182,69 @@
             else this.bottomTrack.appendChild(card);
         }
         
+        createModal() {
+            // Create modal elements directly in body to avoid containing block issues
+            const overlay = document.createElement('div');
+            overlay.id = 'modal-overlay';
+            overlay.style.cssText = `
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 99999;
+            `;
+            
+            const modal = document.createElement('div');
+            modal.id = 'modal-container';
+            modal.style.cssText = `
+                display: none;
+                position: fixed;
+                width: 90%;
+                max-width: 500px;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                z-index: 100000;
+                animation: fadeIn 0.2s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="padding: 16px 20px; background: linear-gradient(135deg, #DC143C, #1E90FF); color: white; border-radius: 16px 16px 0 0;">
+                    <span id="modal-close" style="position: absolute; top: 12px; right: 16px; font-size: 24px; cursor: pointer; color: white; opacity: 0.8;">&times;</span>
+                    <h2 id="modal-title" style="font-size: 1.2rem; margin-bottom: 4px; padding-right: 30px;">Event Title</h2>
+                    <div id="modal-date" style="font-size: 0.75rem; opacity: 0.9;">Date</div>
+                </div>
+                <div style="padding: 18px; max-height: 70vh; overflow-y: auto;">
+                    <img id="modal-image" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 15px; display: none;">
+                    <div id="modal-image-fallback" style="display: none; text-align: center; padding: 30px; background: #f5f5f5; border-radius: 8px;">📷 No image</div>
+                    <p id="modal-description">Description</p>
+                    <div id="modal-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;"></div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(modal);
+            
+            this.modalOverlay = overlay;
+            this.modalContainer = modal;
+            
+            // Setup close events
+            const closeBtn = document.getElementById('modal-close');
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    this.modalOverlay.style.display = 'none';
+                    this.modalContainer.style.display = 'none';
+                };
+            }
+            this.modalOverlay.onclick = () => {
+                this.modalOverlay.style.display = 'none';
+                this.modalContainer.style.display = 'none';
+            };
+        }
+        
         showModal(event) {
             // Set content
             document.getElementById('modal-title').textContent = event.title;
@@ -245,10 +258,6 @@
                 img.src = event.image;
                 img.style.display = 'block';
                 fallback.style.display = 'none';
-                img.onerror = () => {
-                    img.style.display = 'none';
-                    fallback.style.display = 'block';
-                };
             } else {
                 img.style.display = 'none';
                 fallback.style.display = 'block';
@@ -260,61 +269,27 @@
             if (event.tags && event.tags.length) {
                 event.tags.forEach(tag => {
                     const span = document.createElement('span');
-                    span.className = 'modal-tag';
                     span.textContent = tag;
-                    span.style.backgroundColor = '#B22222';
+                    span.style.cssText = 'padding: 3px 10px; border-radius: 16px; font-size: 0.7rem; font-weight: 600; color: white; background-color: #B22222; margin-right: 6px;';
                     tagsContainer.appendChild(span);
                 });
             }
             
-            const overlay = document.getElementById('modal-overlay');
-            const modal = document.getElementById('modal-container');
+            // Show overlay
+            this.modalOverlay.style.display = 'block';
+            this.modalContainer.style.display = 'block';
             
-            // Show overlay first
-            overlay.style.display = 'block';
-            
-            // Make modal visible but positioned off-screen temporarily to measure
-            modal.style.display = 'block';
-            modal.style.visibility = 'hidden';
-            modal.style.top = '-9999px';
-            modal.style.left = '-9999px';
-            
-            // Get modal height after it's rendered
-            const modalHeight = modal.offsetHeight;
+            // Force position calculation
+            const modalHeight = this.modalContainer.offsetHeight;
             const windowHeight = window.innerHeight;
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             
-            // Calculate position - center in viewport
             let topPosition = scrollTop + (windowHeight / 2) - (modalHeight / 2);
             topPosition = Math.max(10, topPosition);
             
-            // Position modal
-            modal.style.visibility = 'visible';
-            modal.style.position = 'fixed';
-            modal.style.top = topPosition + 'px';
-            modal.style.left = '50%';
-            modal.style.transform = 'translateX(-50%)';
-            modal.style.right = 'auto';
-            modal.style.bottom = 'auto';
-        }
-        
-        setupModal() {
-            const closeBtn = document.getElementById('modal-close');
-            const overlay = document.getElementById('modal-overlay');
-            const modal = document.getElementById('modal-container');
-            
-            if (closeBtn) {
-                closeBtn.onclick = () => {
-                    overlay.style.display = 'none';
-                    modal.style.display = 'none';
-                };
-            }
-            if (overlay) {
-                overlay.onclick = () => {
-                    overlay.style.display = 'none';
-                    modal.style.display = 'none';
-                };
-            }
+            this.modalContainer.style.top = topPosition + 'px';
+            this.modalContainer.style.left = '50%';
+            this.modalContainer.style.transform = 'translateX(-50%)';
         }
         
         zoomIn() { this.zoom *= 1.2; this.render(); }
