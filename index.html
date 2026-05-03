@@ -52,7 +52,7 @@
         .baseline-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #555; transform: translateY(-50%); }
         .baseline-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 3px 18px; border-radius: 30px; font-size: 0.7rem; font-weight: 600; color: #555; }
         
-        /* GITHUB PAGES COMPATIBLE MODAL */
+        /* MODAL - Designed for GitHub Pages */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -65,7 +65,7 @@
         }
         .modal-container {
             display: none;
-            position: absolute;
+            position: fixed;
             width: 90%;
             max-width: 500px;
             background: white;
@@ -89,8 +89,6 @@
         
         footer { text-align: center; margin-top: 25px; color: #999; font-size: 0.7rem; }
         .zoom-hint { text-align: center; font-size: 0.7rem; color: #aaa; margin-top: 10px; }
-        .watermark-text { position: absolute; bottom: 15px; right: 20px; font-size: 10px; color: rgba(0,0,0,0.12); background: rgba(255,255,255,0.6); padding: 3px 10px; border-radius: 4px; }
-        .version-badge { position: absolute; bottom: 5px; left: 10px; font-size: 9px; color: rgba(0,0,0,0.4); background: rgba(255,255,255,0.7); padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -126,8 +124,6 @@
                 <div class="era-label">Trump Era (Mapped to Hitler Dates)</div>
             </div>
         </div>
-        <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
-        <div class="version-badge" id="version-number">v1.0</div>
     </div>
     <div class="zoom-hint">Click any card for details</div>
     <footer>Historical comparison for educational purposes</footer>
@@ -150,13 +146,10 @@
 </div>
 
 <script>
-    // All 40 events (same as before - keep your existing data array here)
+    // Sample events for testing
     const timelineEvents = [
-        // [PASTE YOUR 40 EVENTS HERE - use the same array from your working file]
-        // For brevity, I'm showing a simplified version. Replace with your full 40 events.
-        { id: "H-001", date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", tags: ["Emergency Powers"] },
-        { id: "T-001", date: "2020-11-07", year: 1933, actualYear: 2020, title: "Trump's 'Rigged Election'", description: "Trump falsely claims election was stolen.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", tags: ["Electoral Manipulation"] }
-        // ... add your remaining 38 events here
+        { id: 1, date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", tags: ["Emergency Powers"] },
+        { id: 2, date: "2020-11-07", year: 1933, actualYear: 2020, title: "Trump's 'Rigged Election'", description: "Trump falsely claims election was stolen.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", tags: ["Electoral Manipulation"] }
     ];
 
     class Timeline {
@@ -173,7 +166,7 @@
             this.render();
             this.bindEvents();
             this.setupModal();
-            console.log('Timeline ready with ' + this.events.length + ' events');
+            console.log('Timeline ready');
         }
         
         yearToPixel(year) {
@@ -185,7 +178,7 @@
             this.topTrack.innerHTML = '';
             this.bottomTrack.innerHTML = '';
             
-            // Year markers
+            // Year markers - top
             const topContainer = document.getElementById('top-year-markers');
             topContainer.innerHTML = '';
             for (let y = 1920; y <= 1950; y += 5) {
@@ -197,6 +190,7 @@
                 topContainer.appendChild(label);
             }
             
+            // Year markers - bottom
             const bottomContainer = document.getElementById('bottom-year-markers');
             bottomContainer.innerHTML = '';
             for (let y = 2000; y <= 2030; y += 5) {
@@ -238,7 +232,6 @@
             else this.bottomTrack.appendChild(card);
         }
         
-        // GITHUB PAGES COMPATIBLE MODAL
         showModal(event) {
             // Set content
             document.getElementById('modal-title').textContent = event.title;
@@ -252,6 +245,10 @@
                 img.src = event.image;
                 img.style.display = 'block';
                 fallback.style.display = 'none';
+                img.onerror = () => {
+                    img.style.display = 'none';
+                    fallback.style.display = 'block';
+                };
             } else {
                 img.style.display = 'none';
                 fallback.style.display = 'block';
@@ -273,22 +270,32 @@
             const overlay = document.getElementById('modal-overlay');
             const modal = document.getElementById('modal-container');
             
-            // Show elements first
+            // Show overlay first
             overlay.style.display = 'block';
-            modal.style.display = 'block';
             
-            // Calculate position based on current viewport
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const windowHeight = window.innerHeight;
+            // Make modal visible but positioned off-screen temporarily to measure
+            modal.style.display = 'block';
+            modal.style.visibility = 'hidden';
+            modal.style.top = '-9999px';
+            modal.style.left = '-9999px';
+            
+            // Get modal height after it's rendered
             const modalHeight = modal.offsetHeight;
+            const windowHeight = window.innerHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Calculate position - center in viewport
             let topPosition = scrollTop + (windowHeight / 2) - (modalHeight / 2);
             topPosition = Math.max(10, topPosition);
             
-            // Position the modal
-            modal.style.position = 'absolute';
+            // Position modal
+            modal.style.visibility = 'visible';
+            modal.style.position = 'fixed';
             modal.style.top = topPosition + 'px';
             modal.style.left = '50%';
             modal.style.transform = 'translateX(-50%)';
+            modal.style.right = 'auto';
+            modal.style.bottom = 'auto';
         }
         
         setupModal() {
