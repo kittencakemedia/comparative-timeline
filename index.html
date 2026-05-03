@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f0f2f5; padding: 20px; height: 100%; }
-        html { height: 100%; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; padding: 20px; }
         .container { max-width: 1400px; margin: 0 auto; }
         
         header { text-align: center; margin-bottom: 30px; }
@@ -56,11 +55,11 @@
         footer { text-align: center; margin-top: 25px; color: #999; font-size: 0.7rem; }
         .zoom-hint { text-align: center; font-size: 0.7rem; color: #aaa; margin-top: 10px; }
         
-        /* Simple alert-style modal */
+        /* Alert box - positioned below controls */
         .custom-alert {
             display: none;
             position: fixed;
-            top: 20px;
+            top: 200px;
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
@@ -138,7 +137,7 @@
 </div>
 
 <script>
-    // Sample events
+    // Sample events (add your 40 events here)
     const timelineEvents = [
         { id: 1, date: "1933-02-27", year: 1933, title: "Reichstag Fire", description: "The German parliament building is set on fire.", image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp/1508px-Interior-fire-damage-Reichstag-Berlin-Germany-1933.webp.png", position: "top", tags: ["Emergency Powers"] },
         { id: 2, date: "2020-11-07", year: 1933, actualYear: 2020, title: "Trump's 'Rigged Election'", description: "Trump falsely claims election was stolen.", image: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Donald_Trump_%2850548277763%29.jpg", position: "bottom", tags: ["Electoral Manipulation"] }
@@ -157,7 +156,7 @@
             this.bottomTrack = document.getElementById('bottom-timeline');
             this.render();
             this.bindEvents();
-            this.createSimpleAlert();
+            this.createAlert();
             console.log('Timeline ready');
         }
         
@@ -221,13 +220,11 @@
             else this.bottomTrack.appendChild(card);
         }
         
-        createSimpleAlert() {
-            // Create overlay
+        createAlert() {
             this.alertOverlay = document.createElement('div');
             this.alertOverlay.className = 'custom-alert-overlay';
             document.body.appendChild(this.alertOverlay);
             
-            // Create alert box
             this.alertBox = document.createElement('div');
             this.alertBox.className = 'custom-alert';
             this.alertBox.innerHTML = `
@@ -276,11 +273,6 @@
             
             this.alertOverlay.style.display = 'block';
             this.alertBox.style.display = 'block';
-            
-            // Position at top of screen, not center
-            this.alertBox.style.top = '80px';
-            this.alertBox.style.left = '50%';
-            this.alertBox.style.transform = 'translateX(-50%)';
         }
         
         hideAlert() {
