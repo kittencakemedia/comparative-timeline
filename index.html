@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f0f2f5; padding: 20px; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; padding: 20px; height: 100%; }
+        html { height: 100%; }
         .container { max-width: 1400px; margin: 0 auto; }
         
         header { text-align: center; margin-bottom: 30px; }
@@ -20,7 +21,6 @@
         .legend-color.red { background: #DC143C; }
         .legend-color.blue { background: #1E90FF; }
         
-        /* Remove any transform/position that could create containing block */
         .timeline-container { background: white; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); overflow-x: auto; }
         .timeline-inner { min-width: 3800px; }
         
@@ -55,6 +55,48 @@
         
         footer { text-align: center; margin-top: 25px; color: #999; font-size: 0.7rem; }
         .zoom-hint { text-align: center; font-size: 0.7rem; color: #aaa; margin-top: 10px; }
+        
+        /* Simple alert-style modal */
+        .custom-alert {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 100000;
+            border-top: 4px solid #DC143C;
+        }
+        .custom-alert-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .custom-alert-body { padding: 20px; }
+        .custom-alert-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+        }
+        .custom-alert-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 99999;
+        }
     </style>
 </head>
 <body>
@@ -115,7 +157,7 @@
             this.bottomTrack = document.getElementById('bottom-timeline');
             this.render();
             this.bindEvents();
-            this.createModal();
+            this.createSimpleAlert();
             console.log('Timeline ready');
         }
         
@@ -128,7 +170,6 @@
             this.topTrack.innerHTML = '';
             this.bottomTrack.innerHTML = '';
             
-            // Year markers - top
             const topContainer = document.getElementById('top-year-markers');
             topContainer.innerHTML = '';
             for (let y = 1920; y <= 1950; y += 5) {
@@ -140,7 +181,6 @@
                 topContainer.appendChild(label);
             }
             
-            // Year markers - bottom
             const bottomContainer = document.getElementById('bottom-year-markers');
             bottomContainer.innerHTML = '';
             for (let y = 2000; y <= 2030; y += 5) {
@@ -153,7 +193,6 @@
                 bottomContainer.appendChild(label);
             }
             
-            // Cards
             this.events.forEach(event => {
                 const x = this.yearToPixel(event.year);
                 const y = 30;
@@ -176,84 +215,45 @@
                 <div class="card-title">${event.title}</div>
                 <div class="card-year">${yearDisplay}</div>
             `;
-            card.onclick = () => this.showModal(event);
+            card.onclick = () => this.showAlert(event);
             
             if (event.position === 'top') this.topTrack.appendChild(card);
             else this.bottomTrack.appendChild(card);
         }
         
-        createModal() {
-            // Create modal elements directly in body to avoid containing block issues
-            const overlay = document.createElement('div');
-            overlay.id = 'modal-overlay';
-            overlay.style.cssText = `
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                z-index: 99999;
-            `;
+        createSimpleAlert() {
+            // Create overlay
+            this.alertOverlay = document.createElement('div');
+            this.alertOverlay.className = 'custom-alert-overlay';
+            document.body.appendChild(this.alertOverlay);
             
-            const modal = document.createElement('div');
-            modal.id = 'modal-container';
-            modal.style.cssText = `
-                display: none;
-                position: fixed;
-                width: 90%;
-                max-width: 500px;
-                background: white;
-                border-radius: 16px;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-                z-index: 100000;
-                animation: fadeIn 0.2s ease;
-            `;
-            
-            modal.innerHTML = `
-                <div style="padding: 16px 20px; background: linear-gradient(135deg, #DC143C, #1E90FF); color: white; border-radius: 16px 16px 0 0;">
-                    <span id="modal-close" style="position: absolute; top: 12px; right: 16px; font-size: 24px; cursor: pointer; color: white; opacity: 0.8;">&times;</span>
-                    <h2 id="modal-title" style="font-size: 1.2rem; margin-bottom: 4px; padding-right: 30px;">Event Title</h2>
-                    <div id="modal-date" style="font-size: 0.75rem; opacity: 0.9;">Date</div>
+            // Create alert box
+            this.alertBox = document.createElement('div');
+            this.alertBox.className = 'custom-alert';
+            this.alertBox.innerHTML = `
+                <div class="custom-alert-header">
+                    <span id="alert-title">Event Title</span>
+                    <span class="custom-alert-close" id="alert-close">&times;</span>
                 </div>
-                <div style="padding: 18px; max-height: 70vh; overflow-y: auto;">
-                    <img id="modal-image" style="max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 15px; display: none;">
-                    <div id="modal-image-fallback" style="display: none; text-align: center; padding: 30px; background: #f5f5f5; border-radius: 8px;">📷 No image</div>
-                    <p id="modal-description">Description</p>
-                    <div id="modal-tags" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;"></div>
+                <div class="custom-alert-body">
+                    <img id="alert-image" style="max-width: 100%; max-height: 150px; border-radius: 8px; margin-bottom: 15px; display: none;">
+                    <div id="alert-fallback" style="display: none; text-align: center; padding: 20px; background: #f5f5f5; border-radius: 8px;">📷 No image</div>
+                    <p id="alert-description" style="margin-bottom: 15px;"></p>
+                    <div id="alert-tags" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
                 </div>
             `;
+            document.body.appendChild(this.alertBox);
             
-            document.body.appendChild(overlay);
-            document.body.appendChild(modal);
-            
-            this.modalOverlay = overlay;
-            this.modalContainer = modal;
-            
-            // Setup close events
-            const closeBtn = document.getElementById('modal-close');
-            if (closeBtn) {
-                closeBtn.onclick = () => {
-                    this.modalOverlay.style.display = 'none';
-                    this.modalContainer.style.display = 'none';
-                };
-            }
-            this.modalOverlay.onclick = () => {
-                this.modalOverlay.style.display = 'none';
-                this.modalContainer.style.display = 'none';
-            };
+            document.getElementById('alert-close').onclick = () => this.hideAlert();
+            this.alertOverlay.onclick = () => this.hideAlert();
         }
         
-        showModal(event) {
-            // Set content
-            document.getElementById('modal-title').textContent = event.title;
-            document.getElementById('modal-date').textContent = new Date(event.date).toLocaleDateString();
-            document.getElementById('modal-description').textContent = event.description;
+        showAlert(event) {
+            document.getElementById('alert-title').textContent = event.title;
+            document.getElementById('alert-description').textContent = event.description;
             
-            // Handle image
-            const img = document.getElementById('modal-image');
-            const fallback = document.getElementById('modal-image-fallback');
+            const img = document.getElementById('alert-image');
+            const fallback = document.getElementById('alert-fallback');
             if (event.image && event.image !== '') {
                 img.src = event.image;
                 img.style.display = 'block';
@@ -263,33 +263,29 @@
                 fallback.style.display = 'block';
             }
             
-            // Handle tags
-            const tagsContainer = document.getElementById('modal-tags');
+            const tagsContainer = document.getElementById('alert-tags');
             tagsContainer.innerHTML = '';
             if (event.tags && event.tags.length) {
                 event.tags.forEach(tag => {
                     const span = document.createElement('span');
                     span.textContent = tag;
-                    span.style.cssText = 'padding: 3px 10px; border-radius: 16px; font-size: 0.7rem; font-weight: 600; color: white; background-color: #B22222; margin-right: 6px;';
+                    span.style.cssText = 'padding: 3px 10px; border-radius: 16px; font-size: 0.7rem; font-weight: 600; color: white; background-color: #B22222;';
                     tagsContainer.appendChild(span);
                 });
             }
             
-            // Show overlay
-            this.modalOverlay.style.display = 'block';
-            this.modalContainer.style.display = 'block';
+            this.alertOverlay.style.display = 'block';
+            this.alertBox.style.display = 'block';
             
-            // Force position calculation
-            const modalHeight = this.modalContainer.offsetHeight;
-            const windowHeight = window.innerHeight;
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            let topPosition = scrollTop + (windowHeight / 2) - (modalHeight / 2);
-            topPosition = Math.max(10, topPosition);
-            
-            this.modalContainer.style.top = topPosition + 'px';
-            this.modalContainer.style.left = '50%';
-            this.modalContainer.style.transform = 'translateX(-50%)';
+            // Position at top of screen, not center
+            this.alertBox.style.top = '80px';
+            this.alertBox.style.left = '50%';
+            this.alertBox.style.transform = 'translateX(-50%)';
+        }
+        
+        hideAlert() {
+            this.alertOverlay.style.display = 'none';
+            this.alertBox.style.display = 'none';
         }
         
         zoomIn() { this.zoom *= 1.2; this.render(); }
