@@ -14,6 +14,7 @@ class Timeline {
         this.render();
         this.bindEvents();
         console.log('Timeline ready with', this.events.length, 'events');
+        this.updateVersion();
     }
     
     yearToPixel(year) {
@@ -49,12 +50,24 @@ class Timeline {
             bottomContainer.appendChild(label);
         }
         
-        // Cards
-        this.events.forEach(event => {
-            const x = this.yearToPixel(event.year);
-            const y = 30;
-            this.createCard(event, x, y);
-        });
+       
+    // Group events by year for stacking
+    const eventsByYear = {};
+    this.events.forEach(event => {
+        const key = `${event.position}_${event.year}`;
+        if (!eventsByYear[key]) eventsByYear[key] = [];
+        eventsByYear[key].push(event);
+    });
+
+    // Render with stacking
+    this.events.forEach(event => {
+        const x = this.yearToPixel(event.year);
+        const key = `${event.position}_${event.year}`;
+        const yearEvents = eventsByYear[key];
+        const eventIndex = yearEvents.findIndex(e => e.id === event.id);
+        const y = 30 + (eventIndex * 55);  // 55px spacing between stacked cards
+        this.createCard(event, x, y);
+    });
     }
     
     createCard(event, x, y) {
@@ -88,6 +101,15 @@ class Timeline {
         document.getElementById('zoom-out').onclick = () => this.zoomOut();
         document.getElementById('reset-view').onclick = () => this.resetView();
         document.getElementById('fit-view').onclick = () => this.fitToScreen();
+    }
+
+    updateVersion() {
+        const versionEl = document.getElementById('version-number');
+        if (versionEl) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
+            versionEl.textContent = `Beta | ${dateStr}`;
+        }
     }
 }
 
