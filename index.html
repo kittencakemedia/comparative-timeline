@@ -19,32 +19,50 @@
             <button id="fit-view">Fit to Screen</button>
         </div>
         <div class="legend">
-            <div><span class="legend-color red"></span> Hitler Era</div>
+            <div><span class="legend-color red"></span> Hitler Era (1923-1945)</div>
             <div><span class="legend-color blue"></span> Trump Era (Mapped to Hitler Dates)</div>
         </div>
     </header>
 
-    <div class="timeline-container" id="timeline-container">
-        <div class="timeline-inner" id="timeline-inner">
-            <div class="top-section">
-                <div class="timeline-track" id="top-timeline"></div>
-                <div class="year-markers top-markers" id="top-year-markers"></div>
-                <div class="era-label">Hitler Era (1923-1945)</div>
-            </div>
-            <div class="baseline-container">
-                <div class="baseline-line"></div>
-                <div class="baseline-label">COMPARATIVE BASELINE</div>
-            </div>
-            <div class="bottom-section">
-                <div class="year-markers bottom-markers" id="bottom-year-markers"></div>
-                <div class="timeline-track" id="bottom-timeline"></div>
-                <div class="era-label">Trump Era (Mapped to Hitler Dates)</div>
-                <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
-                <div class="version-badge" id="version-number">v1.0</div>
+    <!-- Tag Filters -->
+    <div class="tag-filters">
+        <button class="filter-btn active" data-tag="all">All Events</button>
+        <button class="filter-btn" data-tag="Emergency Powers & Crisis Exploitation">⚡ Emergency Powers</button>
+        <button class="filter-btn" data-tag="Propaganda & Media Control">📢 Propaganda</button>
+        <button class="filter-btn" data-tag="Loyalty Purges & Political Patronage">🗡️ Loyalty Purges</button>
+        <button class="filter-btn" data-tag="Electoral Manipulation & Democratic Erosion">🗳️ Electoral Manipulation</button>
+        <button class="filter-btn" data-tag="Legal Manipulation & Institutional Capture">⚖️ Legal Manipulation</button>
+        <button class="filter-btn" data-tag="Authoritarian Ideology & Nationalism">👑 Authoritarian Ideology</button>
+        <button class="filter-btn" data-tag="State-Sanctioned Violence & Intimidation">💥 State Violence</button>
+        <button class="filter-btn" data-tag="Cult of Personality & Mass Mobilization">👤 Cult of Personality</button>
+        <button class="filter-btn" data-tag="Surveillance & Internal Policing">👁️ Surveillance</button>
+    </div>
+
+    <!-- Timeline - No extra scroll wrappers -->
+    <div class="timeline-wrapper">
+        <div class="timeline-container" id="timeline-container">
+            <div class="timeline-inner" id="timeline-inner">
+                <div class="top-section">
+                    <div class="timeline-track" id="top-timeline"></div>
+                    <div class="year-markers top-markers" id="top-year-markers"></div>
+                    <div class="era-label">Hitler Era (1923-1945)</div>
+                </div>
+                <div class="baseline-container">
+                    <div class="baseline-line"></div>
+                    <div class="baseline-label">COMPARATIVE BASELINE</div>
+                </div>
+                <div class="bottom-section">
+                    <div class="year-markers bottom-markers" id="bottom-year-markers"></div>
+                    <div class="timeline-track" id="bottom-timeline"></div>
+                    <div class="era-label">Trump Era (Mapped to Hitler Dates)</div>
+                    <div class="watermark-text">HITLER | 1933-1945 | HISTORICAL PARALLELS</div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="zoom-hint">Click any card for details</div>
+
+    <div class="zoom-hint">Click any card for details | Use mouse wheel to scroll vertically | Browser scrolls horizontally</div>
+    <div class="version-info" id="version-info"></div>
     <footer>Historical comparison for educational purposes</footer>
 </div>
 
