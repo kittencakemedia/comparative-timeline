@@ -19,6 +19,8 @@ class Timeline {
         this.updateVersionDisplay();
         this.setupPinchZoom();
         this.setupFilters();
+        this.forceScrollBars();  // Add this line
+
         // Force scroll to start on GitHub Pages
         if (window.location.hostname.includes('github.io')) {
             window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
@@ -41,18 +43,13 @@ class Timeline {
     getTotalWidth() {
         const totalYears = 30;
         const baseWidth = totalYears * this.zoom;
-        // Add padding for left/right margins
-        const padding = 160;
+        // Much larger padding for GitHub Pages
+        const padding = 400;
         let totalWidth = baseWidth + padding;
         
-        // Ensure minimum width for all content
-        const minWidth = 2800;
+        // Ensure minimum width forces scroll
+        const minWidth = 3800;
         totalWidth = Math.max(totalWidth, minWidth);
-        
-        // On GitHub Pages, add extra buffer
-        if (window.location.hostname.includes('github.io')) {
-            totalWidth += 100;
-        }
         
         return totalWidth;
     }
@@ -304,6 +301,22 @@ class Timeline {
         });
     }
     
+    forceScrollBars() {
+        // Force body to be scrollable by setting a minimum width
+        const container = document.querySelector('.container');
+        if (container) {
+            const minWidth = this.getTotalWidth() + 200;
+            container.style.minWidth = minWidth + 'px';
+        }
+        
+        // Ensure html element has scroll
+        document.documentElement.style.overflowX = 'auto';
+        document.documentElement.style.overflowY = 'auto';
+        
+        // Log for debugging
+        console.log('Forced scroll bars, min width:', container?.style.minWidth);
+    }
+
     bindEvents() {
         document.getElementById('zoom-in').onclick = () => this.zoomIn();
         document.getElementById('zoom-out').onclick = () => this.zoomOut();
