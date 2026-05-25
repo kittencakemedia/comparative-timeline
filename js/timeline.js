@@ -19,7 +19,13 @@ class Timeline {
         this.updateVersionDisplay();
         this.setupPinchZoom();
         this.setupFilters();
-        console.log('Timeline ready with', this.events.length, 'events');
+        // Force scroll to start on GitHub Pages
+        if (window.location.hostname.includes('github.io')) {
+            window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+            document.documentElement.scrollLeft = 0;
+            document.body.scrollLeft = 0;
+        }
+            console.log('Timeline ready with', this.events.length, 'events');
     }
     
     updateVersionDisplay() {
@@ -34,9 +40,21 @@ class Timeline {
     
     getTotalWidth() {
         const totalYears = 30;
-        const totalWidth = totalYears * this.zoom;
+        const baseWidth = totalYears * this.zoom;
+        // Add padding for left/right margins
+        const padding = 160;
+        let totalWidth = baseWidth + padding;
+        
+        // Ensure minimum width for all content
         const minWidth = 2800;
-        return Math.max(totalWidth + 160, minWidth);
+        totalWidth = Math.max(totalWidth, minWidth);
+        
+        // On GitHub Pages, add extra buffer
+        if (window.location.hostname.includes('github.io')) {
+            totalWidth += 100;
+        }
+        
+        return totalWidth;
     }
     
     yearToPixel(year) {

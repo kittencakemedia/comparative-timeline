@@ -457,3 +457,38 @@ footer {
     margin-top: 10px;
     font-family: monospace;
 }
+
+/* Force browser scrollbars on GitHub Pages */
+html {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f2f5;
+    padding: 20px;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    min-width: 1200px;
+}
+
+/* Ensure container takes full width */
+.container {
+    width: 100%;
+    max-width: none;  /* Remove max-width restriction */
+    min-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Timeline containers - ensure proper width */
+.timeline-wrapper {
+    width: 100%;
+    overflow-x: visible;
+}
+
+.timeline-container {
+    width: 100%;
+    overflow-x: visible;
+    position: relative;
+}
