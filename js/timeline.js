@@ -14,20 +14,13 @@ class Timeline {
     init() {
         this.topTrack = document.getElementById('top-timeline');
         this.bottomTrack = document.getElementById('bottom-timeline');
+        this.scrollContainer = document.querySelector('.timeline-scroll');
         this.render();
         this.bindEvents();
         this.updateVersionDisplay();
         this.setupPinchZoom();
         this.setupFilters();
-        this.forceScrollBars();  // Add this line
-
-        // Force scroll to start on GitHub Pages
-        if (window.location.hostname.includes('github.io')) {
-            window.scrollTo({ left: 0, top: 0, behavior: 'auto' });
-            document.documentElement.scrollLeft = 0;
-            document.body.scrollLeft = 0;
-        }
-            console.log('Timeline ready with', this.events.length, 'events');
+        console.log('Timeline ready with', this.events.length, 'events');
     }
     
     updateVersionDisplay() {
@@ -43,28 +36,21 @@ class Timeline {
     getTotalWidth() {
         const totalYears = 30;
         const baseWidth = totalYears * this.zoom;
-        // Much larger padding for GitHub Pages
-        const padding = 400;
-        let totalWidth = baseWidth + padding;
-        
-        // Ensure minimum width forces scroll
-        const minWidth = 3800;
-        totalWidth = Math.max(totalWidth, minWidth);
-        
-        return totalWidth;
+        // Just enough padding, no extra white space
+        return baseWidth + 80;
     }
     
     yearToPixel(year) {
         const totalYears = 30;
         const percent = (year - 1920) / totalYears;
         const totalWidth = totalYears * this.zoom;
-        return 40 + (percent * totalWidth);
+        return 20 + (percent * totalWidth);
     }
     
     pixelToYear(pixelX) {
         const totalYears = 30;
         const totalWidth = totalYears * this.zoom;
-        const percent = (pixelX - 40) / totalWidth;
+        const percent = (pixelX - 20) / totalWidth;
         let year = 1920 + (percent * totalYears);
         year = Math.max(1920, Math.min(1950, year));
         return year;
@@ -128,7 +114,7 @@ class Timeline {
         bottomContainer.innerHTML = '';
         for (let y = 2000; y <= 2030; y += 5) {
             const percent = (y - 2000) / 30;
-            const left = 40 + (percent * 30 * this.zoom);
+            const left = 20 + (percent * 30 * this.zoom);
             const label = document.createElement('span');
             label.className = 'year-marker-label';
             label.textContent = y;
@@ -197,32 +183,55 @@ class Timeline {
         }
     }
     
+    // Helper to get current center year from scroll position
+    getCenterYear() {
+        if (!this.scrollContainer) return 1935;
+        const centerX = this.scrollContainer.scrollLeft + (this.scrollContainer.clientWidth / 2);
+        return this.pixelToYear(centerX);
+    }
+    
+    // Helper to restore scroll position based on a center year
+    setCenterYear(year) {
+        if (!this.scrollContainer) return;
+        const targetX = this.yearToPixel(year);
+        const newScrollLeft = targetX - (this.scrollContainer.clientWidth / 2);
+        this.scrollContainer.scrollLeft = Math.max(0, newScrollLeft);
+    }
+    
     zoomIn() { 
+        const centerYear = this.getCenterYear();
         let newZoom = this.zoom * 1.2;
         if (newZoom <= this.maxZoom) {
             this.zoom = newZoom;
             this.render();
+            this.setCenterYear(centerYear);
         }
     }
     
     zoomOut() { 
+        const centerYear = this.getCenterYear();
         let newZoom = this.zoom * 0.8;
         if (newZoom >= this.minZoom) {
             this.zoom = newZoom;
             this.render();
+            this.setCenterYear(centerYear);
         }
     }
     
     resetView() { 
         this.zoom = 70; 
         this.render(); 
-        window.scrollTo({ left: 0, behavior: 'smooth' });
+        if (this.scrollContainer) {
+            this.scrollContainer.scrollLeft = 0;
+        }
     }
     
     fitToScreen() { 
         this.zoom = 70; 
         this.render(); 
-        window.scrollTo({ left: 0, behavior: 'smooth' });
+        if (this.scrollContainer) {
+            this.scrollContainer.scrollLeft = 0;
+        }
     }
     
     filterEvents(tag) {
@@ -260,27 +269,20 @@ class Timeline {
             return Math.sqrt(dx * dx + dy * dy);
         };
         
-        const getPinchCenterX = (touches) => {
-            return (touches[0].clientX + touches[1].clientX) / 2;
-        };
+        const scrollContainer = this.scrollContainer;
+        if (!scrollContainer) return;
         
-        const container = document.querySelector('.timeline-container');
-        if (!container) return;
-        
-        container.addEventListener('touchstart', (e) => {
+        scrollContainer.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
                 initialZoom = this.zoom;
                 initialDistance = getDistance(e.touches);
-                const pinchX = getPinchCenterX(e.touches);
-                const containerRect = container.getBoundingClientRect();
-                const scrollLeft = window.scrollX;
-                const absoluteX = pinchX - containerRect.left + scrollLeft;
-                centerYear = this.pixelToYear(absoluteX);
+                // Store the center year at pinch start
+                centerYear = this.getCenterYear();
             }
         });
         
-        container.addEventListener('touchmove', (e) => {
+        scrollContainer.addEventListener('touchmove', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
                 const newDistance = getDistance(e.touches);
@@ -288,35 +290,15 @@ class Timeline {
                 let newZoom = initialZoom * scale;
                 newZoom = Math.max(this.minZoom, Math.min(this.maxZoom, newZoom));
                 
-                if (Math.abs(newZoom - this.zoom) > 1) {
+                if (Math.abs(newZoom - this.zoom) > 0.5) {
                     this.zoom = newZoom;
                     this.render();
-                    
-                    const newCenterX = this.yearToPixel(centerYear);
-                    const containerRect = container.getBoundingClientRect();
-                    const targetScrollLeft = newCenterX - (containerRect.width / 2);
-                    window.scrollTo({ left: Math.max(0, targetScrollLeft), behavior: 'auto' });
+                    this.setCenterYear(centerYear);
                 }
             }
         });
     }
     
-    forceScrollBars() {
-        // Force body to be scrollable by setting a minimum width
-        const container = document.querySelector('.container');
-        if (container) {
-            const minWidth = this.getTotalWidth() + 200;
-            container.style.minWidth = minWidth + 'px';
-        }
-        
-        // Ensure html element has scroll
-        document.documentElement.style.overflowX = 'auto';
-        document.documentElement.style.overflowY = 'auto';
-        
-        // Log for debugging
-        console.log('Forced scroll bars, min width:', container?.style.minWidth);
-    }
-
     bindEvents() {
         document.getElementById('zoom-in').onclick = () => this.zoomIn();
         document.getElementById('zoom-out').onclick = () => this.zoomOut();

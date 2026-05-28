@@ -4,33 +4,20 @@
     box-sizing: border-box;
 }
 
-/* Force scroll on html element */
-html {
-    overflow-x: auto !important;
-    overflow-y: auto !important;
-}
-
-/* Body styling */
 body {
     font-family: 'Inter', sans-serif;
     background: #f0f2f5;
     padding: 20px;
-    overflow-x: scroll !important;
-    overflow-y: auto !important;
-    min-width: 100%;
+    overflow-x: hidden;  /* Body does NOT scroll */
+    overflow-y: auto;
 }
 
-/* Container - wide enough to force scroll */
-.container {
-    width: 100%;
+/* Header and controls - stay centered in viewport */
+/* Make the container wider to fit all buttons */
+.header-section {
+    max-width: 1400px;  /* Increased from 1200px */
     margin: 0 auto;
-    min-width: 3800px;  /* Forces horizontal scroll */
-    padding: 0 20px;
-}
-
-header {
     text-align: center;
-    margin-bottom: 30px;
 }
 
 h1 {
@@ -39,6 +26,7 @@ h1 {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    margin-bottom: 15px;
 }
 
 .controls {
@@ -74,22 +62,22 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
-/* Tag Filters */
 .tag-filters {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     margin: 15px 0;
     flex-wrap: wrap;
+    max-width: 100%;
 }
 
 .filter-btn {
     background: white;
     border: 1px solid #ddd;
     border-radius: 20px;
-    padding: 6px 12px;
+    padding: 5px 10px;  /* Reduced padding */
     cursor: pointer;
-    font-size: 0.7rem;
+    font-size: 0.7rem;  /* Slightly smaller font */
     font-weight: 500;
     white-space: nowrap;
     transition: all 0.2s;
@@ -106,18 +94,25 @@ h1 {
     border-color: #1E90FF;
 }
 
-/* Timeline containers */
-.timeline-wrapper {
-    width: 100%;
+/* Timeline scroll container - THIS scrolls horizontally */
+.timeline-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+    margin-top: 20px;
+    padding-bottom: 10px;
 }
 
+/* Timeline container - wide enough for all content */
 .timeline-container {
-    position: relative;
+    width: 3800px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
 .timeline-inner {
-    width: 3800px;  /* Fixed wide width */
     position: relative;
+    width: 100%;
 }
 
 /* Sections */
@@ -320,7 +315,7 @@ h1 {
     text-align: center;
     font-size: 0.65rem;
     color: #aaa;
-    margin-top: 10px;
+    margin-top: 15px;
     font-family: monospace;
 }
 
@@ -414,7 +409,6 @@ h1 {
     border-top: 1px solid #eee;
 }
 
-/* Footer */
 footer {
     text-align: center;
     margin-top: 25px;
