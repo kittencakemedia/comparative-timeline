@@ -14,7 +14,7 @@ body {
 
 /* Header section - centered in viewport */
 .header-section {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     text-align: center;
     background: transparent;
@@ -71,6 +71,7 @@ h1 {
     gap: 6px;
     margin: 15px 0;
     flex-wrap: wrap;
+    max-width: 100%;
 }
 
 .filter-btn {
