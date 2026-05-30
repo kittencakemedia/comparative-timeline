@@ -20,6 +20,12 @@ class Timeline {
         this.updateVersionDisplay();
         this.setupPinchZoom();
         this.setupFilters();
+        
+        // Force scroll container to have proper width on GitHub Pages
+        if (this.scrollContainer) {
+            this.scrollContainer.style.overflowX = 'scroll';
+        }
+        
         console.log('Timeline ready with', this.events.length, 'events');
     }
     
@@ -36,21 +42,21 @@ class Timeline {
     getTotalWidth() {
         const totalYears = 30;
         const baseWidth = totalYears * this.zoom;
-        // Just enough padding, no extra white space
-        return baseWidth + 80;
+        // Add padding for the scroll bars and end markers
+        return baseWidth + 200;
     }
     
     yearToPixel(year) {
         const totalYears = 30;
         const percent = (year - 1920) / totalYears;
         const totalWidth = totalYears * this.zoom;
-        return 20 + (percent * totalWidth);
+        return 30 + (percent * totalWidth);
     }
     
     pixelToYear(pixelX) {
         const totalYears = 30;
         const totalWidth = totalYears * this.zoom;
-        const percent = (pixelX - 20) / totalWidth;
+        const percent = (pixelX - 30) / totalWidth;
         let year = 1920 + (percent * totalYears);
         year = Math.max(1920, Math.min(1950, year));
         return year;
@@ -83,21 +89,19 @@ class Timeline {
         
         const totalWidth = this.getTotalWidth();
         
+        // Update widths
         const inner = document.querySelector('.timeline-inner');
         if (inner) {
             inner.style.width = totalWidth + 'px';
-            inner.style.minWidth = totalWidth + 'px';
         }
         if (this.topTrack) {
             this.topTrack.style.width = totalWidth + 'px';
-            this.topTrack.style.minWidth = totalWidth + 'px';
         }
         if (this.bottomTrack) {
             this.bottomTrack.style.width = totalWidth + 'px';
-            this.bottomTrack.style.minWidth = totalWidth + 'px';
         }
         
-        // Year markers - top
+        // Year markers - top (1920-1950)
         const topContainer = document.getElementById('top-year-markers');
         topContainer.innerHTML = '';
         for (let y = 1920; y <= 1950; y += 5) {
@@ -109,12 +113,12 @@ class Timeline {
             topContainer.appendChild(label);
         }
         
-        // Year markers - bottom
+        // Year markers - bottom (2000-2030)
         const bottomContainer = document.getElementById('bottom-year-markers');
         bottomContainer.innerHTML = '';
         for (let y = 2000; y <= 2030; y += 5) {
             const percent = (y - 2000) / 30;
-            const left = 20 + (percent * 30 * this.zoom);
+            const left = 30 + (percent * 30 * this.zoom);
             const label = document.createElement('span');
             label.className = 'year-marker-label';
             label.textContent = y;
@@ -183,14 +187,12 @@ class Timeline {
         }
     }
     
-    // Helper to get current center year from scroll position
     getCenterYear() {
         if (!this.scrollContainer) return 1935;
         const centerX = this.scrollContainer.scrollLeft + (this.scrollContainer.clientWidth / 2);
         return this.pixelToYear(centerX);
     }
     
-    // Helper to restore scroll position based on a center year
     setCenterYear(year) {
         if (!this.scrollContainer) return;
         const targetX = this.yearToPixel(year);
@@ -277,7 +279,6 @@ class Timeline {
                 e.preventDefault();
                 initialZoom = this.zoom;
                 initialDistance = getDistance(e.touches);
-                // Store the center year at pinch start
                 centerYear = this.getCenterYear();
             }
         });

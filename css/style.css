@@ -8,16 +8,18 @@ body {
     font-family: 'Inter', sans-serif;
     background: #f0f2f5;
     padding: 20px;
-    overflow-x: hidden;  /* Body does NOT scroll */
+    overflow-x: hidden;
     overflow-y: auto;
 }
 
-/* Header and controls - stay centered in viewport */
-/* Make the container wider to fit all buttons */
+/* Header section - centered in viewport */
 .header-section {
-    max-width: 1400px;  /* Increased from 1200px */
+    max-width: 1200px;
     margin: 0 auto;
     text-align: center;
+    background: transparent;
+    position: relative;
+    z-index: 10;
 }
 
 h1 {
@@ -62,22 +64,22 @@ h1 {
 .legend-color.red { background: #DC143C; }
 .legend-color.blue { background: #1E90FF; }
 
+/* Tag Filters */
 .tag-filters {
     display: flex;
     justify-content: center;
     gap: 6px;
     margin: 15px 0;
     flex-wrap: wrap;
-    max-width: 100%;
 }
 
 .filter-btn {
     background: white;
     border: 1px solid #ddd;
     border-radius: 20px;
-    padding: 5px 10px;  /* Reduced padding */
+    padding: 5px 10px;
     cursor: pointer;
-    font-size: 0.7rem;  /* Slightly smaller font */
+    font-size: 0.7rem;
     font-weight: 500;
     white-space: nowrap;
     transition: all 0.2s;
@@ -94,25 +96,32 @@ h1 {
     border-color: #1E90FF;
 }
 
-/* Timeline scroll container - THIS scrolls horizontally */
+/* Timeline scroll container */
 .timeline-scroll {
     overflow-x: auto;
     overflow-y: visible;
     margin-top: 20px;
     padding-bottom: 10px;
+    width: 100%;
+    background: transparent;
 }
 
-/* Timeline container - wide enough for all content */
+/* Force horizontal scrollbar to always show */
+.timeline-scroll {
+    overflow-x: scroll !important;
+}
+
+/* Timeline container - match the scroll width */
 .timeline-container {
-    width: 3800px;
     background: white;
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    width: max-content;
+    min-width: 100%;
 }
 
 .timeline-inner {
     position: relative;
-    width: 100%;
 }
 
 /* Sections */
