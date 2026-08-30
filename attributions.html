@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attributions - Historical Parallels</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            color: #37474F;
+        }
+        h1 { margin-bottom: 10px; font-weight: 700; font-size: 1.8rem; }
+        .last-updated {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #37474F;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+        h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #37474F;
+        }
+        p, li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+        ul {
+            margin-left: 20px;
+            list-style: none;
+        }
+        ul li {
+            padding: 4px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        ul li:last-child {
+            border-bottom: none;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: #1565C0;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .license-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .license-badge.pd {
+            background: #e3f2fd;
+            color: #0d47a1;
+        }
+        .license-badge.cc {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .source-link {
+            color: #1565C0;
+            text-decoration: none;
+        }
+        .source-link:hover {
+            text-decoration: underline;
+        }
+        .attribution-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 15px 0;
+        }
+        .attribution-table th {
+            background: #f5f5f5;
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .attribution-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        .attribution-table tr:hover {
+            background: #fafafa;
+        }
+        .attribution-table .event-list {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        .attribution-count {
+            font-size: 0.7rem;
+            color: #999;
+            margin-left: 8px;
+        }
+        .license-link {
+            color: #1565C0;
+            text-decoration: none;
+        }
+        .license-link:hover {
+            text-decoration: underline;
+        }
+        .author-link {
+            color: #1565C0;
+            text-decoration: none;
+        }
+        .author-link:hover {
+            text-decoration: underline;
+        }
+        .no-attribution {
+            color: #999;
+            font-style: italic;
+        }
+        .attribution-section {
+            margin-top: 20px;
+        }
+        .attribution-section .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #37474F;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Attributions & Image Licenses</h1>
+    <div class="last-updated">Last Updated: <span id="last-updated-date">June 2024</span></div>
+
+    <p>This page documents all third-party content used in Historical Parallels. All images are either in the <strong>Public Domain</strong> or licensed under <strong>Creative Commons</strong> terms that permit commercial use with attribution.</p>
+
+    <!-- ===== DYNAMIC ATTRIBUTION TABLE ===== -->
+    <div id="attribution-container">
+        <div class="attribution-section">
+            <div class="section-title">Image Attributions</div>
+            <p><span id="attribution-count">Loading attribution data...</span></p>
+            <table class="attribution-table" id="attribution-table">
+                <thead>
+                    <tr>
+                        <th>License</th>
+                        <th>Author</th>
+                        <th>Attribution</th>
+                        <th>Used In</th>
+                    </tr>
+                </thead>
+                <tbody id="attribution-table-body">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #999; padding: 30px;">
+                            <span id="loading-message">Loading attribution data...</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== HISTORICAL SOURCES ===== -->
+    <h2>Historical Source Attributions</h2>
+<p>Event descriptions and dates are derived from the following sources:</p>
+<ul>
+    <li><strong>United States Holocaust Memorial Museum</strong> – <a href="https://www.ushmm.org" target="_blank">ushmm.org</a></li>
+    <li><strong>Britannica Encyclopedia</strong> – <a href="https://www.britannica.com" target="_blank">britannica.com</a></li>
+    <li><strong>History.com</strong> – <a href="https://www.history.com" target="_blank">history.com</a></li>
+    <li><strong>JSTOR</strong> – Academic journal articles</li>
+    <li><strong>Library of Congress</strong> – <a href="https://www.loc.gov" target="_blank">loc.gov</a></li>
+</ul>
+
+<h2>Image Sources</h2>
+<p>Images are sourced from the following platforms:</p>
+<ul>
+    <li><strong>Wikimedia Commons</strong> – <a href="https://commons.wikimedia.org" target="_blank">commons.wikimedia.org</a></li>
+    <li><strong>Flickr</strong> – <a href="https://www.flickr.com" target="_blank">flickr.com</a></li>
+    <li><strong>Openverse</strong> – <a href="https://openverse.org" target="_blank">openverse.org</a></li>
+    <li><strong>White House Flickr</strong> – <a href="https://www.flickr.com/photos/whitehouse" target="_blank">flickr.com/photos/whitehouse</a></li>
+</ul>
+
+<!-- ===== LICENSE SUMMARY ===== -->
+<h2>License Summary</h2>
+
+<h3>Public Domain</h3>
+<p>Images in the public domain are free to use for any purpose, including commercial use, without attribution. Most Hitler-era images fall into this category.</p>
+
+<h3>Creative Commons CC BY 2.0</h3>
+<p>Images licensed under CC BY require:</p>
+<ul>
+    <li><strong>Attribution:</strong> Credit must be given to the original creator</li>
+    <li><strong>Commercial Use:</strong> Allowed</li>
+</ul>
+<p>Full license: <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank">creativecommons.org/licenses/by/2.0/</a></p>
+
+<h3>Creative Commons CC BY-SA 2.0</h3>
+<p>Images licensed under CC BY-SA require:</p>
+<ul>
+    <li><strong>Attribution:</strong> Credit must be given to the original creator</li>
+    <li><strong>ShareAlike:</strong> Any derivative works must be shared under the same license</li>
+    <li><strong>Commercial Use:</strong> Allowed</li>
+</ul>
+<p>Full license: <a href="https://creativecommons.org/licenses/by-sa/2.0/" target="_blank">creativecommons.org/licenses/by-sa/2.0/</a></p>
+
+<h3>Creative Commons CC BY 4.0</h3>
+<p>Images licensed under CC BY 4.0 require:</p>
+<ul>
+    <li><strong>Attribution:</strong> Credit must be given to the original creator</li>
+    <li><strong>Commercial Use:</strong> Allowed</li>
+</ul>
+<p>Full license: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">creativecommons.org/licenses/by/4.0/</a></p>
+
+<h3>Creative Commons CC BY-SA 4.0</h3>
+<p>Images licensed under CC BY-SA 4.0 require:</p>
+<ul>
+    <li><strong>Attribution:</strong> Credit must be given to the original creator</li>
+    <li><strong>ShareAlike:</strong> Any derivative works must be shared under the same license</li>
+    <li><strong>Commercial Use:</strong> Allowed</li>
+</ul>
+<p>Full license: <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">creativecommons.org/licenses/by-sa/4.0/</a></p>
+
+    <!-- ===== DYNAMIC CONTENT NOTE ===== -->
+    <h2>Dynamic Content & Future Events</h2>
+    <p>Attribution data from historical events prior to 2026 has been manually verified. Attribution data from historical events from 2026 onwards may be automatically generated but manually verified.</p>
+    <p>Last updated: <strong id="last-updated-dynamic">June 2024</strong></p>
+
+    <a href="index.html" class="back-link">← Back to Timeline</a>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/data.js"></script>
+    <script src="js/attributions.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update last updated date
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('last-updated-date').textContent = dateStr;
+            document.getElementById('last-updated-dynamic').textContent = dateStr;
+
+            // Build attribution table
+            const tableBody = document.getElementById('attribution-table-body');
+            const loadingMsg = document.getElementById('loading-message');
+            const countSpan = document.getElementById('attribution-count');
+
+            if (typeof timelineEvents === 'undefined') {
+                loadingMsg.textContent = 'Event data not loaded. Please check that data.js is loaded correctly.';
+                return;
+            }
+
+            if (typeof getAllAttributions === 'undefined') {
+                loadingMsg.textContent = 'Attribution data not loaded. Please check that attributions.js is loaded correctly.';
+                return;
+            }
+
+            // Get all unique attributions
+            const attributions = getAllAttributions(timelineEvents);
+            
+            if (attributions.length === 0) {
+                loadingMsg.textContent = 'No attribution data found. Please add attribution data to attributions.js.';
+                return;
+            }
+
+            // Update count
+            const totalEvents = timelineEvents.length;
+            const eventsWithAttribution = timelineEvents.filter(e => e.image && e.image !== '' && getAttribution(e.image)).length;
+            countSpan.textContent = `Found ${attributions.length} unique attributions for ${eventsWithAttribution} of ${totalEvents} events.`;
+
+            // Clear loading message
+            tableBody.innerHTML = '';
+
+            // Sort attributions by license type (PD first, then CC)
+            attributions.sort((a, b) => {
+                if (a.license.includes('Public Domain')) return -1;
+                if (b.license.includes('Public Domain')) return 1;
+                return a.license.localeCompare(b.license);
+            });
+
+            // Build table rows
+            attributions.forEach(att => {
+                const row = document.createElement('tr');
+                
+                // License with badge
+                let licenseBadge = '';
+                if (att.license.includes('Public Domain')) {
+                    licenseBadge = `<span class="license-badge pd">${att.license}</span>`;
+                } else if (att.license.includes('CC BY-SA')) {
+                    licenseBadge = `<span class="license-badge cc">${att.license}</span>`;
+                } else {
+                    licenseBadge = `<span class="license-badge">${att.license}</span>`;
+                }
+                
+                // Author with link
+                let authorHtml = att.author || 'Unknown';
+                if (att.authorUrl) {
+                    authorHtml = `<a href="${att.authorUrl}" target="_blank" class="author-link">${att.author}</a>`;
+                }
+                
+                // Attribution text with license link
+                let attributionHtml = att.attribution || att.license || 'Unknown';
+                if (att.licenseUrl) {
+                    attributionHtml = `${att.attribution || att.license} <a href="${att.licenseUrl}" target="_blank" class="license-link">🔗</a>`;
+                }
+                
+                // Events list
+                const eventCount = att.events ? att.events.length : 0;
+                let eventsList = '';
+                if (att.events && att.events.length > 0) {
+                    // Get event titles for these IDs
+                    const eventTitles = att.events.map(id => {
+                        const ev = timelineEvents.find(e => e.id === id);
+                        return ev ? ev.title : id;
+                    });
+                    eventsList = eventTitles.join(', ');
+                    if (eventTitles.length > 3) {
+                        eventsList = eventTitles.slice(0, 3).join(', ') + ` +${eventTitles.length - 3} more`;
+                    }
+                }
+                
+                row.innerHTML = `
+                    <td>${licenseBadge}</td>
+                    <td>${authorHtml}</td>
+                    <td>${attributionHtml}</td>
+                    <td class="event-list">${eventsList || 'Unknown'}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
